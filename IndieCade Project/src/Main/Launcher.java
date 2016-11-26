@@ -17,10 +17,10 @@ public class Launcher extends StateBasedGame
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException 
 	{
-		
-		this.addState(new SplashScreen());
+		//this.addState(new SplashScreen());
 		this.addState(new MainMenu());
-		this.enterState(0);
+		this.addState(new Game());
+		this.enterState(1);
 	}
 	
 	public static void main(String[] args)

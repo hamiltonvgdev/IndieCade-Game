@@ -6,6 +6,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import Geo.Quad;
+import Main.Config;
 import Render.AnimationSet;
 
 public class Button 
@@ -18,11 +19,14 @@ public class Button
 	float y;
 	float width;
 	float height;
-	Quad hitbox;
 	
+	Quad hitbox;
 	public boolean clicked;
+	int delay;
 	
 	int id;
+	
+	boolean down;
 	
 	public Button(String phrase, float x, float y, int id)
 	{
@@ -37,6 +41,10 @@ public class Button
 		hitbox = new Quad(x, y, width, height);
 		
 		this.id = id;
+		
+		delay = 0;
+		
+		down = false;
 	}
 	
 	public Button setImage(AnimationSet normal, AnimationSet selected)
@@ -58,12 +66,25 @@ public class Button
 	public void update()
 	{
 		hitbox.changeDimensions(x, y, width, height);
-		
-		if(hitbox.checkPoint(Mouse.getDX(), Mouse.getDY()))
+		if(hitbox.checkPoint(Mouse.getX(), Config.HEIGHT - Mouse.getY()))
 		{
 			if(Mouse.isButtonDown(Input.MOUSE_LEFT_BUTTON))
 			{
+				down = true;
+			}
+		}else
+		{
+			down = false;
+		}
+		
+		if(down)
+		{
+			if(!Mouse.isButtonDown(Input.MOUSE_LEFT_BUTTON))
+			{
 				clicked = true;
+			}else
+			{
+				clicked = false;
 			}
 		}else
 		{
@@ -73,15 +94,17 @@ public class Button
 	
 	public void render(Graphics g) throws SlickException
 	{
-		if(hitbox.checkPoint(Mouse.getDX(), Mouse.getDY()) && Selected != null)
+		if(hitbox.checkPoint(Mouse.getX(), Mouse.getY()) && Selected != null)
 		{
 			Selected.render(x, y, width, height, 0, g);
 		}else
 		{
 			Normal.render(x, y, width, height, 0, g);
 		}
+
+		g.drawString(Phrase, x - Phrase.length() / 2 * 10, y - 10);
 		
-		g.drawString(Phrase, x - width/2, y);
+		
 	}
 	
 	public int getID()

@@ -24,7 +24,7 @@ public class MainMenu extends BasicGameState
 	{
 		Menus = new ArrayList<BasicMenu>();
 		Menus.add(new StartMenu(gc, this));
-		Menus.add(new PlayMenu());
+		Menus.add(new PlayMenu(this, (Game) sbg.getState(2), sbg));
 		Menus.add(new CodexMenu(this));
 		
 		index = 0;

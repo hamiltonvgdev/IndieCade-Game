@@ -48,8 +48,8 @@ public class Quad {
 	
 	public void changeDimensions(float x, float y, float width, float height)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = x- width / 2;
+		this.y = y - height / 2;
 		this.width = width;
 		this.height = height;
 	}
