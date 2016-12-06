@@ -5,9 +5,9 @@ import org.newdawn.slick.Color;
 public class SpawnTile extends Tile
 {
 
-	public SpawnTile(Color Id)
+	public SpawnTile(String name, Color Id)
 	{
-		super(Id);
+		super(name, Id);
 		
 		spawnable = true;
 	}

@@ -3,12 +3,13 @@ package GameBasics;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import Render.AnimationSet;
 import Render.BasicImage;
 
-public class Item 
+public abstract class Item 
 {
 	String name;
-	BasicImage Icon;
+	public AnimationSet sprite;
 	int healthBoost;
 	int armorBoost;
 	int damageBoost;
@@ -28,6 +29,36 @@ public class Item
 	public void render(Graphics g) throws SlickException
 	{
 		
+	}
+	
+	public Item setHealth(int health)
+	{
+		healthBoost = health;
+		return this;
+	}
+	
+	public Item setArmor(int armor)
+	{
+		armorBoost = armor;
+		return this;
+	}
+	
+	public Item setDamage(int damage)
+	{
+		damageBoost = damage;
+		return this;
+	}
+	
+	public Item setTenacity(int tenacity)
+	{
+		tenacityBoost = tenacity;
+		return this;
+	}
+	
+	public Item setSpeed(int speed)
+	{
+		speedBoost = speed;
+		return this;
 	}
 	
 	public String getName()

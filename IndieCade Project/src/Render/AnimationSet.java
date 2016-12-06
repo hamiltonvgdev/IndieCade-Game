@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 
 public class AnimationSet 
 {
+	String ref;
 	ArrayList<BasicImage> Animation;
 	int frame;
 	long delay;
@@ -23,6 +24,7 @@ public class AnimationSet
 	
 	public AnimationSet(String ref, long delay)
 	{
+		this.ref = ref;
 		File folder = new File(ref);
 		File[] list = folder.listFiles();
 		
@@ -199,6 +201,11 @@ public class AnimationSet
 	public void reset()
 	{
 		frame = 0;
+	}
+	
+	public String getFolder()
+	{
+		return ref;
 	}
 	
 	public String getRef(int i)

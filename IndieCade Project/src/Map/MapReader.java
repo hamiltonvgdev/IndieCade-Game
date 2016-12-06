@@ -21,7 +21,6 @@ public class MapReader
 				tileId.add(tiles.getColor(x, y));
 			}
 		}
-		
 		return tileId;
 	}
 	

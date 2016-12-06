@@ -15,26 +15,32 @@ public class World
 	
 	ArrayList<Map> world;
 	
-	public World()
+	Player player;
+	
+	public World(Player player)
 	{
-		mapX = 10;
-		mapY = 8;
-		
 		try {
 			world = Converter.convertMap(MapReader.readTileMap(new Image("res/World.png")), MapList.getMaps());
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+		
+		mapX = (world.size() % 20) / 2;
+		mapY = (world.size() / 20) / 2;
+		
+		this.player = player;
+		player.setMap(world.get(mapX + mapY * 20));
 	}
 	
 	public void update()
 	{
+		player.setMap(world.get(mapX + mapY * 20));
 		world.get(mapX + mapY * 20).update();
 	}
 	
-	public void render(Graphics g)
+	public void render(Graphics g) throws SlickException
 	{
-		world.get(mapX + mapY * 20).render(g);;
+		world.get(mapX + mapY * 20).render(g);
 	}
 	
 	public void move(int xa, int ya)

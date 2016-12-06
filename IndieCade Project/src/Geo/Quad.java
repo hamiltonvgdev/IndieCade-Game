@@ -46,6 +46,30 @@ public class Quad {
 		return intersect;
 	}
 	
+	public boolean checkWithin(Quad quad)
+	{
+		boolean contained = true;
+		
+		for(float x = quad.x ; x < quad.x + quad.width; x ++)
+		{
+			for(float y = quad.y - quad.height; y < quad.y + quad.height; y ++)
+			{
+				if(!checkPoint(x,y))
+				{
+					contained = false;
+					break;
+				}
+			}
+			
+			if(!contained)
+			{
+				break;
+			}
+		}
+		
+		return contained;
+	}
+	
 	public void changeDimensions(float x, float y, float width, float height)
 	{
 		this.x = x- width / 2;

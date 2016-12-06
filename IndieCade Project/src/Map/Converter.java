@@ -8,20 +8,28 @@ import Tiles.Tile;
 
 public class Converter 
 {
-	public static ArrayList<Tile> convertTile(ArrayList<Color> Id, ArrayList<Tile> PossibleTiles)
+	public static ArrayList<Tile> convertTile(ArrayList<Color> Id, ArrayList<Tile> PossibleTiles) 
 	{
-		ArrayList<Tile> Tiles = new ArrayList<Tile>();
 		
+		ArrayList<Tile> Tiles = new ArrayList<Tile>();
 		for(int i = 0; i < Id.size(); i ++)
 		{
 			Color ID = Id.get(i);
-			
 			for(int j = 0; j < PossibleTiles.size(); j ++)
 			{
-				if(PossibleTiles.get(j).getID() == ID)
+				if(Math.abs(PossibleTiles.get(j).getID().r - ID.r) <= 0.04)
 				{
-					Tiles.add(PossibleTiles.get(j));
-					break;
+					if(Math.abs(PossibleTiles.get(j).getID().g - ID.g) <= 0.04)
+					{
+						if(Math.abs(PossibleTiles.get(j).getID().b - ID.b) <= 0.04)
+						{
+							Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
+									setAnimation(PossibleTiles.get(j).getRef()).
+									setColidable(PossibleTiles.get(j).getCollidable()));
+							
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -39,8 +47,8 @@ public class Converter
 			
 			for(int j = 0; j < PossibleMaps.size(); j ++)
 			{
-				if(Math.abs(ID.g - PossibleMaps.get(j).getID().g) < 0.5 &&
-						Math.abs(ID.r - PossibleMaps.get(j).getID().r) < 0.5)
+				if(Math.abs(ID.g - PossibleMaps.get(j).getID().g) < 0.001 &&
+						Math.abs(ID.r - PossibleMaps.get(j).getID().r) < 0.001)
 				{
 					Maps.add(PossibleMaps.get(j));
 					break;
