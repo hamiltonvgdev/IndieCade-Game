@@ -78,6 +78,10 @@ public class Tile
 	public void render(Graphics g) throws SlickException
 	{
 		sprite.render(x, y, width, height, 0, g);
+		if(name.equals("Stone"))
+		{
+			hitbox.render(g);
+		}
 	}
 	
 	public String getName()

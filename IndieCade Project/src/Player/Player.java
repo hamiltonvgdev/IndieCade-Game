@@ -217,6 +217,7 @@ public class Player
 	{
 		Hitbox.render(g);
 		Screen.render(g);
+		new Quad(x, y + Vy + Ay, width, height).render(g);
 	/*
 		Head.render(x, headY, width, height, 0, g);
 		Torso.render(x, torsoY, width, height, 0, g);
