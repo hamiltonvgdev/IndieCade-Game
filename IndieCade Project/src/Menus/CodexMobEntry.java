@@ -98,6 +98,31 @@ public class CodexMobEntry
 		Race.render(Config.WIDTH / 2 + 400, -25 + 300 / 2, 150, 150, 0, g);
 		Environment.render(Config.WIDTH / 2 - 400, -25 + 300 / 2, 150, 150, 0, g);
 		
+		for(int i = 3; i < 13; i ++)
+		{
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350, 30, 25, 0, g);
+		}
+		
+		for(int i = 3; i < 13; i ++)
+		{
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 40, 30, 25, 0, g);
+		}
+		
+		for(int i = 3; i < 13; i ++)
+		{
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 80, 30, 25, 0, g);
+		}
+		
+		for(int i = 3; i < 13; i ++)
+		{
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 120, 30, 25, 0, g);
+		}
+		
+		for(int i = 3; i < 13; i ++)
+		{
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 160, 30, 25, 0, g);
+		}
+		
 		if(codex.index < codex.Items.size() - 1)
 		{
 			nxt.render(g);
