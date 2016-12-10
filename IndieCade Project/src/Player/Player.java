@@ -12,6 +12,8 @@ import Tiles.Tile;
 
 public class Player 
 {
+	boolean paused;
+	
 	//Vertical Movement
 	float y;
 	float JumpV;
@@ -62,6 +64,8 @@ public class Player
 	
 	public Player(float x, float y)
 	{
+		paused = false;
+		
 		this.x = x;
 		this.y = y;
 		JumpV = -10F;
@@ -138,79 +142,82 @@ public class Player
 	
 	public void update()
 	{		
-		Physics();
-		
-		if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
+		if(!paused)
 		{
-			rightMove = true;
-		}else
-		{
-			rightMove = false;
-		}
-		
-		if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
-		{
-			leftMove = true;
-		}else
-		{
-			leftMove = false;
-		}
-		
-		if(leftMove && !rightMove)
-		{
-			if(Math.abs(Vx) <= speed)
+			Physics();
+			
+			if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
 			{
-				Ax = -0.1F;
+				rightMove = true;
 			}else
 			{
-				Ax = 0;
-			}
-		}else if(rightMove && !leftMove)
-		{
-			if(Math.abs(Vx) <= speed)
-			{
-				Ax = 0.1F;
-			}else
-			{
-				Ax = 0;
-			}
-		}else
-		{
-			if(Vx < 0)
-			{
-				Ax = 0.1F;
-			}else if(Vx == 0)
-			{
-				Ax = 0;
+				rightMove = false;
 			}
 			
-			if(Vx > 0)
+			if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
 			{
-				Ax = -0.1F;
-			}else if(Vx == 0)
+				leftMove = true;
+			}else
 			{
-				Ax = 0;
+				leftMove = false;
 			}
+			
+			if(leftMove && !rightMove)
+			{
+				if(Math.abs(Vx) <= speed)
+				{
+					Ax = -0.1F;
+				}else
+				{
+					Ax = 0;
+				}
+			}else if(rightMove && !leftMove)
+			{
+				if(Math.abs(Vx) <= speed)
+				{
+					Ax = 0.1F;
+				}else
+				{
+					Ax = 0;
+				}
+			}else
+			{
+				if(Vx < 0)
+				{
+					Ax = 0.1F;
+				}else if(Vx == 0)
+				{
+					Ax = 0;
+				}
+				
+				if(Vx > 0)
+				{
+					Ax = -0.1F;
+				}else if(Vx == 0)
+				{
+					Ax = 0;
+				}
+			}
+			
+			if(Math.abs(Vx) < 0.000001)
+			{
+				Vx = 0;
+			}
+			
+			if(input.isKeyDown(input.KEY_SPACE) 
+					&& System.currentTimeMillis() - JumpTick > 1000
+					&& Jumps != 0)
+			{
+				Jump();
+			}
+			
+			
+			map.shift(-Vx, 0);
+			map.shift(0, -Vy);
+			
+			Hitbox.changeDimensions(x, y, width, height);
+			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 		}
-		
-		if(Math.abs(Vx) < 0.000001)
-		{
-			Vx = 0;
-		}
-		
-		if(input.isKeyDown(input.KEY_SPACE) 
-				&& System.currentTimeMillis() - JumpTick > 1000
-				&& Jumps != 0)
-		{
-			Jump();
-		}
-		
-		
-		map.shift(-Vx, 0);
-		map.shift(0, -Vy);
-		
-		Hitbox.changeDimensions(x, y, width, height);
-		Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 	}	
 	
 	public void render(Graphics g) throws SlickException
@@ -243,5 +250,15 @@ public class Player
 	public float getY()
 	{
 		return y;
+	}
+	
+	public void pause()
+	{
+		paused = true;
+	}
+	
+	public void unpause()
+	{
+		paused = false;
 	}
 }

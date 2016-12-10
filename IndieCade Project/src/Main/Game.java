@@ -9,6 +9,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import GUI.GUI;
 import Map.MapList;
 import Map.TileList;
 import Map.World;
@@ -18,12 +19,15 @@ public class Game extends BasicGameState
 {
 	Player player;
 	World world;
+	GUI gui;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{
 		TileList.init();
 		MapList.init(player);
+		
+		gui = new GUI();
 	}
 
 	@Override
@@ -32,7 +36,7 @@ public class Game extends BasicGameState
 		player.render(g);
 		world.render(g);
 		
-		g.drawString(Integer.toString(Mouse.getX()), 300, 300);
+		gui.render(g);
 	}
 
 	@Override
@@ -41,6 +45,9 @@ public class Game extends BasicGameState
 		player.update();
 		
 		world.update();
+		
+		gui.update(world, player);
+		
 	}
 
 	@Override
