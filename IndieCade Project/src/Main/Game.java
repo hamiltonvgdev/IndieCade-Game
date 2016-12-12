@@ -1,5 +1,6 @@
 package Main;
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -30,6 +31,8 @@ public class Game extends BasicGameState
 	{	
 		player.render(g);
 		world.render(g);
+		
+		g.drawString(Integer.toString(Mouse.getX()), 300, 300);
 	}
 
 	@Override

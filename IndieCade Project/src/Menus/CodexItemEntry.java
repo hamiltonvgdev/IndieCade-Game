@@ -95,40 +95,40 @@ public class CodexItemEntry
 	
 	public void render(Graphics g) throws SlickException
 	{
-		Icon.render(300 / 2, -25 + 300 / 2, 300, 300, 0, g);
-		g.drawString(name, 400, 0);
-		g.drawString(des, 350, 75);
+		Icon.render(Config.WIDTH / 2, -25 + 300 / 2, 300, 300, 0, g);
+		g.drawString(name, Config.WIDTH / 2 - name.length() * 10 / 2, 0);
+		g.drawString(des, Config.WIDTH / 2 - des.length() * 10 / 2, 300);
 
 
-		g.drawString("Health", 0, 290);
-		g.drawString("Armor", 0, 330);
-		g.drawString("Damage", 0, 370);
-		g.drawString("Tenacity", 0, 410);
-		g.drawString("Speed", 0, 450);
+		g.drawString("Health", Config.WIDTH / 2 - 230, 340);
+		g.drawString("Armor", Config.WIDTH / 2 - 230, 380);
+		g.drawString("Damage", Config.WIDTH / 2 - 230, 420);
+		g.drawString("Tenacity", Config.WIDTH / 2 - 230, 460);
+		g.drawString("Speed", Config.WIDTH / 2 - 230, 510);
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(15 + 30 * i, 300, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(15 + 30 * i, 300 + 40, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 40, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(15 + 30 * i, 300 + 80, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 80, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(15 + 30 * i, 300 + 120, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 120, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(15 + 30 * i, 300 + 160, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 160, 30, 25, 0, g);
 		}
 		
 		if(codex.index < codex.Items.size() - 1)

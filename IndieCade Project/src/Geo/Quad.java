@@ -28,7 +28,7 @@ public class Quad {
 		
 		for(float x = quad.x ; x < quad.x + quad.width; x ++)
 		{
-			for(float y = quad.y - quad.height; y < quad.y + quad.height; y ++)
+			for(float y = quad.y; y < quad.y + quad.height; y ++)
 			{
 				if(checkPoint(x,y))
 				{
