@@ -45,8 +45,6 @@ public class Button
 		delay = 0;
 		
 		down = false;
-		Normal = null;
-		Selected = null;
 	}
 	
 	public Button setImage(AnimationSet normal, AnimationSet selected)
@@ -96,7 +94,7 @@ public class Button
 	
 	public void render(Graphics g) throws SlickException
 	{
-		if(hitbox.checkPoint(Mouse.getX(), Config.HEIGHT - Mouse.getY()) && Selected != null)
+		if(hitbox.checkPoint(Mouse.getX(), Mouse.getY()) && Selected != null)
 		{
 			Selected.render(x, y, width, height, 0, g);
 		}else

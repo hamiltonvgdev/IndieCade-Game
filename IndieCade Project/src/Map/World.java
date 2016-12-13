@@ -10,8 +10,6 @@ import Player.Player;
 
 public class World 
 {
-	boolean paused;
-	
 	int mapX;
 	int mapY;
 	
@@ -21,8 +19,6 @@ public class World
 	
 	public World(Player player)
 	{
-		paused = false;
-		
 		try {
 			world = Converter.convertMap(MapReader.readTileMap(new Image("res/World.png")), MapList.getMaps());
 		} catch (SlickException e) {
@@ -38,11 +34,8 @@ public class World
 	
 	public void update()
 	{
-		if(!paused)
-		{
-			player.setMap(world.get(mapX + mapY * 20));
-			world.get(mapX + mapY * 20).update();
-		}
+		player.setMap(world.get(mapX + mapY * 20));
+		world.get(mapX + mapY * 20).update();
 	}
 	
 	public void render(Graphics g) throws SlickException
@@ -54,15 +47,5 @@ public class World
 	{
 		mapX += xa;
 		mapY += ya;
-	}
-	
-	public void pause()
-	{
-		paused = true;
-	}
-	
-	public void unpause()
-	{
-		paused = false;
 	}
 }
