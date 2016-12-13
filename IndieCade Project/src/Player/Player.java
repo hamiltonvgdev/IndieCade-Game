@@ -124,12 +124,12 @@ public class Player
 		
 		if(CollisionY)
 		{
-			Vy = 0;
 			Jumping = false;
-			if(Jumps < MaxJumps)
+			if(Jumps < MaxJumps && Vy > 0)
 			{
 				Jumps ++;
 			}
+			Vy = 0;
 		}else
 		{
 			Vy += Ay;
