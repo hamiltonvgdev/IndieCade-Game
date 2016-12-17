@@ -1,9 +1,12 @@
 package Player;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
 import Map.Map;
@@ -12,6 +15,8 @@ import Tiles.Tile;
 
 public class Player 
 {
+	boolean paused;
+	
 	//Vertical Movement
 	float y;
 	float JumpV;
@@ -26,6 +31,7 @@ public class Player
 	float Vy;
 	float Ax;
 	float Ay;
+	float acceleration;
 	
 	//Input
 	Input input;
@@ -42,6 +48,7 @@ public class Player
 	Quad Screen;
 	
 	//Gear
+	ArrayList<Item> Inventory;
 	AnimationSet Head;
 	public float headY;
 	AnimationSet Torso;
@@ -62,11 +69,15 @@ public class Player
 	
 	public Player(float x, float y)
 	{
+		Inventory = new ArrayList<Item>();
+		
+		paused = false;
+		
 		this.x = x;
 		this.y = y;
 		JumpV = -10F;
-		Jumps = 1;
-		MaxJumps = 1;
+		Jumps = 0;
+		MaxJumps = 2;
 		JumpTick = System.currentTimeMillis();
 		Jumping = false;
 		
@@ -76,7 +87,8 @@ public class Player
 		input = new Input(1);
 		
 		Ax = 0;
-		Ay = 0.1F;
+		Ay = 0.5F;
+		acceleration = 0.5F;
 		
 		width = 64;
 		height = 64;
@@ -89,7 +101,7 @@ public class Player
 		armor = 0;
 		damage = 5;
 		tenacity = 0;
-		this.speed = 2;
+		this.speed = 5;
 	}
 	
 	public void setMap(Map map)
@@ -106,7 +118,7 @@ public class Player
 		
 		for(Tile T : map.getTiles())
 		{
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Ax + Vx, y, width, height)))
+			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
 			{
 				CollisionX = true;
 			}
@@ -125,7 +137,7 @@ public class Player
 		if(CollisionY)
 		{
 			Jumping = false;
-			if(Jumps < MaxJumps && Vy > 0)
+			if(Jumps < MaxJumps && Vy >= 0)
 			{
 				Jumps ++;
 			}
@@ -133,91 +145,97 @@ public class Player
 		}else
 		{
 			Vy += Ay;
+			if(!Jumping)
+			{
+				Jumps = 0;
+			}
 		}
 	}
 	
 	public void update()
-	{		
-		Physics();
-		
-		if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
+	{
+		if(!paused)
 		{
-			rightMove = true;
-		}else
-		{
-			rightMove = false;
-		}
-		
-		if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
-		{
-			leftMove = true;
-		}else
-		{
-			leftMove = false;
-		}
-		
-		if(leftMove && !rightMove)
-		{
-			if(Math.abs(Vx) <= speed)
+			Physics();
+			
+			if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
 			{
-				Ax = -0.1F;
+				rightMove = true;
 			}else
 			{
-				Ax = 0;
-			}
-		}else if(rightMove && !leftMove)
-		{
-			if(Math.abs(Vx) <= speed)
-			{
-				Ax = 0.1F;
-			}else
-			{
-				Ax = 0;
-			}
-		}else
-		{
-			if(Vx < 0)
-			{
-				Ax = 0.1F;
-			}else if(Vx == 0)
-			{
-				Ax = 0;
+				rightMove = false;
 			}
 			
-			if(Vx > 0)
+			if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
 			{
-				Ax = -0.1F;
-			}else if(Vx == 0)
+				leftMove = true;
+			}else
 			{
-				Ax = 0;
+				leftMove = false;
 			}
+			
+			if(leftMove && !rightMove)
+			{
+				if(Math.abs(Vx) <= speed)
+				{
+					Ax = -acceleration;
+				}else
+				{
+					Ax = 0;
+				}
+			}else if(rightMove && !leftMove)
+			{
+				if(Math.abs(Vx) <= speed)
+				{
+					Ax = acceleration;
+				}else
+				{
+					Ax = 0;
+				}
+			}else
+			{
+				if(Vx < 0)
+				{
+					Ax = map.getCurrentTile(x, y + 50).getFriction();
+				}else if(Vx == 0)
+				{
+					Ax = 0;
+				}
+				
+				if(Vx > 0)
+				{
+					Ax = -map.getCurrentTile(x, y + 50).getFriction();
+				}else if(Vx == 0)
+				{
+					Ax = 0;
+				}
+			}
+			
+			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction() )
+			{
+				Vx = 0;
+			}
+			
+			if(input.isKeyDown(input.KEY_W) 
+					&& System.currentTimeMillis() - JumpTick > 300
+					&& Jumps != 0)
+			{
+				Jump();
+			}
+			
+			
+			map.shift(-Vx, 0);
+			map.shift(0, -Vy);
+			
+			Hitbox.changeDimensions(x, y, width, height);
+			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 		}
-		
-		if(Math.abs(Vx) < 0.000001)
-		{
-			Vx = 0;
-		}
-		
-		if(input.isKeyDown(input.KEY_SPACE) 
-				&& System.currentTimeMillis() - JumpTick > 1000
-				&& Jumps != 0)
-		{
-			Jump();
-		}
-		
-		
-		map.shift(-Vx, 0);
-		map.shift(0, -Vy);
-		
-		Hitbox.changeDimensions(x, y, width, height);
-		Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 	}	
 	
 	public void render(Graphics g) throws SlickException
 	{
 		Hitbox.render(g);
 		Screen.render(g);
-		new Quad(x, y + Vy + Ay, width, height).render(g);
 	/*
 		Head.render(x, headY, width, height, 0, g);
 		Torso.render(x, torsoY, width, height, 0, g);
@@ -235,6 +253,21 @@ public class Player
 		JumpTick = System.currentTimeMillis();
 	}
 	
+	public void giveItem(Item item)
+	{
+		Inventory.add(item);
+	}
+	
+	public void pause()
+	{
+		paused = true;
+	}
+	
+	public void unpause()
+	{
+		paused = false;
+	}
+	
 	public float getX()
 	{
 		return x;
@@ -243,5 +276,10 @@ public class Player
 	public float getY()
 	{
 		return y;
+	}
+	
+	public ArrayList<Item> getInventory()
+	{
+		return Inventory;
 	}
 }

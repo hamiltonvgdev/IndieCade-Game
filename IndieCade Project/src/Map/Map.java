@@ -19,6 +19,7 @@ public class Map
 {
 	Level level;
 	ArrayList<Tile> TileMap;
+	Image tilemap;
 	float height;
 	float width;
 	Image BackGround;
@@ -36,16 +37,18 @@ public class Map
 	int spawnSize;
 	
 	public Map(Player player, Image tilemap, Image BackGround, Color ID)
-	{
+	{	
 		this.ID = ID;
 		level = new Level(player);
 		this.BackGround = BackGround;
 		
+		this.tilemap = tilemap;
 		TileMap = Converter.convertTile(MapReader.readTileMap(tilemap), TileList.getTiles());
 		width = tilemap.getWidth();
 		height = tilemap.getHeight();
 		
 		respawnTick = System.currentTimeMillis();
+		mobs = new ArrayList<Entity>();
 		
 		gen = new Random();
 		
@@ -72,9 +75,12 @@ public class Map
 		{
 			if(level.getEntities().size() < 10)
 			{
-				while(level.getEntities().size() < spawnSize)
+				if(mobs.size() > 0)
 				{
-					spawn();
+					while(level.getEntities().size() < spawnSize)
+					{
+						spawn();
+					}
 				}
 			}
 		}
@@ -146,6 +152,22 @@ public class Map
 		}
 	}
 	
+	public void reset()
+	{
+		mobs.clear();
+		
+		for(int i = 0; i < TileMap.size(); i ++)
+		{
+			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
+					i / tilemap.getWidth() * 64 + 64 / 2);
+		}
+
+		x = width * 64 / 2; 
+		y = height * 64 / 2;
+		
+		respawnTick = System.currentTimeMillis();
+	}
+	
 	public Color getID()
 	{
 		return ID;
@@ -154,6 +176,23 @@ public class Map
 	public ArrayList<Tile> getTiles()
 	{
 		return TileMap;
+	}
+	
+	public Tile getCurrentTile(float x, float y)
+	{
+		Tile derp = new Tile(null, null);
+		
+		for(int i = 0; i < TileMap.size(); i ++)
+		{
+			if(TileMap.get(i).getHitbox().checkQuad(new Quad(x, y, 5, 5)))
+			{
+				derp = TileMap.get(i);
+				
+				break;
+			}
+		}
+		
+		return derp;
 	}
 	
 	//Direct Map Customizations

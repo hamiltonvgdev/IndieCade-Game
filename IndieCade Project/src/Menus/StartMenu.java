@@ -24,13 +24,13 @@ public class StartMenu extends BasicMenu
 		this.gc = gc;
 		
 		Play = new Button("Play", Config.WIDTH / 2, Config.HEIGHT / 2, 0);
-		Play = Play.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		Play = Play.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		Codex = new Button("Codex",Config.WIDTH / 2, Config.HEIGHT / 2 + 75, 0);
-		Codex = Codex.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		Codex = Codex.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		Exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT / 2 + 150, 0);
-		Exit = Exit.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		Exit = Exit.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 	}
 	
 	public void update()

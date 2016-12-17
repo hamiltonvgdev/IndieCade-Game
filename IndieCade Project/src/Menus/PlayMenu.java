@@ -25,15 +25,15 @@ public class PlayMenu extends BasicMenu
 	public PlayMenu(MainMenu menu, Game game, StateBasedGame sbg)
 	{
 		save1 = new Button("Load Save 1", Config.WIDTH / 2, Config.HEIGHT / 4, 1);
-		save1 = save1.setDimensions(150, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		save1 = save1.setDimensions(175, 75).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		save2 = new Button("Load Save 2", Config.WIDTH / 4 , Config.HEIGHT / 2, 1);
-		save2 = save2.setDimensions(150, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		save2 = save2.setDimensions(175, 75).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		save3 = new Button("Load Save 3", Config.WIDTH / 4 * 3, Config.HEIGHT / 2, 1);
-		save3 = save3.setDimensions(150, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		save3 = save3.setDimensions(175, 75).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		newGame = new Button("New Game", Config.WIDTH / 2, Config.HEIGHT / 4 * 3, 1);
-		newGame = newGame.setDimensions(150, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		newGame = newGame.setDimensions(175, 75).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT - 30, 1);
-		exit = exit.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		exit = exit.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		this.menu = menu;
 		this.game = game;

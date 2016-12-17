@@ -36,9 +36,9 @@ public class CodexMobEntry
 		this.codex = codex;
 		
 		nxt = new Button("Next", Config.WIDTH - 50, Config.HEIGHT / 2, 0);
-		nxt = nxt.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		nxt = nxt.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 		pre = new Button("Previous", 50, Config.HEIGHT / 2, 0);
-		pre = pre.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		pre = pre.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 	}
 	
 	public CodexMobEntry(CodexMenu codex)
@@ -60,9 +60,9 @@ public class CodexMobEntry
 		Bar = new BasicImage("res/Defaults/Bar/Default Bar.png");
 		
 		nxt = new Button("Next", Config.WIDTH - 50, Config.HEIGHT / 2, 0);
-		nxt = nxt.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		nxt = nxt.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 		pre = new Button("Previous", 50, Config.HEIGHT / 2, 0);
-		pre = pre.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		pre = pre.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 	}
 	
 	public void update()

@@ -19,7 +19,7 @@ public class MapList
 		
 		try {
 			Map test = new Map(player, new Image("res/Maps/Test Map.png"),  new Image("res/Maps/Test Map.png"), 
-					new Color(8 / 255, 10 / 255, 0 / 255));
+					new Color(8 / 255, 10 / 255, 0 / 255)).setSpawn(20);
 			Maps.add(test);
 		} catch (SlickException e) {
 			e.printStackTrace();

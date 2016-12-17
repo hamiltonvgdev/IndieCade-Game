@@ -90,11 +90,18 @@ public class Button
 		{
 			clicked = false;
 		}
+		
+		if(Selected != null)
+		{
+			Selected.resetAnimate();
+		}
+		
+		Normal.resetAnimate();
 	}
 	
 	public void render(Graphics g) throws SlickException
 	{
-		if(hitbox.checkPoint(Mouse.getX(), Mouse.getY()) && Selected != null)
+		if(hitbox.checkPoint(Mouse.getX(),Config.HEIGHT -  Mouse.getY()) && Selected != null)
 		{
 			Selected.render(x, y, width, height, 0, g);
 		}else
@@ -103,7 +110,6 @@ public class Button
 		}
 
 		g.drawString(Phrase, x - Phrase.length() / 2 * 10, y - 10);
-		
 		
 	}
 	
