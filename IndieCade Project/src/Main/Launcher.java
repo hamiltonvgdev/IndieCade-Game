@@ -11,16 +11,20 @@ public class Launcher extends StateBasedGame
 	
 	public Launcher() 
 	{
+		
 		super(Config.NAME);
+		
 	}
 
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException 
 	{
+		
 		//this.addState(new SplashScreen());
 		this.addState(new MainMenu());
 		this.addState(new Game());
 		this.enterState(1);
+		
 	}
 	
 	public static void main(String[] args)
