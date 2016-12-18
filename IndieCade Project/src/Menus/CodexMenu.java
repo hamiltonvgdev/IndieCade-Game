@@ -34,13 +34,13 @@ public class CodexMenu extends BasicMenu
 		state = 0;
 		
 		Item = new Button("Item", Config.WIDTH / 2 - 100, Config.HEIGHT / 2, 0);
-		Item = Item.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		Item = Item.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		Mob = new Button("Enemies",Config.WIDTH / 2 + 100, Config.HEIGHT / 2, 0);
-		Mob = Mob.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);
+		Mob = Mob.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		Exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT - 25, 0);
-		Exit = Exit.setDimensions(100, 50).setImage(new AnimationSet("res/Buttons/Test", 100), null);	
+		Exit = Exit.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 		
 		Items = new ArrayList<CodexItemEntry>();
 		CodexItemEntry ItemDef = new CodexItemEntry(this);

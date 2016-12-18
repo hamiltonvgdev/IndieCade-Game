@@ -18,14 +18,12 @@ public class Tile
 	Quad hitbox;
 	float x;
 	float y;
-	float xOffset;
-	float yOffset;
-	float lastXoffset;
-	float lastYoffset;
 	
 	AnimationSet sprite;
 	final float width = 64;
 	final float height = 64;
+	
+	float friction;
 	
 	public Tile(String name, Color Id)
 	{
@@ -37,17 +35,11 @@ public class Tile
 		
 		hitbox = new Quad(x, y, width, height);
 		
-		xOffset = 0;
-		yOffset = 0;
-		lastXoffset = xOffset;
-		lastYoffset = yOffset;
+		friction = 0.5F;
 	}
 	
 	public void changeCoordinates(float xa, float ya)
 	{
-		x = xa;
-		y = ya;
-		
 		x = xa;
 		y = ya;
 	}
@@ -61,6 +53,12 @@ public class Tile
 	public Tile setColidable(boolean collide)
 	{
 		collidable = collide;
+		return this;
+	}
+	
+	public Tile setFriction(float friction)
+	{
+		this.friction = friction;
 		return this;
 	}
 	
@@ -78,10 +76,6 @@ public class Tile
 	public void render(Graphics g) throws SlickException
 	{hitbox.changeDimensions(x, y, width, height);
 		sprite.render(x, y, width, height, 0, g);
-		if(name.equals("Stone"))
-		{
-			hitbox.render(g);
-		}
 	}
 	
 	public String getName()
@@ -102,6 +96,11 @@ public class Tile
 	public float getY()
 	{
 		return y;
+	}
+	
+	public float getFriction()
+	{
+		return friction;
 	}
 	
 	public boolean getSpawnable()
