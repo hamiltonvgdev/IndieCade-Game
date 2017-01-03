@@ -2,16 +2,20 @@ package Player;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import BoneStructure.BoneStructure;
 import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
 import Map.Map;
 import Render.AnimationSet;
 import Tiles.Tile;
+import Weapons.MeleeWeapon;
+import Weapons.Weapon;
 
 public class Player 
 {
@@ -44,22 +48,19 @@ public class Player
 	//Renders
 	float width;
 	float height;
-	Quad Hitbox;
+	public Quad Hitbox;
 	Quad Screen;
 	
 	//Gear
 	ArrayList<Item> Inventory;
-	AnimationSet Head;
-	public float headY;
-	AnimationSet Torso;
-	public float torsoY;
-	AnimationSet Arms;
-	public float armsY;
-	public float armRot;
-	AnimationSet Legs;
-	public float legsY;
+	Item Helmet;
+	Item Chestplate;
+	Item Pants;
+	Item Gauntlet;
+	Weapon Wpn;
 	
 	//Combat
+	BoneStructure body;
 	float maxHealth;
 	float health;
 	float armor;
@@ -83,6 +84,7 @@ public class Player
 		
 		Vx = 0;
 		Vy = 0;
+		
 		
 		input = new Input(1);
 		
@@ -121,11 +123,19 @@ public class Player
 			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
 			{
 				CollisionX = true;
+				T.nextTo = true;
+			}else
+			{
+				T.nextTo = false;
 			}
 			
 			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
 			{
 				CollisionY = true;
+				T.on = true;
+			}else
+			{
+				T.on = false;
 			}
 		}
 		
@@ -150,6 +160,7 @@ public class Player
 				Jumps = 0;
 			}
 		}
+		
 	}
 	
 	public void update()
@@ -176,23 +187,27 @@ public class Player
 			
 			if(leftMove && !rightMove)
 			{
-				if(Math.abs(Vx) <= speed)
+				if(Math.abs(Vx) < speed)
 				{
 					Ax = -acceleration;
 				}else
 				{
 					Ax = 0;
 				}
-			}else if(rightMove && !leftMove)
+			}
+			
+			if(rightMove && !leftMove)
 			{
-				if(Math.abs(Vx) <= speed)
+				if(Math.abs(Vx) < speed)
 				{
 					Ax = acceleration;
 				}else
 				{
 					Ax = 0;
 				}
-			}else
+			}
+			
+			if(!rightMove && !leftMove)
 			{
 				if(Vx < 0)
 				{
@@ -211,7 +226,7 @@ public class Player
 				}
 			}
 			
-			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction() )
+			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction())
 			{
 				Vx = 0;
 			}
@@ -229,6 +244,8 @@ public class Player
 			
 			Hitbox.changeDimensions(x, y, width, height);
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
+			
+			//Does not change directions when air
 		}
 	}	
 	
@@ -236,12 +253,6 @@ public class Player
 	{
 		Hitbox.render(g);
 		Screen.render(g);
-	/*
-		Head.render(x, headY, width, height, 0, g);
-		Torso.render(x, torsoY, width, height, 0, g);
-		Arms.render(x, armsY, width, height, 0, g);
-		Legs.render(x, legsY, width, height, 0, g);
-	*/
 	}
 	
 	public void Jump()
@@ -278,8 +289,58 @@ public class Player
 		return y;
 	}
 	
+	public float getVx()
+	{
+		return Vx;
+	}
+	
+	public float getVy()
+	{
+		return Vy;
+	}
+	
+	public Map getMap()
+	{
+		return map;
+	}
+	
+	public Input getInput()
+	{
+		return input;
+	}
+	
+	public BoneStructure getBody()
+	{
+		return body;
+	}
+	
 	public ArrayList<Item> getInventory()
 	{
 		return Inventory;
+	}
+	
+	public Item getHelmet()
+	{
+		return Helmet;
+	}
+	
+	public Item getChestplate()
+	{
+		return Chestplate;
+	}
+	
+	public Item getPants()
+	{
+		return Pants;
+	}
+	
+	public Item getGaunlets()
+	{
+		return Gauntlet;
+	}
+	
+	public Weapon getWeapon()
+	{
+		return Wpn;
 	}
 }

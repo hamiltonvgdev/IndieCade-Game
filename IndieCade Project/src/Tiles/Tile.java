@@ -5,6 +5,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import Geo.Quad;
+import Map.Map;
+import Map.World;
 import Render.AnimationSet;
 
 public class Tile 
@@ -12,10 +14,12 @@ public class Tile
 	public String name;
 	
 	Color Id;
-	boolean spawnable;
 	
 	boolean collidable;
 	Quad hitbox;
+	public boolean on;
+	public boolean nextTo;
+	
 	float x;
 	float y;
 	
@@ -23,7 +27,12 @@ public class Tile
 	final float width = 64;
 	final float height = 64;
 	
+	boolean sounded;
+	String ref;
+	
 	float friction;
+	
+	Map map;
 	
 	public Tile(String name, Color Id)
 	{
@@ -31,17 +40,33 @@ public class Tile
 		
 		collidable = false;
 		this.Id = Id;
-		spawnable = false;
 		
 		hitbox = new Quad(x, y, width, height);
 		
-		friction = 0.5F;
+		friction = 0.075F;
+		
+		sounded = false;
+		ref = null;
+		
+		on = false;
+		nextTo = true;
 	}
 	
 	public void changeCoordinates(float xa, float ya)
 	{
 		x = xa;
 		y = ya;
+	}
+	
+	public void setMap(Map map)
+	{
+		this.map = map;
+	}
+	
+	public Tile setSound(String ref)
+	{
+		this.ref = ref;
+		return this;
 	}
 	
 	public Tile setAnimation(String ref)
@@ -71,6 +96,15 @@ public class Tile
 	public void update()
 	{
 		hitbox.changeDimensions(x, y, width, height);
+		
+		if(on && !sounded && ref != null)
+		{
+			Sound.Sound.infiniteLoopSound(ref);
+			sounded = true;
+		}else if(!on)
+		{
+			sounded = false;
+		}
 	}
 
 	public void render(Graphics g) throws SlickException
@@ -88,6 +122,11 @@ public class Tile
 		return sprite.getFolder();
 	}
 	
+	public String getSoundRef()
+	{
+		return ref;
+	}
+	
 	public float getX()
 	{
 		return x;
@@ -103,11 +142,6 @@ public class Tile
 		return friction;
 	}
 	
-	public boolean getSpawnable()
-	{
-		return spawnable;
-	}
-	
 	public boolean getCollidable()
 	{
 		return collidable;
@@ -121,5 +155,10 @@ public class Tile
 	public Color getID()
 	{
 		return Id;
+	}
+	
+	public Map getMap()
+	{
+		return map;
 	}
 }

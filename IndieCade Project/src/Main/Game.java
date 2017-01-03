@@ -26,7 +26,6 @@ public class Game extends BasicGameState
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{
 		TileList.init();
-		MapList.init(player);
 		
 		gui = new GUI();
 	}
@@ -58,13 +57,18 @@ public class Game extends BasicGameState
 	public void loadFiles(String ref)
 	{
 		player = (Player) Load.Load.load(ref + "/Player");
+
+		MapList.init(player);
 		
 		world = (World) Load.Load.load(ref + "/World");
+		System.out.println(player);
 	}
 	
 	public void newGame()
 	{	
 		player = new Player(Config.WIDTH / 2, Config.HEIGHT / 2);
+		
+		MapList.init(player);
 		
 		world = new World(player);
 	}

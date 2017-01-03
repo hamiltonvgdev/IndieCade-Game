@@ -1,10 +1,13 @@
 package GameBasics;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import Player.Player;
 import Render.AnimationSet;
 import Render.BasicImage;
+import Weapons.Weapon;
 
 public abstract class Item 
 {
@@ -16,20 +19,20 @@ public abstract class Item
 	int tenacityBoost;
 	int speedBoost;
 	
-	public Item(String name)
+	Input input;
+	
+	public Item(String name, Player player)
 	{
 		this.name = name;
-	}
-	
-	public void update()
-	{
 		
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public Item setSprite(String ref, long delay)
 	{
-		
+		sprite = new AnimationSet(ref, delay);
+		return this;
 	}
+	
 	
 	public Item setHealth(int health)
 	{
@@ -59,6 +62,16 @@ public abstract class Item
 	{
 		speedBoost = speed;
 		return this;
+	}
+	
+	public void update()
+	{
+		
+	}
+	
+	public void render(Graphics g) throws SlickException
+	{
+		
 	}
 	
 	public String getName()

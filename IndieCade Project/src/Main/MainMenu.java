@@ -1,6 +1,5 @@
 package Main;
 
-import java.awt.PageAttributes.MediaType;
 import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
@@ -13,8 +12,6 @@ import Menus.BasicMenu;
 import Menus.CodexMenu;
 import Menus.PlayMenu;
 import Menus.StartMenu;
-import Sound.Sound;
-import Util.Button;
 
 public class MainMenu extends BasicGameState
 {

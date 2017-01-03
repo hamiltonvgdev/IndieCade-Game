@@ -12,11 +12,10 @@ public class Sound
 
 	public static void playSound(String ref)
 	{
-		Clip clip;
 		try {
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream
 	        		(new File(ref).getAbsoluteFile());
-	        clip = AudioSystem.getClip();
+	        Clip clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
 	        clip.start();
 	    } catch(Exception ex) {

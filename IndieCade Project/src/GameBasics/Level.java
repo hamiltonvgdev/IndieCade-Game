@@ -14,6 +14,7 @@ public class Level
 {
 	ArrayList<Entity> Entities;
 	ArrayList<Item> Items;
+	ArrayList<BasicNPC> NPCs;
 	
 	Player player;
 	
@@ -21,6 +22,7 @@ public class Level
 	{
 		Entities = new ArrayList<Entity>();
 		Items = new ArrayList<Item>();
+		NPCs = new ArrayList<BasicNPC>();
 		
 		this.player = player;
 	}
@@ -47,6 +49,21 @@ public class Level
 	{
 		Entities.remove(e);
 	}
+
+	public ArrayList<BasicNPC> getNPCs()
+	{
+		return NPCs;
+	}
+	
+	public void addNPC(BasicNPC npc)
+	{
+		NPCs.add(npc);
+	}
+	
+	public void removeNPC(BasicNPC npc)
+	{
+		NPCs.remove(npc);
+	}
 	
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
@@ -65,5 +82,23 @@ public class Level
 		{
 			Entities.get(i).update();
 		}
+	}
+
+	public void shift(float xa, float ya) 
+	{
+		for(int i = 0; i < Entities.size(); i ++)
+		{
+			//move each entity
+		}
+		
+		for(int i = 0; i < NPCs.size(); i ++)
+		{
+			NPCs.get(i).shift(xa, ya);
+		}
+	}
+
+	public Player getPlayer() 
+	{
+		return player;
 	}
 }

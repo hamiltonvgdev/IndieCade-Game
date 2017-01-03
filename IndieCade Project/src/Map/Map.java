@@ -9,6 +9,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import GameBasics.BasicNPC;
 import GameBasics.Entity;
 import GameBasics.Level;
 import Geo.Quad;
@@ -22,19 +23,15 @@ public class Map
 	Image tilemap;
 	float height;
 	float width;
+	
 	Image BackGround;
+	String themeMusic;
 	
 	public Quad Hitbox;
 	float x;
 	float y;
 	
 	Color ID;
-	
-	long respawnTick;
-	
-	Random gen;
-	ArrayList<Entity> mobs;
-	int spawnSize;
 	
 	public Map(Player player, Image tilemap, Image BackGround, Color ID)
 	{	
@@ -47,44 +44,34 @@ public class Map
 		width = tilemap.getWidth();
 		height = tilemap.getHeight();
 		
-		respawnTick = System.currentTimeMillis();
-		mobs = new ArrayList<Entity>();
-		
-		gen = new Random();
-		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
+			TileMap.get(i).setMap(this);
 		}
 
 		x = width * 64 / 2; 
 		y = height * 64 / 2;
 		Hitbox = new Quad(x, y, width * 64, height * 64);
+		
+		themeMusic = null;
 	}
 	
-	public Map setSpawn(int SpawnSize)
+	public Map spawnNPC(BasicNPC npc)
 	{
-		spawnSize = SpawnSize;
+		level.addNPC(npc);
+		return this;
+	}
+	
+	public Map setBackGroundMusic(String ref)
+	{
+		themeMusic = ref;
 		return this;
 	}
 	
 	public void update()
-	{
-		if(System.currentTimeMillis() - respawnTick >= 500)
-		{
-			if(level.getEntities().size() < 10)
-			{
-				if(mobs.size() > 0)
-				{
-					while(level.getEntities().size() < spawnSize)
-					{
-						spawn();
-					}
-				}
-			}
-		}
-		
+	{	
 		level.update();
 		
 		for(Tile T: TileMap)
@@ -92,7 +79,17 @@ public class Map
 			T.update();
 		}
 		
+		for(int i = 0; i < level.getNPCs().size(); i ++)
+		{
+			level.getNPCs().get(i).update();
+		}
+		
 		Hitbox.changeDimensions(x, y,  width * 64, height * 64);
+		
+		if(themeMusic != null)
+		{
+			Sound.Sound.infiniteLoopSound(themeMusic);
+		}
 	}
 
 	public void render(Graphics g) throws SlickException
@@ -104,7 +101,10 @@ public class Map
 			T.render(g);
 		}
 		
-		Hitbox.render(g);
+		for(int i = 0; i < level.getNPCs().size(); i ++)
+		{
+			level.getNPCs().get(i).render(g);
+		}
 	}
 	
 	public void shift(float xa, float ya)
@@ -115,47 +115,12 @@ public class Map
 		}
 		x += xa;
 		y += ya;
-	}
-	
-	private void spawn() 
-	{
-		ArrayList<Tile> tiles = new ArrayList<Tile>();
 		
-		for(Tile T: TileMap)
-		{
-			if(T.getSpawnable())
-			{
-				tiles.add(T);
-			}
-		}
-		
-		int mobIndex = gen.nextInt(mobs.size());
-		int tileIndex = gen.nextInt(tiles.size());
-		
-		try {
-			level.addEntity(mobs.get(mobIndex).getClass().newInstance().
-					setLocation(tiles.get(tileIndex).getX(), tiles.get(tileIndex).getY()));
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void addSpawnRates(Entity mob, int rate)
-	{
-		for(int i = 0; i < rate; i ++)
-		{
-			mobs.add(mob);
-		}
+		level.shift(xa, ya);
 	}
 	
 	public void reset()
 	{
-		mobs.clear();
-		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
@@ -164,8 +129,6 @@ public class Map
 
 		x = width * 64 / 2; 
 		y = height * 64 / 2;
-		
-		respawnTick = System.currentTimeMillis();
 	}
 	
 	public Color getID()
@@ -195,7 +158,10 @@ public class Map
 		return derp;
 	}
 	
-	//Direct Map Customizations
+	public Level getLevel()
+	{
+		return level;
+	}
 	
 	public Map directSpawn(Entity e)
 	{

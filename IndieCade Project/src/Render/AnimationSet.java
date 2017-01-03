@@ -213,7 +213,7 @@ public class AnimationSet
 		return Animation.get(i).getPath();
 	}
 	
-	public ArrayList getSet()
+	public ArrayList<BasicImage> getSet()
 	{
 		return Animation;
 	}
