@@ -14,10 +14,15 @@ public class TileList
 	{
 		Tiles = new ArrayList<Tile>();
 		
-		Tile Air = new Tile("Air", new Color(255, 255, 255)).setAnimation("res/Tiles/Air").setColidable(false).setFriction(0.075F);
+		Tile Air = new Tile("Air", new Color(255, 255, 255)).
+				setAnimation("res/Tiles/Air").
+				setColidable(false);
 		Tiles.add(Air);
 		
-		Tile Stone = new Tile("Stone", new Color(0 / 255, 0 / 255, 0 / 255)).setAnimation("res/Tiles/Stone").setColidable(true);
+		Tile Stone = new Tile("Stone", new Color(0 / 255, 0 / 255, 0 / 255)).
+				setAnimation("res/Tiles/Stone/Images").
+				setColidable(true).setFriction(0.5F).
+				setSound("res/Tiles/Stone/Sound/Stone Walk Final.wav");
 		Tiles.add(Stone);
 	}
 	

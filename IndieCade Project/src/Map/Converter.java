@@ -26,7 +26,8 @@ public class Converter
 							Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
 									setAnimation(PossibleTiles.get(j).getRef()).
 									setColidable(PossibleTiles.get(j).getCollidable()).
-									setFriction(PossibleTiles.get(j).getFriction()));
+									setFriction(PossibleTiles.get(j).getFriction()).
+									setSound(PossibleTiles.get(j).getSoundRef()));
 							
 							break;
 						}

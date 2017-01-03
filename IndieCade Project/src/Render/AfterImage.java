@@ -34,8 +34,8 @@ public class AfterImage
 			sprite[i] = Sprite;
 			
 			qualities[i][0] = 100 / 100F;
-			qualities[i][1] = 250 / 255F;
-			qualities[i][2] = 250 / 255F;
+			qualities[i][1] = 255 / 255F;
+			qualities[i][2] = 255 / 255F;
 			qualities[i][3] = 255 / 255F;
 		}
 		
@@ -149,6 +149,7 @@ public class AfterImage
 		    image = sprite[i].getImage().getFlippedCopy(sprite[i].flip, false);
 		    image.setFilter(2);
 		    image.setRotation(values[i][2]);
+		    image.setCenterOfRotation(width / 2.0F, height / 2.0F);
 		    image.draw(values[i][0] - width / 2.0F, values[i][1] - height / 2.0F, width, height, 
 		    		new Color(qualities[i][1], qualities[i][2], qualities[i][3], qualities[i][0]));
 		}

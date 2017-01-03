@@ -28,6 +28,8 @@ public class Button
 	
 	boolean down;
 	
+	float rot;
+	
 	public Button(String phrase, float x, float y, int id)
 	{
 		Phrase = phrase;
@@ -45,6 +47,7 @@ public class Button
 		delay = 0;
 		
 		down = false;
+		rot = 0;
 	}
 	
 	public Button setImage(AnimationSet normal, AnimationSet selected)
@@ -65,6 +68,7 @@ public class Button
 	
 	public void update()
 	{
+		rot ++;
 		hitbox.changeDimensions(x, y, width, height);
 		if(hitbox.checkPoint(Mouse.getX(), Config.HEIGHT - Mouse.getY()))
 		{
@@ -110,7 +114,6 @@ public class Button
 		}
 
 		g.drawString(Phrase, x - Phrase.length() / 2 * 10, y - 10);
-		
 	}
 	
 	public int getID()

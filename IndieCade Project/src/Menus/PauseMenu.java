@@ -123,8 +123,8 @@ public class PauseMenu extends BasicMenu
 		if(pausing)
 		{
 			Rectangle rec = new Rectangle(0, 0, Config.WIDTH, Config.HEIGHT);
-			g.setBackground(new Color(0.5F, 0.5F, 0.5F, 0.F));
-			g.fill(rec);
+			g.setColor(new Color(1f, 1f, 1f, 0.5f));
+			g.fillRect(0, 0, Config.WIDTH, Config.HEIGHT);
 			
 			g.draw(rec);
 			

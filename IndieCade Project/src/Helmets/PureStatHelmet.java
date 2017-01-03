@@ -14,11 +14,10 @@ public class PureStatHelmet extends Item
 	float height;
 	float width;
 	
-	public PureStatHelmet(Player player, String name, String ref, int delay) 
+	public PureStatHelmet(String name, Player player) 
 	{
-		super(name);
+		super(name, player);
 		
-		sprite = new AnimationSet(ref, delay);
 		
 		this.player = player;
 	}
@@ -28,9 +27,9 @@ public class PureStatHelmet extends Item
 		super.update();
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(float x, float y, float width, float height, float rot, Graphics g) throws SlickException
 	{
-		sprite.render(player.getX(), player.headY, width, height, 0, g);
+		sprite.render(x, y, width, height, rot, g);
 	}
 	
 	public PureStatHelmet changeDimensions(float width, float height)

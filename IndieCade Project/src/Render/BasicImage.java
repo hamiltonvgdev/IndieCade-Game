@@ -1,6 +1,5 @@
 package Render;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -80,7 +79,8 @@ public class BasicImage
 	    image = sprite.getFlippedCopy(this.flip, false);
 	    image.setFilter(2);
 	    image.setRotation(rot);
-	    image.draw(x - width / 2.0F, y - height / 2.0F, width, height);
-	   
+	    image.setCenterOfRotation(width / 2.0F, height / 2.0F);
+	    image.draw(x - width / 2.0F, y - height / 2.0F , width, height);
+	    
 	}
 }
