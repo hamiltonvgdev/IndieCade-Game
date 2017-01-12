@@ -22,7 +22,7 @@ public class TileList
 		Tile Stone = new Tile("Stone", new Color(0 / 255, 0 / 255, 0 / 255)).
 				setAnimation("res/Tiles/Stone/Images").
 				setColidable(true).setFriction(0.5F).
-				setSound("res/Tiles/Stone/Sound/Stone Walk Final.wav");
+				setSound("res/Tiles/Stone/Sound/Stone Walk 4.wav");
 		Tiles.add(Stone);
 	}
 	

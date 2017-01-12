@@ -6,7 +6,6 @@ import org.newdawn.slick.SlickException;
 
 import Geo.Quad;
 import Map.Map;
-import Map.World;
 import Render.AnimationSet;
 
 public class Tile 

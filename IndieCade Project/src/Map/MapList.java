@@ -21,7 +21,11 @@ public class MapList
 		
 		try {
 			Map test = new Map(player, new Image("res/Maps/Test Map.png"),  new Image("res/Maps/Test Map.png"), 
-					new Color(8 / 255, 10 / 255, 0 / 255));
+					new Color(8 / 255, 10 / 255, 0 / 255)).spawnNPC(
+							new AudioNPC("res/NPC/Test/Sound/Asian Voice File.wav", player, "derp", 100).
+							setIdleImage("res/NPC/Test/Image", 100).setDimensions(50, 100, 0).
+							setCoordinates(300, 300).
+							setPhrase("Please listen to my music!!"));
 			Maps.add(test);
 		} catch (SlickException e) {
 			e.printStackTrace();

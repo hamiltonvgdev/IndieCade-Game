@@ -47,6 +47,11 @@ public class MainMenu extends BasicGameState
 		return 1;
 	}
 	
+	public ArrayList<BasicMenu> getMenus()
+	{
+		return Menus;
+	}
+	
 	public void setIndex(int index)
 	{
 		this.index = index;

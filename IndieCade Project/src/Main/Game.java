@@ -22,9 +22,15 @@ public class Game extends BasicGameState
 	
 	GUI gui;
 	
+	GameContainer gc;
+	StateBasedGame sbg;
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{
+		this.gc = gc;
+		this.sbg = sbg;
+		
 		TileList.init();
 		
 		gui = new GUI();
@@ -66,10 +72,20 @@ public class Game extends BasicGameState
 	
 	public void newGame()
 	{	
-		player = new Player(Config.WIDTH / 2, Config.HEIGHT / 2);
+		player = new Player(this, Config.WIDTH / 2, Config.HEIGHT / 2);
 		
 		MapList.init(player);
 		
 		world = new World(player);
+	}
+	
+	public GameContainer getGc()
+	{
+		return gc;
+	}
+	
+	public StateBasedGame getSbg()
+	{
+		return sbg;
 	}
 }

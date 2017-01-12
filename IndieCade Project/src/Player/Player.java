@@ -11,14 +11,21 @@ import BoneStructure.BoneStructure;
 import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
+import Main.Game;
+import Main.MainMenu;
 import Map.Map;
+import Menus.CodexItemEntry;
+import Menus.CodexMenu;
 import Render.AnimationSet;
+import Stance.Action;
+import Stance.Stance;
 import Tiles.Tile;
 import Weapons.MeleeWeapon;
 import Weapons.Weapon;
 
 public class Player 
 {
+	Game game;
 	boolean paused;
 	
 	//Vertical Movement
@@ -60,16 +67,23 @@ public class Player
 	Weapon Wpn;
 	
 	//Combat
-	BoneStructure body;
+	BoneStructure Body;
 	float maxHealth;
 	float health;
 	float armor;
 	float damage;
 	float tenacity;
+	float Speed;
 	float speed;
+	float baseSpeed;
 	
-	public Player(float x, float y)
+	Stance walk;
+	Stance startWalk;
+	
+	public Player(Game game, float x, float y)
 	{
+		this.game = game;
+		
 		Inventory = new ArrayList<Item>();
 		
 		paused = false;
@@ -78,7 +92,7 @@ public class Player
 		this.y = y;
 		JumpV = -10F;
 		Jumps = 0;
-		MaxJumps = 2;
+		setJumps(1);
 		JumpTick = System.currentTimeMillis();
 		Jumping = false;
 		
@@ -103,12 +117,51 @@ public class Player
 		armor = 0;
 		damage = 5;
 		tenacity = 0;
-		this.speed = 5;
+		this.baseSpeed = 5;
+		speed = 1;
+		Speed = baseSpeed * speed;
+		
+		Body = new BoneStructure(this, 2F);
+		
+		walk = new Stance("Walk Cycle", Body, 6);
+		startWalk = new Stance("Walk Cycle", Body, 6);
+		startWalk.addAction(new Action("Pelvic", 0, 15, 250), 0);
+		startWalk.addAction(new Action("Pelvic", 1, -45, 250), 1);
+		startWalk.addAction(new Action("Knee 1", 0, 75, 250), 2);
+		startWalk.addAction(new Action("Knee 2", 0, -15, 250), 3);
+		startWalk.addAction(new Action("Ankle 1", 0, 75, 250), 4);
+		startWalk.addAction(new Action("Ankle 2", 0, -30, 250), 5);
+		walk.addAction(new Action("Pelvic", 0, -165, 1000), 0);
+		walk.addAction(new Action("Pelvic", 0, 165, 1000), 0);
+		walk.addAction(new Action("Pelvic", 1, 165, 1000), 1);
+		walk.addAction(new Action("Pelvic", 1, -165, 1000), 1);
+		/*walk.addAction(new Action("Knee 1", 0, 0, 1000), 2);
+		walk.addAction(new Action("Knee 2", 0, 0, 1000), 3);*/
 	}
 	
 	public void setMap(Map map)
 	{
 		this.map = map;
+	}
+	
+	public void setJumps(int jumps)
+	{
+		MaxJumps = jumps;
+	}
+	
+	public void setJumpV(float jumpV)
+	{
+		JumpV = jumpV;
+	}
+	
+	public void setVx(float Vx)
+	{
+		this.Vx = Vx;
+	}
+	
+	public void setVy(float Vy)
+	{
+		this.Vy = Vy; 
 	}
 	
 	public void Physics()
@@ -147,11 +200,11 @@ public class Player
 		if(CollisionY)
 		{
 			Jumping = false;
-			if(Jumps < MaxJumps && Vy > 0)
+			if(Jumps < MaxJumps && Vy >= 0)
 			{
 				Jumps ++;
 			}
-			Vy = 0;
+			setVy(0);
 		}else
 		{
 			Vy += Ay;
@@ -160,14 +213,17 @@ public class Player
 				Jumps = 0;
 			}
 		}
-		
 	}
 	
 	public void update()
 	{
 		if(!paused)
 		{
+			startWalk.single();
+			walk.loop();
 			Physics();
+			
+			Speed = baseSpeed * speed;
 			
 			if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
 			{
@@ -187,7 +243,7 @@ public class Player
 			
 			if(leftMove && !rightMove)
 			{
-				if(Math.abs(Vx) < speed)
+				if(Math.abs(Vx) < Speed - acceleration)
 				{
 					Ax = -acceleration;
 				}else
@@ -198,7 +254,7 @@ public class Player
 			
 			if(rightMove && !leftMove)
 			{
-				if(Math.abs(Vx) < speed)
+				if(Math.abs(Vx) < Speed - acceleration)
 				{
 					Ax = acceleration;
 				}else
@@ -228,16 +284,15 @@ public class Player
 			
 			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction())
 			{
-				Vx = 0;
+				setVx(0);
 			}
 			
 			if(input.isKeyDown(input.KEY_W) 
-					&& System.currentTimeMillis() - JumpTick > 300
+					&& System.currentTimeMillis() - JumpTick > 500
 					&& Jumps != 0)
 			{
 				Jump();
 			}
-			
 			
 			map.shift(-Vx, 0);
 			map.shift(0, -Vy);
@@ -245,7 +300,22 @@ public class Player
 			Hitbox.changeDimensions(x, y, width, height);
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 			
-			//Does not change directions when air
+			Body.update();
+			
+			/*	
+			Helmet.update();
+			Chestplate.update();
+			Pants.update();
+			Gauntlet.update();
+			Wpn.update();
+			
+			maxHealth = 1 * (100 + Helmet.getHealth() + Chestplate.getHealth() + Pants.getHealth() + Gauntlet.getHealth()) / 100;
+			armor = 1 * (100 + Helmet.getArmor() + Chestplate.getArmor() + Pants.getArmor() + Gauntlet.getArmor()) / 100;
+			damage = 1 * (100 + Helmet.getDamage() + Chestplate.getDamage() + Pants.getDamage() + Gauntlet.getDamage()) / 100;
+			tenacity = 1 * (100 + Helmet.getTenacity() + Chestplate.getTenacity() + Pants.getTenacity() + Gauntlet.getTenacity()) / 100;
+			speed = 1 * (100 + Helmet.getSpeed() + Chestplate.getSpeed() + Pants.getSpeed() + Gauntlet.getSpeed()) / 100;
+			*/
+			
 		}
 	}	
 	
@@ -253,11 +323,13 @@ public class Player
 	{
 		Hitbox.render(g);
 		Screen.render(g);
+		
+		Body.render(g);
 	}
 	
 	public void Jump()
 	{
-		Vy = JumpV;
+		setVy(JumpV);
 		Jumps --;
 		Jumping = true;
 		
@@ -267,6 +339,9 @@ public class Player
 	public void giveItem(Item item)
 	{
 		Inventory.add(item);
+		
+		((CodexMenu) ((MainMenu) game.getSbg().getState(1)).getMenus().get(2)).
+		addItemEntry(new CodexItemEntry(((CodexMenu) ((MainMenu) game.getSbg().getState(1)).getMenus().get(2)), item));;
 	}
 	
 	public void pause()
@@ -299,6 +374,11 @@ public class Player
 		return Vy;
 	}
 	
+	public float getSpeed()
+	{
+		return Speed;
+	}
+	
 	public Map getMap()
 	{
 		return map;
@@ -311,7 +391,7 @@ public class Player
 	
 	public BoneStructure getBody()
 	{
-		return body;
+		return Body;
 	}
 	
 	public ArrayList<Item> getInventory()

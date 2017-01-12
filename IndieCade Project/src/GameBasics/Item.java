@@ -4,6 +4,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import Menus.CodexItemEntry;
 import Player.Player;
 import Render.AnimationSet;
 import Render.BasicImage;
@@ -11,20 +12,34 @@ import Weapons.Weapon;
 
 public abstract class Item 
 {
+	protected Player player;
+	int code;
+	
 	String name;
-	public AnimationSet sprite;
+	protected AnimationSet sprite;
 	int healthBoost;
 	int armorBoost;
 	int damageBoost;
 	int tenacityBoost;
 	int speedBoost;
 	
-	Input input;
+	CodexItemEntry entry;
 	
-	public Item(String name, Player player)
+	public Item(String name)
 	{
 		this.name = name;
 		
+	}
+
+	protected void setInput(int code)
+	{
+		this.code = code;
+	}
+	
+	public Item setPlayer(Player player)
+	{
+		this.player = player;
+		return this;
 	}
 	
 	public Item setSprite(String ref, long delay)
@@ -66,10 +81,18 @@ public abstract class Item
 	
 	public void update()
 	{
-		
+		if(player.getInput().isKeyDown(code))
+		{
+			Ability();
+		}
 	}
 	
 	public void render(Graphics g) throws SlickException
+	{
+		
+	}
+	
+	public void Ability()
 	{
 		
 	}
