@@ -49,11 +49,11 @@ public class PauseMenu extends BasicMenu
 		exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT / 2 + 150, 0).setDimensions(138, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
-		save1 = new Button("Load Save 1", Config.WIDTH / 2, Config.HEIGHT / 4, 1).setDimensions(150, 50).
+		save1 = new Button("Save to Save 1", Config.WIDTH / 2, Config.HEIGHT / 4, 1).setDimensions(150, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		save2 = new Button("Load Save 2", Config.WIDTH / 4 , Config.HEIGHT / 2, 1).setDimensions(150, 50).
+		save2 = new Button("Save to Save 2", Config.WIDTH / 4 , Config.HEIGHT / 2, 1).setDimensions(150, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		save3 = new Button("Load Save 3", Config.WIDTH / 4 * 3, Config.HEIGHT / 2, 1).setDimensions(150, 50).
+		save3 = new Button("Save to Save 3", Config.WIDTH / 4 * 3, Config.HEIGHT / 2, 1).setDimensions(150, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		back = new Button("Back", Config.WIDTH / 2, Config.HEIGHT / 4 * 3, 1).setDimensions(150, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
@@ -73,6 +73,24 @@ public class PauseMenu extends BasicMenu
 				save2.update();
 				save3.update();
 				back.update();
+				
+				if(save1.clicked)
+				{
+					Save.Save.save("saves/Save 1/Player.ply", player);
+					Save.Save.save("saves/Save 1/World.wrld", world);
+				}
+				
+				if(save2.clicked)
+				{
+					Save.Save.save("saves/Save 2/Player.ply", player);
+					Save.Save.save("saves/Save 2/World.wrld", world);
+				}
+				
+				if(save3.clicked)
+				{
+					Save.Save.save("saves/Save 3/Player.ply", player);
+					Save.Save.save("saves/Save 3/World.wrld", world);
+				}
 				
 				if(back.clicked)
 				{

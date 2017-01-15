@@ -1,13 +1,19 @@
 package GameBasics;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 
 import Geo.Quad;
 import Render.AnimationSet;
 import Render.BasicImage;
 
-public abstract class Entity 
+public abstract class Entity implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1335939607570570293L;
 	float x;
 	float y;
 	float Vx;

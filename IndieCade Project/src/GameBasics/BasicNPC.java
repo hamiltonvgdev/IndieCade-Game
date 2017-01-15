@@ -1,5 +1,7 @@
 package GameBasics;
 
+import java.io.Serializable;
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -10,8 +12,12 @@ import Player.Player;
 import Render.AnimationSet;
 import Tiles.Tile;
 
-public class BasicNPC 
+public class BasicNPC implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5091083775805350494L;
 	String name;
 	Player player;
 	String phrase;

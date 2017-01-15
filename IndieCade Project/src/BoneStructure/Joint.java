@@ -1,9 +1,15 @@
 package BoneStructure;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 
-public class Joint 
+public class Joint implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5618349032689064504L;
 	Bone bone1;
 	Bone bone2;
 	

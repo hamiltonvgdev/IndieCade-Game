@@ -1,13 +1,19 @@
 package Render;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class BasicImage 
+public class BasicImage implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8601732697410596805L;
 	public AfterImage afterImage;
-	Image sprite;
+	transient Image sprite;
 	boolean flip;
 	
 	public BasicImage(String ref)

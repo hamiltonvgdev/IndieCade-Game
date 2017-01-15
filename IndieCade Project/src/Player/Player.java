@@ -1,5 +1,6 @@
 package Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
@@ -23,9 +24,13 @@ import Tiles.Tile;
 import Weapons.MeleeWeapon;
 import Weapons.Weapon;
 
-public class Player 
+public class Player implements Serializable
 {
-	Game game;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6654083572168084434L;
+	transient Game game;
 	boolean paused;
 	
 	//Vertical Movement
@@ -45,7 +50,7 @@ public class Player
 	float acceleration;
 	
 	//Input
-	Input input;
+	transient Input input;
 	boolean rightMove;
 	boolean leftMove;
 	
@@ -66,19 +71,23 @@ public class Player
 	Item Gauntlet;
 	Weapon Wpn;
 	
-	//Combat
+	//Combat Statistics
 	BoneStructure Body;
 	float maxHealth;
 	float health;
 	float armor;
 	float damage;
 	float tenacity;
-	float Speed;
 	float speed;
 	float baseSpeed;
 	
+	//Combat Values
+	float Stun;
+	float Speed;
+	
 	Stance walk;
 	Stance startWalk;
+	Stance stopWalk;
 	
 	public Player(Game game, float x, float y)
 	{
@@ -121,22 +130,11 @@ public class Player
 		speed = 1;
 		Speed = baseSpeed * speed;
 		
+		Stun = 0;
+		
 		Body = new BoneStructure(this, 2F);
 		
 		walk = new Stance("Walk Cycle", Body, 6);
-		startWalk = new Stance("Walk Cycle", Body, 6);
-		startWalk.addAction(new Action("Pelvic", 0, 15, 250), 0);
-		startWalk.addAction(new Action("Pelvic", 1, -45, 250), 1);
-		startWalk.addAction(new Action("Knee 1", 0, 75, 250), 2);
-		startWalk.addAction(new Action("Knee 2", 0, -15, 250), 3);
-		startWalk.addAction(new Action("Ankle 1", 0, 75, 250), 4);
-		startWalk.addAction(new Action("Ankle 2", 0, -30, 250), 5);
-		walk.addAction(new Action("Pelvic", 0, -165, 1000), 0);
-		walk.addAction(new Action("Pelvic", 0, 165, 1000), 0);
-		walk.addAction(new Action("Pelvic", 1, 165, 1000), 1);
-		walk.addAction(new Action("Pelvic", 1, -165, 1000), 1);
-		/*walk.addAction(new Action("Knee 1", 0, 0, 1000), 2);
-		walk.addAction(new Action("Knee 2", 0, 0, 1000), 3);*/
 	}
 	
 	public void setMap(Map map)
@@ -219,26 +217,33 @@ public class Player
 	{
 		if(!paused)
 		{
-			startWalk.single();
-			walk.loop();
 			Physics();
 			
 			Speed = baseSpeed * speed;
 			
-			if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
+			if(Stun == 0)
 			{
-				rightMove = true;
+				if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
+				{
+					rightMove = true;
+				}else
+				{
+					rightMove = false;
+				}
+				
+				if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
+				{
+					leftMove = true;
+				}else
+				{
+					leftMove = false;
+				}
+			}else if(Stun < 0)
+			{
+				Stun = 0;
 			}else
 			{
-				rightMove = false;
-			}
-			
-			if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
-			{
-				leftMove = true;
-			}else
-			{
-				leftMove = false;
+				Stun -= 1000 / Config.Ticks;
 			}
 			
 			if(leftMove && !rightMove)
@@ -352,6 +357,26 @@ public class Player
 	public void unpause()
 	{
 		paused = false;
+	}
+	
+	public void damage(int dmg)
+	{
+		health -= dmg / (1 + armor);
+	}
+	
+	public void Damage(int dmg)
+	{
+		health -= dmg;
+	}
+	
+	public void DOT(int dmg)
+	{
+		health = dmg / (1 + tenacity);
+	}
+	
+	public void stun(float Stun)
+	{
+		this.Stun += Stun / (1 + tenacity);
 	}
 	
 	public float getX()

@@ -1,12 +1,18 @@
 package Stance;
 
+import java.io.Serializable;
+
 import BoneStructure.BoneStructure;
 import BoneStructure.FourWayJoint;
 import BoneStructure.Joint;
 import BoneStructure.ThreeWayJoint;
 
-public class Action 
+public class Action implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 192811957066539752L;
 	String joint;
 	float rot;
 	long time;

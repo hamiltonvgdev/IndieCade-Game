@@ -1,11 +1,17 @@
 package BoneStructure;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 
 import Main.Config;
 
-public class Bone 
+public class Bone implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8465400098824391038L;
 	float x;
 	float y;
 	float length;

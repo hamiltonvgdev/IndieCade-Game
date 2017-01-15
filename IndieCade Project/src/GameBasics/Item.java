@@ -1,5 +1,7 @@
 package GameBasics;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -10,8 +12,12 @@ import Render.AnimationSet;
 import Render.BasicImage;
 import Weapons.Weapon;
 
-public abstract class Item 
+public abstract class Item implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4271756499787690439L;
 	protected Player player;
 	int code;
 	

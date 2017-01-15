@@ -1,9 +1,16 @@
 package Geo;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class Quad {
+public class Quad implements Serializable
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6083904781356000620L;
 	public float width, height, x, y;
 
 	public Quad(float x, float y, float width, float height) {

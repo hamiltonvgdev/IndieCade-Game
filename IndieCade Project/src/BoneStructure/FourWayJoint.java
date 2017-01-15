@@ -1,7 +1,13 @@
 package BoneStructure;
 
-public class FourWayJoint extends ThreeWayJoint
+import java.io.Serializable;
+
+public class FourWayJoint extends ThreeWayJoint implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3192954145125606726L;
 	Bone bone4;
 	
 	public FourWayJoint(Bone bone1, Bone bone2, Bone bone3, Bone bone4) 

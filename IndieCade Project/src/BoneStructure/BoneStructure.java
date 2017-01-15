@@ -1,11 +1,17 @@
 package BoneStructure;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Graphics;
 
 import Player.Player;
 
-public class BoneStructure
+public class BoneStructure implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -785715115218883562L;
 	Bone head;
 	public Joint neck;
 	
