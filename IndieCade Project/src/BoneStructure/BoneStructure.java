@@ -132,8 +132,6 @@ public class BoneStructure implements Serializable
 		
 		Knee2.update();
 		Ankle2.update();
-		
-		torso.rotBone4(tick);
 	}
 	
 	public void render(Graphics g)
