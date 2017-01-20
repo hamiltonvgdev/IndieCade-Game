@@ -252,7 +252,16 @@ public abstract class Entity implements Serializable
 				level.getEntities().remove(i);
 			}
 		}
+		
+	}
+	public Quad getHitbox() 
+	{
+		return Hitbox;
 	}
 	
+	public void init()
+	{
+		
+	}
 	
 }
