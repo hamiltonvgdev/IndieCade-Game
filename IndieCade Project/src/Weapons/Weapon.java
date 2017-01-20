@@ -1,5 +1,6 @@
 package Weapons;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
@@ -13,8 +14,12 @@ import Map.World;
 import Player.Player;
 import Render.AnimationSet;
 
-public abstract class Weapon
+public abstract class Weapon implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2981180336430241954L;
 	String name;
 	Player player;
 	Map map;

@@ -1,19 +1,25 @@
 package Tiles;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import Geo.Quad;
 import Map.Map;
-import Map.World;
 import Render.AnimationSet;
 
-public class Tile 
+public class Tile implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6125590096932271699L;
+
 	public String name;
 	
-	Color Id;
+	transient Color Id;
 	
 	boolean collidable;
 	Quad hitbox;
@@ -69,9 +75,9 @@ public class Tile
 		return this;
 	}
 	
-	public Tile setAnimation(String ref)
+	public Tile setAnimation(String ref, long delay)
 	{
-		sprite = new AnimationSet(ref, 100);
+		sprite = new AnimationSet(ref, delay);
 		return this;
 	}
 	
@@ -97,6 +103,8 @@ public class Tile
 	{
 		hitbox.changeDimensions(x, y, width, height);
 		
+		sprite.resetAnimate();
+		
 		if(on && !sounded && ref != null)
 		{
 			Sound.Sound.infiniteLoopSound(ref);
@@ -120,6 +128,11 @@ public class Tile
 	public String getRef()
 	{
 		return sprite.getFolder();
+	}
+	
+	public long getDelay()
+	{
+		return sprite.getDelay();
 	}
 	
 	public String getSoundRef()

@@ -1,5 +1,6 @@
 package Map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Graphics;
@@ -8,8 +9,13 @@ import org.newdawn.slick.SlickException;
 
 import Player.Player;
 
-public class World 
+public class World implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1240449199258534855L;
+
 	boolean paused;
 	
 	int mapX;

@@ -1,14 +1,19 @@
 package Render;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class AnimationSet 
+public class AnimationSet implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6784000698013223393L;
 	String ref;
 	ArrayList<BasicImage> Animation;
 	int frame;
@@ -206,6 +211,11 @@ public class AnimationSet
 	public String getFolder()
 	{
 		return ref;
+	}
+	
+	public long getDelay()
+	{
+		return delay;
 	}
 	
 	public String getRef(int i)

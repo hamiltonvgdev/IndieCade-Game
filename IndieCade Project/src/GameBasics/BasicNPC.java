@@ -1,5 +1,7 @@
 package GameBasics;
 
+import java.io.Serializable;
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -10,29 +12,33 @@ import Player.Player;
 import Render.AnimationSet;
 import Tiles.Tile;
 
-public class BasicNPC 
+public class BasicNPC implements Serializable
 {
-	String name;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5091083775805350494L;
+	protected String name;
 	Player player;
 	String phrase;
 	
-	AnimationSet Idle;
-	boolean idle;
-	AnimationSet Near;
-	boolean near;
-	AnimationSet Active;
-	boolean active;
+	protected AnimationSet Idle;
+	protected boolean idle;
+	protected AnimationSet Near;
+	protected boolean near;
+	protected AnimationSet Active;
+	protected boolean active;
 	
-	float x;
-	float y;
+	protected float x;
+	protected float y;
 	float Vx;
 	float Vy;
 	float Ax;
 	float Ay;
 	
-	float height;
-	float width;
-	float rot;
+	protected float height;
+	protected float width;
+	protected float rot;
 	float range;
 	Quad hitbox;
 	

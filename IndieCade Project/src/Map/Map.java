@@ -1,5 +1,6 @@
 package Map;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,23 +16,28 @@ import GameBasics.Level;
 import Geo.Quad;
 import Player.Player;
 import Tiles.Tile;
+import Tiles.TileList;
 
-public class Map 
+public class Map implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7167480686083434369L;
 	Level level;
 	ArrayList<Tile> TileMap;
-	Image tilemap;
+	transient Image tilemap;
 	float height;
 	float width;
 	
-	Image BackGround;
+	transient Image BackGround;
 	String themeMusic;
 	
 	public Quad Hitbox;
 	float x;
 	float y;
 	
-	Color ID;
+	transient Color ID;
 	
 	public Map(Player player, Image tilemap, Image BackGround, Color ID)
 	{	
