@@ -21,19 +21,22 @@ public class Converter
 					System.out.println(PossibleTiles.get(2).getID());
 				}
 				
-				if(Math.abs(PossibleTiles.get(j).getID().r - ID.r) <= 0.04)
+				if(Math.abs(PossibleTiles.get(j).getID().a - ID.a) <= 0.04)
 				{
-					if(Math.abs(PossibleTiles.get(j).getID().g - ID.g) <= 0.04)
+					if(Math.abs(PossibleTiles.get(j).getID().r - ID.r) <= 0.04)
 					{
-						if(Math.abs(PossibleTiles.get(j).getID().b - ID.b) <= 0.04)
+						if(Math.abs(PossibleTiles.get(j).getID().g - ID.g) <= 0.04)
 						{
-							Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
-									setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
-									setColidable(PossibleTiles.get(j).getCollidable()).
-									setFriction(PossibleTiles.get(j).getFriction()).
-									setSound(PossibleTiles.get(j).getSoundRef()));
-							
-							break;
+							if(Math.abs(PossibleTiles.get(j).getID().b - ID.b) <= 0.04)
+							{
+								Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
+										setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+										setColidable(PossibleTiles.get(j).getCollidable()).
+										setFriction(PossibleTiles.get(j).getFriction()).
+										setSound(PossibleTiles.get(j).getSoundRef()));
+								
+								break;
+							}
 						}
 					}
 				}

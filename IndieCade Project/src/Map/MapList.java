@@ -8,6 +8,7 @@ import org.newdawn.slick.SlickException;
 
 import GameBasics.BasicNPC;
 import NPCs.AudioNPC;
+import NPCs.ImageNPC;
 import Player.Player;
 import Tiles.Tile;
 

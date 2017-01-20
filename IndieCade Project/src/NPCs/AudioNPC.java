@@ -17,7 +17,10 @@ public class AudioNPC extends BasicNPC
 	@Override
 	public void action()
 	{
-		Sound.Sound.playSound(soundRef);
+		if(soundRef != null)
+		{
+			Sound.Sound.playSound(soundRef);
+		}
 	}
 
 }

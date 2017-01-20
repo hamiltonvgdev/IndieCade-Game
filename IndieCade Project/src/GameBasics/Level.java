@@ -32,14 +32,6 @@ public class Level implements Serializable
 		this.player = player;
 	}
 	
-	public void initEnt()
-	{
-		for(int i = 0; i < Entities.size(); i ++)
-		{
-			Entities.get(i).init();
-		}
-	}
-	
 	public ArrayList<Entity> getEntities()
 	{
 		return Entities;

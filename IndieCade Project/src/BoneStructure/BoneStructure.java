@@ -107,6 +107,8 @@ public class BoneStructure implements Serializable
 		
 		Ankle1.getBone2().setRot(0);
 		Ankle2.getBone2().setRot(0);
+		
+		tick = 10;
 	}
 	
 	public void update()
@@ -130,6 +132,8 @@ public class BoneStructure implements Serializable
 		
 		Knee2.update();
 		Ankle2.update();
+		
+		torso.rotBone4(tick);
 	}
 	
 	public void render(Graphics g)

@@ -73,7 +73,6 @@ public class Game extends BasicGameState implements Serializable
 		MapList.init(player);
 		
 		world = (World) Load.Load.load(ref + "/World.wrl");
-		System.out.println(player);
 	}
 	
 	public void newGame()

@@ -99,7 +99,7 @@ public class Player implements Serializable
 		
 		this.x = x;
 		this.y = y;
-		JumpV = -10F;
+		JumpV = -7F;
 		Jumps = 0;
 		setJumps(1);
 		JumpTick = System.currentTimeMillis();
@@ -112,7 +112,7 @@ public class Player implements Serializable
 		input = new Input(1);
 		
 		Ax = 0;
-		Ay = 0.5F;
+		Ay = 0.3F;
 		acceleration = 0.5F;
 		
 		width = 64;
@@ -294,7 +294,8 @@ public class Player implements Serializable
 			
 			if(input.isKeyDown(input.KEY_W) 
 					&& System.currentTimeMillis() - JumpTick > 500
-					&& Jumps != 0)
+					&& Jumps != 0
+					&& Stun == 0)
 			{
 				Jump();
 			}
@@ -306,6 +307,7 @@ public class Player implements Serializable
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 			
 			Body.update();
+			
 			
 			/*	
 			Helmet.update();

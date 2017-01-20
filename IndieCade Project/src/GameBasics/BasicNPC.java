@@ -18,27 +18,27 @@ public class BasicNPC implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -5091083775805350494L;
-	String name;
+	protected String name;
 	Player player;
 	String phrase;
 	
-	AnimationSet Idle;
-	boolean idle;
-	AnimationSet Near;
-	boolean near;
-	AnimationSet Active;
-	boolean active;
+	protected AnimationSet Idle;
+	protected boolean idle;
+	protected AnimationSet Near;
+	protected boolean near;
+	protected AnimationSet Active;
+	protected boolean active;
 	
-	float x;
-	float y;
+	protected float x;
+	protected float y;
 	float Vx;
 	float Vy;
 	float Ax;
 	float Ay;
 	
-	float height;
-	float width;
-	float rot;
+	protected float height;
+	protected float width;
+	protected float rot;
 	float range;
 	Quad hitbox;
 	
