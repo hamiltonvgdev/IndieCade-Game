@@ -33,6 +33,11 @@ public class FourWayJoint extends ThreeWayJoint implements Serializable
 		bone4.setRot(bone4.getDegRot() + rot);
 	}
 	
+	public void setBone4Rot(float rot)
+	{
+		bone4.setRot(rot);
+	}
+	
 	public Bone getBone4()
 	{
 		return bone4;

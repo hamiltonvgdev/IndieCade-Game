@@ -76,4 +76,9 @@ public class World implements Serializable
 	{
 		paused = false;
 	}
+	
+	public Player getPlayer()
+	{
+		return player;
+	}
 }

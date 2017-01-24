@@ -21,6 +21,8 @@ public class SpawnTile extends Tile
 		this.CD = CD;
 		
 		tick = 0;
+		
+		Type = 2;
 	}
 	
 	public Tile setSpawnSound(String ref)
@@ -64,5 +66,15 @@ public class SpawnTile extends Tile
 		{
 			Sound.Sound.playSound(spawnRef);
 		}
+	}
+	
+	public Entity getEnt()
+	{
+		return mob;
+	}
+	
+	public long getCD()
+	{
+		return CD;
 	}
 }
