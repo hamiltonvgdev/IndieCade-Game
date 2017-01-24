@@ -1,5 +1,6 @@
 package Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
@@ -11,14 +12,25 @@ import BoneStructure.BoneStructure;
 import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
+import Main.Game;
+import Main.MainMenu;
 import Map.Map;
+import Menus.CodexItemEntry;
+import Menus.CodexMenu;
 import Render.AnimationSet;
+import Stance.Action;
+import Stance.Stance;
 import Tiles.Tile;
 import Weapons.MeleeWeapon;
 import Weapons.Weapon;
 
-public class Player 
+public class Player implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6654083572168084434L;
+	transient Game game;
 	boolean paused;
 	
 	//Vertical Movement
@@ -38,7 +50,7 @@ public class Player
 	float acceleration;
 	
 	//Input
-	Input input;
+	transient Input input;
 	boolean rightMove;
 	boolean leftMove;
 	
@@ -59,26 +71,37 @@ public class Player
 	Item Gauntlet;
 	Weapon Wpn;
 	
-	//Combat
-	BoneStructure body;
+	//Combat Statistics
+	BoneStructure Body;
 	float maxHealth;
 	float health;
 	float armor;
 	float damage;
 	float tenacity;
 	float speed;
+	float baseSpeed;
 	
-	public Player(float x, float y)
+	//Combat Values
+	float Stun;
+	float Speed;
+	
+	Stance walk;
+	Stance startWalk;
+	Stance stopWalk;
+	
+	public Player(Game game, float x, float y)
 	{
+		this.game = game;
+		
 		Inventory = new ArrayList<Item>();
 		
 		paused = false;
 		
 		this.x = x;
 		this.y = y;
-		JumpV = -10F;
+		JumpV = -7F;
 		Jumps = 0;
-		MaxJumps = 2;
+		setJumps(1);
 		JumpTick = System.currentTimeMillis();
 		Jumping = false;
 		
@@ -89,7 +112,7 @@ public class Player
 		input = new Input(1);
 		
 		Ax = 0;
-		Ay = 0.5F;
+		Ay = 0.3F;
 		acceleration = 0.5F;
 		
 		width = 64;
@@ -103,12 +126,40 @@ public class Player
 		armor = 0;
 		damage = 5;
 		tenacity = 0;
-		this.speed = 5;
+		this.baseSpeed = 5;
+		speed = 1;
+		Speed = baseSpeed * speed;
+		
+		Stun = 0;
+		
+		Body = new BoneStructure(this, 2F);
+		
+		walk = new Stance("Walk Cycle", Body, 6);
 	}
 	
 	public void setMap(Map map)
 	{
 		this.map = map;
+	}
+	
+	public void setJumps(int jumps)
+	{
+		MaxJumps = jumps;
+	}
+	
+	public void setJumpV(float jumpV)
+	{
+		JumpV = jumpV;
+	}
+	
+	public void setVx(float Vx)
+	{
+		this.Vx = Vx;
+	}
+	
+	public void setVy(float Vy)
+	{
+		this.Vy = Vy; 
 	}
 	
 	public void Physics()
@@ -147,11 +198,11 @@ public class Player
 		if(CollisionY)
 		{
 			Jumping = false;
-			if(Jumps < MaxJumps && Vy > 0)
+			if(Jumps < MaxJumps && Vy >= 0)
 			{
 				Jumps ++;
 			}
-			Vy = 0;
+			setVy(0);
 		}else
 		{
 			Vy += Ay;
@@ -160,7 +211,6 @@ public class Player
 				Jumps = 0;
 			}
 		}
-		
 	}
 	
 	public void update()
@@ -169,25 +219,36 @@ public class Player
 		{
 			Physics();
 			
-			if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
-			{
-				rightMove = true;
-			}else
-			{
-				rightMove = false;
-			}
+			Speed = baseSpeed * speed;
 			
-			if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
+			if(Stun == 0)
 			{
-				leftMove = true;
+				if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
+				{
+					rightMove = true;
+				}else
+				{
+					rightMove = false;
+				}
+				
+				if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
+				{
+					leftMove = true;
+				}else
+				{
+					leftMove = false;
+				}
+			}else if(Stun < 0)
+			{
+				Stun = 0;
 			}else
 			{
-				leftMove = false;
+				Stun -= 1000 / Config.Ticks;
 			}
 			
 			if(leftMove && !rightMove)
 			{
-				if(Math.abs(Vx) < speed)
+				if(Math.abs(Vx) < Speed - acceleration)
 				{
 					Ax = -acceleration;
 				}else
@@ -198,7 +259,7 @@ public class Player
 			
 			if(rightMove && !leftMove)
 			{
-				if(Math.abs(Vx) < speed)
+				if(Math.abs(Vx) < Speed - acceleration)
 				{
 					Ax = acceleration;
 				}else
@@ -228,16 +289,16 @@ public class Player
 			
 			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction())
 			{
-				Vx = 0;
+				setVx(0);
 			}
 			
 			if(input.isKeyDown(input.KEY_W) 
-					&& System.currentTimeMillis() - JumpTick > 300
-					&& Jumps != 0)
+					&& System.currentTimeMillis() - JumpTick > 500
+					&& Jumps != 0
+					&& Stun == 0)
 			{
 				Jump();
 			}
-			
 			
 			map.shift(-Vx, 0);
 			map.shift(0, -Vy);
@@ -245,7 +306,23 @@ public class Player
 			Hitbox.changeDimensions(x, y, width, height);
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 			
-			//Does not change directions when air
+			Body.update();
+			
+			
+			/*	
+			Helmet.update();
+			Chestplate.update();
+			Pants.update();
+			Gauntlet.update();
+			Wpn.update();
+			
+			maxHealth = 1 * (100 + Helmet.getHealth() + Chestplate.getHealth() + Pants.getHealth() + Gauntlet.getHealth()) / 100;
+			armor = 1 * (100 + Helmet.getArmor() + Chestplate.getArmor() + Pants.getArmor() + Gauntlet.getArmor()) / 100;
+			damage = 1 * (100 + Helmet.getDamage() + Chestplate.getDamage() + Pants.getDamage() + Gauntlet.getDamage()) / 100;
+			tenacity = 1 * (100 + Helmet.getTenacity() + Chestplate.getTenacity() + Pants.getTenacity() + Gauntlet.getTenacity()) / 100;
+			speed = 1 * (100 + Helmet.getSpeed() + Chestplate.getSpeed() + Pants.getSpeed() + Gauntlet.getSpeed()) / 100;
+			*/
+			
 		}
 	}	
 	
@@ -253,11 +330,13 @@ public class Player
 	{
 		Hitbox.render(g);
 		Screen.render(g);
+		
+		Body.render(g);
 	}
 	
 	public void Jump()
 	{
-		Vy = JumpV;
+		setVy(JumpV);
 		Jumps --;
 		Jumping = true;
 		
@@ -267,6 +346,9 @@ public class Player
 	public void giveItem(Item item)
 	{
 		Inventory.add(item);
+		
+		((CodexMenu) ((MainMenu) game.getSbg().getState(1)).getMenus().get(2)).
+		addItemEntry(new CodexItemEntry(((CodexMenu) ((MainMenu) game.getSbg().getState(1)).getMenus().get(2)), item));;
 	}
 	
 	public void pause()
@@ -277,6 +359,26 @@ public class Player
 	public void unpause()
 	{
 		paused = false;
+	}
+	
+	public void damage(int dmg)
+	{
+		health -= dmg / (1 + armor);
+	}
+	
+	public void Damage(int dmg)
+	{
+		health -= dmg;
+	}
+	
+	public void DOT(int dmg)
+	{
+		health = dmg / (1 + tenacity);
+	}
+	
+	public void stun(float Stun)
+	{
+		this.Stun += Stun / (1 + tenacity);
 	}
 	
 	public float getX()
@@ -299,6 +401,11 @@ public class Player
 		return Vy;
 	}
 	
+	public float getSpeed()
+	{
+		return Speed;
+	}
+	
 	public Map getMap()
 	{
 		return map;
@@ -311,7 +418,7 @@ public class Player
 	
 	public BoneStructure getBody()
 	{
-		return body;
+		return Body;
 	}
 	
 	public ArrayList<Item> getInventory()

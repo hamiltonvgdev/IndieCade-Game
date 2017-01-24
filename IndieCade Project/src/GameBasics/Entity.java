@@ -39,7 +39,6 @@ public abstract class Entity implements Serializable
 	boolean jumping;
 	
 	//Combat statistics
-	BoneStructure body;
 	float maxHealth;
 	float health;
 	float damage;
@@ -191,12 +190,6 @@ public abstract class Entity implements Serializable
 		jumpTick = System.currentTimeMillis();
 	}
 	
-	public void giveItem(Item item)
-	{
-		//needed?
-		//Inventory.add(item);
-	}
-	
 	public void pause()
 	{
 		paused = true;
@@ -232,11 +225,6 @@ public abstract class Entity implements Serializable
 		return map;
 	}
 	
-	public BoneStructure getBody()
-	{
-		return body;
-	}
-	
 	//...
 	public void damage(int damage)
 	{
@@ -258,10 +246,4 @@ public abstract class Entity implements Serializable
 	{
 		return Hitbox;
 	}
-	
-	public void init()
-	{
-		
-	}
-	
 }

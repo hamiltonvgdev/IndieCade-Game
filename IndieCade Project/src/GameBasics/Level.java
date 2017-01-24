@@ -1,5 +1,6 @@
 package GameBasics;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
@@ -10,8 +11,12 @@ import Geo.Quad;
 import Main.Config;
 import Player.Player;
 
-public class Level 
+public class Level implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6513983764060293943L;
 	ArrayList<Entity> Entities;
 	ArrayList<Item> Items;
 	ArrayList<BasicNPC> NPCs;
@@ -25,14 +30,6 @@ public class Level
 		NPCs = new ArrayList<BasicNPC>();
 		
 		this.player = player;
-	}
-	
-	public void initEnt()
-	{
-		for(int i = 0; i < Entities.size(); i ++)
-		{
-			Entities.get(i).init();
-		}
 	}
 	
 	public ArrayList<Entity> getEntities()
