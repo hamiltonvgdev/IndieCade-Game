@@ -21,7 +21,7 @@ public class BoneStructure implements Serializable
 	Bone USpine;
 	Bone LSpine;
 	public FourWayJoint torso;
-	//public ThreeWayJoint Pelvic;
+	public ThreeWayJoint Pelvic;
 	public Joint Spine;
 	
 	Bone UArm1;
@@ -186,10 +186,10 @@ public class BoneStructure implements Serializable
 			return neck;
 		}else if(name.equals("Torso"))
 		{
-			//return torso;
+			return torso;
 		}else if(name.equals("Pelvic"))
 		{
-			//return Pelvic;
+			return Pelvic;
 		}else if(name.equals("Shoulder 1"))
 		{
 			return shoulder1;
