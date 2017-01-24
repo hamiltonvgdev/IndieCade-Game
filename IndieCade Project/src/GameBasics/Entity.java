@@ -29,7 +29,7 @@ public abstract class Entity implements Serializable
 	float Ax;
 	float Ay;
 	float acceleration;
-	
+	//
 	//Vertical movement
 	float y;
 	float jumpV;
