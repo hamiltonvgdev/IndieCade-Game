@@ -4,28 +4,26 @@ import org.newdawn.slick.Color;
 
 import Player.Player;
 
-public class InteractTile extends Tile
+public abstract class InteractTile extends Tile
 {
 	Player player;
 	boolean interact;
 	
-	public InteractTile(String name, Color Id) 
+	public InteractTile(String name, Player player, Color Id) 
 	{
 		super(name, Id);
 		
 		interact = false;
-	}
-	
-	public void setPlayer(Player player)
-	{
+		
 		this.player = player;
 	}
 	
+	@Override
 	public void update()
-	{
+	{	
 		super.update();
 		
-		if(player.getInput().isKeyDown(player.getInput().KEY_LALT))
+		if(player.getInput().isKeyDown(player.getInput().KEY_LALT) && hitbox.checkQuad(player.Hitbox))
 		{
 			interact = true;
 		}
@@ -39,6 +37,11 @@ public class InteractTile extends Tile
 	public void action()
 	{
 		
+	}
+	
+	public Player getPlayer()
+	{
+		return player;
 	}
 
 }

@@ -57,6 +57,16 @@ public class Joint implements Serializable
 		bone2.setRot(bone2.getDegRot() + rot);
 	}
 	
+	public void setBone2Rot(float rot)
+	{
+		bone2.setRot(rot);
+	}
+	
+	public Bone getBone1()
+	{
+		return bone1;
+	}
+	
 	public Bone getBone2()
 	{
 		return bone2;
