@@ -62,14 +62,16 @@ public class Level implements Serializable
 		NPCs.remove(npc);
 	}
 	
-	public void render(GameContainer gc, Graphics g) throws SlickException
+	public void render(Graphics g) throws SlickException
 	{
 		for(Entity e : Entities)
 		{
-			if(e.getHitbox().checkQuad(new Quad(Config.WIDTH / 2, Config.HEIGHT / 2, Config.WIDTH, Config.HEIGHT)))
-			{
-				e.render(g);
-			}
+			e.render(g);
+		}
+		
+		for(BasicNPC n : NPCs)
+		{
+			n.render(g);
 		}
 	}
 	
@@ -85,7 +87,7 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			//move each entity
+			Entities.get(i).Move(xa, ya);
 		}
 		
 		for(int i = 0; i < NPCs.size(); i ++)

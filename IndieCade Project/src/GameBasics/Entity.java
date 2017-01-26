@@ -1,6 +1,7 @@
 package GameBasics;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -9,11 +10,12 @@ import BoneStructure.BoneStructure;
 import Geo.Quad;
 import Main.Config;
 import Map.Map;
+import Player.Player;
 import Render.AnimationSet;
 import Render.BasicImage;
 import Tiles.Tile;
 
-public abstract class Entity implements Serializable
+public class Entity implements Serializable
 {
 	/**
 	 * 
@@ -45,6 +47,7 @@ public abstract class Entity implements Serializable
 	float defense;
 	float speed;
 	float tenacity;
+	boolean stun;
 	
 	//Combat values
 	float Stun;
@@ -59,6 +62,11 @@ public abstract class Entity implements Serializable
 	public Quad Hitbox;
 	Quad Screen;
 	Level level;
+	
+	//animation
+	AnimationSet sprite;
+	
+	Random gen = new Random();
 	
 	public Entity(float x, float y, float speed)
 	{
@@ -79,9 +87,6 @@ public abstract class Entity implements Serializable
 		Ax = 0;
 		Ay = 0.5F;
 		acceleration = 0.5F;
-		
-		width = 64;
-		height = 64;
 		
 		Hitbox = new Quad(x, y, width, height);
 		Screen = new Quad(x, y, Config.WIDTH, Config.HEIGHT);
@@ -152,7 +157,7 @@ public abstract class Entity implements Serializable
 	
 	
 	public void update()
-	{
+	{		
 		if(!paused)
 		{
 			Physics();
@@ -173,12 +178,12 @@ public abstract class Entity implements Serializable
 		
 		Hitbox.changeDimensions(x, y, width, height);
 		Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
+		
 	}
 	
 	public void render(Graphics g) throws SlickException
 	{
-		Hitbox.render(g);
-		Screen.render(g);
+		sprite.render(x, y, width, height, 0, g);
 	}
 	
 	public void jump()
@@ -225,7 +230,20 @@ public abstract class Entity implements Serializable
 		return map;
 	}
 	
-	//...
+	
+	public Entity AnimationSet(String ref, long delay)
+	{
+		sprite = new AnimationSet(ref, delay);
+		return this;
+	}
+	
+	public Entity setDimensions(float width, float height)
+	{
+		this.width = width;
+		this.height = height;
+		return this;
+	}
+	
 	public void damage(int damage)
 	{
 		health -= damage;
@@ -245,5 +263,152 @@ public abstract class Entity implements Serializable
 	public Quad getHitbox() 
 	{
 		return Hitbox;
+	}
+	
+	public void follow(Player player)
+	{
+		float distX = player.getX() - x;
+		float distY = player.getY() - y;
+		
+		if(distY != 0)
+		{
+			try
+			{
+				move(0, (distY) / (Math.abs(distY)));
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+		
+		if(distX != 0)
+		{
+			try
+			{
+				move((distX) / (Math.abs(distX)) , 0);
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+	}
+	
+	public void move(float Xa, float Ya)
+	{
+		if(!stun)
+		{
+			x += Xa * speed;
+			y += Ya * speed;
+		}
+	}
+	
+	public void Move(float Xa, float Ya)
+	{
+		x += Xa;
+		y += Ya;
+	}
+	
+	public void follow(Entity patient)
+	{
+		float distX = patient.getX() - x;
+		float distY = patient.getY() - y;
+		
+		if(distY != 0)
+		{
+			try
+			{
+				move(0, (distY) / (Math.abs(distY)));
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+		
+		if(distX != 0)
+		{
+			try
+			{
+				move((distX) / (Math.abs(distX)) , 0);
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+	}
+	
+	public boolean distanceSense(float distance, Entity patient)
+	{
+		double space = Math.sqrt(Math.pow(x -
+				patient.getX(), 2) + Math.pow(y - patient.getY(), 2));
+		
+		if(space <= distance)
+		{
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
+	
+	public void wander()
+	{
+		int movement = gen.nextInt(8) + 1;
+		
+		switch(movement)
+		{
+			default:
+			{
+				move(0, 0);
+				break;
+			}
+			
+			case 1:
+			{
+				move(speed, 0);
+				break;
+			}
+			
+			case 2:
+			{
+				move(0, jump);
+				break;
+			}
+			
+			case 3:
+			{
+				move(-speed, 0);
+				break;
+			}
+			
+			
+			case 4:
+			{
+				move(speed, jump);
+				break;
+			}
+			
+			case 5:
+			{
+				move(-speed, jump);
+				break;
+			}
+		}
+		
 	}
 }

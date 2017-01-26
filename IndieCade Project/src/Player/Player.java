@@ -9,6 +9,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import BoneStructure.BoneStructure;
+import GameBasics.Entity;
 import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
@@ -220,6 +221,13 @@ public class Player implements Serializable
 			Physics();
 			
 			Speed = baseSpeed * speed;
+			
+			if(input.isKeyDown(input.KEY_P))
+			{
+				Entity e = new Entity(x, y, 0).AnimationSet("res/NPC/Test/Image", 100).setDimensions(64, 64);
+				e.setMap(map);
+				map.getLevel().addEntity(e);
+			}
 			
 			if(Stun == 0)
 			{
