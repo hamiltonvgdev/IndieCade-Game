@@ -230,6 +230,11 @@ public class Player implements Serializable
 	{
 		if(!paused)
 		{
+			if(health <= 0)
+			{
+				die();
+			}
+			
 			Physics();
 			
 			Speed = baseSpeed * speed;
@@ -345,6 +350,11 @@ public class Player implements Serializable
 		Screen.render(g);
 		
 		Body.render(g);
+	}
+	
+	public void die()
+	{
+		map.reset();
 	}
 	
 	public void Jump()

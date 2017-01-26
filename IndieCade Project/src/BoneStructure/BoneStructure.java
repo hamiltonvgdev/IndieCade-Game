@@ -254,4 +254,12 @@ public class BoneStructure implements Serializable
 	{
 		return Bones;
 	}
+	
+	public void flip()
+	{
+		for(Bone bone: Bones)
+		{
+			bone.setRot(bone.getDegRot() + 90);
+		}
+	}
 }

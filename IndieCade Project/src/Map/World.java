@@ -44,6 +44,7 @@ public class World implements Serializable
 		}
 		
 		this.player = player;
+		System.out.println(world.size());
 		player.setMap(world.get(mapX + mapY * 20));
 	}
 	
