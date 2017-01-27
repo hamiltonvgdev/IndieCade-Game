@@ -247,6 +247,13 @@ public class Player implements Serializable
 				die();
 			}
 			
+			if(input.isKeyDown(input.KEY_P) && map.getLevel().getEntities().size() < 100)
+			{
+				Entity e = new Entity(this, 0).setAnimationSet("res/NPC/Test/Image", 100).setDimensions(64, 64);
+				e.setPosition(x, y);
+				map.directSpawn(e);
+			}
+			
 			Physics();
 			
 			Speed = baseSpeed * speed;
@@ -362,11 +369,12 @@ public class Player implements Serializable
 		Screen.render(g);
 		
 		Body.render(g);
+		
 		for(int i = -1; i <= 1; i ++)
 		{
 			for(int j = -1; j <= 1; j ++)
 			{
-				map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().render(g);
+				
 			}
 		}
 	}

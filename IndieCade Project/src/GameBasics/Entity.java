@@ -61,7 +61,6 @@ public class Entity implements Serializable
 	float width;
 	float height;
 	public Quad Hitbox;
-	Quad Screen;
 	Level level;
 	
 	//animation
@@ -89,7 +88,6 @@ public class Entity implements Serializable
 		acceleration = 0.5F;
 		
 		Hitbox = new Quad(x, y, width, height);
-		Screen = new Quad(x, y, Config.WIDTH, Config.HEIGHT);
 		
 		maxHealth = 100;
 		health = maxHealth;
@@ -129,27 +127,28 @@ public class Entity implements Serializable
 		boolean CollisionX = false;
 		boolean CollisionY = false;
 		
-
-		
-		
-		for(Tile T : map.getTiles())
+		//This is problem
+		for(int i = -1; i <= 1; i ++)
 		{
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+			for(int j = -1; j <= 1; j ++)
 			{
-				CollisionX = true;
-				T.nextTo = true;
-			}else
-			{
-				T.nextTo = false;
-			}
-			
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
-			{
-				CollisionY = true;
-				T.on = true;
-			}else
-			{
-				T.on = false;
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+				{
+					CollisionX = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = false;
+				}
+				
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
+				{
+					CollisionY = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = false;
+				}
 			}
 		}
 		
@@ -174,12 +173,12 @@ public class Entity implements Serializable
 				jump = 0;
 			}
 		}
-		
 	}
 	
 	
 	public void update()
 	{		
+		
 		if(!paused)
 		{
 			setMap(player.getMap());
@@ -196,11 +195,10 @@ public class Entity implements Serializable
 			}
 		}
 		
-		map.shift(-Vx, 0);
-		map.shift(0, -Vy);
+		move(Vx, 0);
+		move(0, Vy);
 		
 		Hitbox.changeDimensions(x, y, width, height);
-		Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 		
 	}
 	
