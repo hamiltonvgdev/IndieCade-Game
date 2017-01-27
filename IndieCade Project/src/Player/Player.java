@@ -187,24 +187,28 @@ public class Player implements Serializable
 			map.getLevel().addEntity(e);
 		}
 		
-		for(Tile T : map.getTiles())
+		
+		for(int i = -1; i <= 1; i ++)
 		{
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+			for(int j = -1; j <= 1; j ++)
 			{
-				CollisionX = true;
-				T.nextTo = true;
-			}else
-			{
-				T.nextTo = false;
-			}
-			
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
-			{
-				CollisionY = true;
-				T.on = true;
-			}else
-			{
-				T.on = false;
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+				{
+					CollisionX = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = false;
+				}
+				
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
+				{
+					CollisionY = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = false;
+				}
 			}
 		}
 		
@@ -358,6 +362,13 @@ public class Player implements Serializable
 		Screen.render(g);
 		
 		Body.render(g);
+		for(int i = -1; i <= 1; i ++)
+		{
+			for(int j = -1; j <= 1; j ++)
+			{
+				map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().render(g);
+			}
+		}
 	}
 	
 	public void die()
