@@ -173,8 +173,8 @@ public class Entity implements Serializable
 			}
 		}
 		
-		map.shift(-Vx, 0);
-		map.shift(0, -Vy);
+		move(-Vx, 0);
+		move(0, -Vy);
 		
 		Hitbox.changeDimensions(x, y, width, height);
 		Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
@@ -409,6 +409,5 @@ public class Entity implements Serializable
 				break;
 			}
 		}
-		
 	}
 }
