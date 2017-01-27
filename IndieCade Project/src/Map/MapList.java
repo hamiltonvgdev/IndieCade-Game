@@ -15,7 +15,7 @@ import Tiles.Tile;
 public class MapList 
 {
 	public static ArrayList<Map> Maps;
-	
+
 	public static void init(Player player) 
 	{
 		Maps = new ArrayList<Map>();
