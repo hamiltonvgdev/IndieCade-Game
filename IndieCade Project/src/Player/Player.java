@@ -9,6 +9,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import BoneStructure.BoneStructure;
+import GameBasics.Entity;
 import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
@@ -178,6 +179,13 @@ public class Player implements Serializable
 		
 		boolean CollisionX = false;
 		boolean CollisionY = false;
+		
+		if(input.isKeyDown(input.KEY_K))
+		{
+			Entity e = new Entity(this, 0).setAnimationSet("res/NPC/Test/Image", 100).setDimensions(32, 32);
+			e.setDimensions(x, y);
+			map.getLevel().addEntity(e);
+		}
 		
 		for(Tile T : map.getTiles())
 		{

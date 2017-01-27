@@ -22,6 +22,7 @@ public class Entity implements Serializable
 	 */
 	private static final long serialVersionUID = -1335939607570570293L;
 	
+	Player player;
 	boolean paused;
 	
 	//Horizontal movement
@@ -68,13 +69,12 @@ public class Entity implements Serializable
 	
 	Random gen = new Random();
 	
-	public Entity(float x, float y, float speed)
+	public Entity(Player player, float speed)
 	{
+		this.player = player;
 		
 		paused = false;
 		
-		this.x = x;
-		this.y = y;
 		jumpV = -10F;
 		jump = 0;
 		maxjump = 2;
@@ -96,11 +96,30 @@ public class Entity implements Serializable
 		defense = 5;
 		damage = 5;
 		tenacity = 0;
-		this.speed = 5;
+		this.speed = speed;
 	}
 	public void setMap(Map map)
 	{
 		this.map = map;
+	}
+	
+	public void setPosition(float x, float y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	public Entity setAnimationSet(String ref, long delay)
+	{
+		sprite = new AnimationSet(ref, delay);
+		return this;
+	}
+	
+	public Entity setDimensions(float width, float height)
+	{
+		this.width = width;
+		this.height = height;
+		return this;
 	}
 	
 	public void Physics()
@@ -109,6 +128,9 @@ public class Entity implements Serializable
 		
 		boolean CollisionX = false;
 		boolean CollisionY = false;
+		
+
+		
 		
 		for(Tile T : map.getTiles())
 		{
@@ -160,9 +182,10 @@ public class Entity implements Serializable
 	{		
 		if(!paused)
 		{
+			setMap(player.getMap());
 			Physics();
 			
-			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction())
+			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
 			{
 				Vx = 0;
 			}
@@ -225,23 +248,19 @@ public class Entity implements Serializable
 		return Vy;
 	}
 	
+	public float getHeight()
+	{
+		return height;
+	}
+	
+	public float getWidth()
+	{
+		return width;
+	}
+	
 	public Map getMap()
 	{
 		return map;
-	}
-	
-	
-	public Entity AnimationSet(String ref, long delay)
-	{
-		sprite = new AnimationSet(ref, delay);
-		return this;
-	}
-	
-	public Entity setDimensions(float width, float height)
-	{
-		this.width = width;
-		this.height = height;
-		return this;
 	}
 	
 	public void damage(int damage)
