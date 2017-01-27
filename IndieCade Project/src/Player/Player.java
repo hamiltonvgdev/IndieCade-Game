@@ -180,24 +180,35 @@ public class Player implements Serializable
 		boolean CollisionX = false;
 		boolean CollisionY = false;
 		
-		for(Tile T : map.getTiles())
+		if(input.isKeyDown(input.KEY_K))
 		{
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+			Entity e = new Entity(this, 0).setAnimationSet("res/NPC/Test/Image", 100).setDimensions(32, 32);
+			e.setDimensions(x, y);
+			map.getLevel().addEntity(e);
+		}
+		
+		
+		for(int i = -1; i <= 1; i ++)
+		{
+			for(int j = -1; j <= 1; j ++)
 			{
-				CollisionX = true;
-				T.nextTo = true;
-			}else
-			{
-				T.nextTo = false;
-			}
-			
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
-			{
-				CollisionY = true;
-				T.on = true;
-			}else
-			{
-				T.on = false;
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+				{
+					CollisionX = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = false;
+				}
+				
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
+				{
+					CollisionY = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = false;
+				}
 			}
 		}
 		
@@ -231,16 +242,14 @@ public class Player implements Serializable
 	{
 		if(!paused)
 		{
+			if(health <= 0)
+			{
+				die();
+			}
+			
 			Physics();
 			
 			Speed = baseSpeed * speed;
-			
-			if(input.isKeyDown(input.KEY_P))
-			{
-				Entity e = new Entity(x, y, 0).AnimationSet("res/NPC/Test/Image", 100).setDimensions(64, 64);
-				e.setMap(map);
-				map.getLevel().addEntity(e);
-			}
 			
 			if(Stun == 0)
 			{
@@ -353,6 +362,18 @@ public class Player implements Serializable
 		Screen.render(g);
 		
 		Body.render(g);
+		for(int i = -1; i <= 1; i ++)
+		{
+			for(int j = -1; j <= 1; j ++)
+			{
+				map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().render(g);
+			}
+		}
+	}
+	
+	public void die()
+	{
+		map.reset();
 	}
 	
 	public void Jump()

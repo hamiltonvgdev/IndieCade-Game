@@ -1,11 +1,22 @@
-/BoneStructure
 /Chestplate
-/GUI
-/GameBasics
+/Gauntlets
+/Pants
+/Stance
+/Map
 /Player
+<<<<<<< HEAD
 /Helmets/
 /Main/
 /Map/
 /NPCs/
 /Tiles/
 /Render/
+=======
+/Main
+/Tiles
+/GameBasics
+/BoneStructure
+/Helmets
+/Render
+/NPCs
+>>>>>>> refs/remotes/origin/Hummus-Branch

@@ -15,19 +15,25 @@ import Tiles.Tile;
 public class MapList 
 {
 	public static ArrayList<Map> Maps;
-	
+
 	public static void init(Player player) 
 	{
 		Maps = new ArrayList<Map>();
 		
 		try {
-			Map test = new Map(player, new Image("res/Maps/Training Hall.png"),  new Image("res/Maps/Training Hall.png"), 
-					new Color(8 / 255, 10 / 255, 0 / 255)).spawnNPC(
+			Map TrainingHall = new Map(player, new Image("res/Maps/Training Hall.png"),
+					new Image("res/Maps/Training Hall Back.png"), 
+					new Color(8 / 255F, 10 / 255F, 0 / 255F)).spawnNPC(
 							new AudioNPC("res/NPC/Test/Sound/Asian Voice File.wav", player, "derp", 100).
 							setIdleImage("res/NPC/Test/Image", 100).setDimensions(50, 100, 0).
 							setCoordinates(300, 300).
 							setPhrase("Please listen to my music!!"));
-			Maps.add(test);
+			Maps.add(TrainingHall);
+			
+			Map TrainingHallDoor = new Map(player,  new Image("res/Maps/Training Hall.png"),
+					new Image("res/Maps/Training Hall Back.png"), 
+					new Color(9 / 255F, 10 / 255F, 0 / 255F));
+			Maps.add(TrainingHallDoor);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

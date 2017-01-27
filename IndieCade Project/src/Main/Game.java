@@ -2,7 +2,6 @@ package Main;
 
 import java.io.Serializable;
 
-
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -17,7 +16,6 @@ import Map.MapList;
 import Map.World;
 import Player.Player;
 import Tiles.TileList;
-import GameBasics.Entity;
 
 public class Game extends BasicGameState implements Serializable
 {
@@ -46,9 +44,9 @@ public class Game extends BasicGameState implements Serializable
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException 
-	{
-		player.render(g);
+	{	
 		world.render(g);
+		player.render(g);
 		gui.render(g, player);
 	}
 

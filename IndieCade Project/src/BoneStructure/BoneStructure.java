@@ -121,8 +121,8 @@ public class BoneStructure implements Serializable
 		Ankle2 = new Joint(LLeg2, Foot2);
 		
 		
-		//Pelvic.getBone2().setRot(-225);
-		//Pelvic.getBone3().setRot(45);
+		Pelvic.getBone2().setRot(-225);
+		Pelvic.getBone3().setRot(45);
 		
 		Knee1.getBone2().setRot(90);
 		Knee2.getBone2().setRot(90);
@@ -136,7 +136,7 @@ public class BoneStructure implements Serializable
 	{
 		neck.update();
 		torso.update();
-		//Pelvic.update();
+		Pelvic.update();
 		Spine.update();
 		
 		shoulder1.update();
@@ -159,7 +159,7 @@ public class BoneStructure implements Serializable
 		Head.render(g);
 		neck.render(g);
 		Neck.render(g);
-		//torso.render(g);
+		torso.render(g);
 		Shoulder1.render(g);
 		Shoulder2.render(g);
 		USpine.render(g);
@@ -181,7 +181,7 @@ public class BoneStructure implements Serializable
 		LLeg2.render(g);
 		Foot2.render(g);
 		
-		//Pelvic.render(g);
+		Pelvic.render(g);
 		Spine.render(g);
 		
 		shoulder1.render(g);
@@ -252,5 +252,13 @@ public class BoneStructure implements Serializable
 	public ArrayList<Bone> getBones()
 	{
 		return Bones;
+	}
+	
+	public void flip()
+	{
+		for(Bone bone: Bones)
+		{
+			bone.setRot(bone.getDegRot() + 90);
+		}
 	}
 }

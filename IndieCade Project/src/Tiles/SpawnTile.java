@@ -46,11 +46,11 @@ public class SpawnTile extends Tile
 			}
 		}
 		
-		if(empty)
+		if(!empty)
 		{
 			if(System.currentTimeMillis() - tick > CD)
 			{
-				spawn();
+				//spawn();
 			}
 		}else
 		{
@@ -60,6 +60,7 @@ public class SpawnTile extends Tile
 	
 	public void spawn()
 	{
+		mob.setDimensions(x, y - mob.getHeight());
 		map.getLevel().addEntity(mob);
 		
 		if(spawnRef != null)

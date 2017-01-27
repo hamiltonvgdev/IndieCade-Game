@@ -22,6 +22,7 @@ public class Level implements Serializable
 	ArrayList<BasicNPC> NPCs;
 	
 	Player player;
+	Quad Screen;
 	
 	public Level(Player player)
 	{
@@ -30,6 +31,7 @@ public class Level implements Serializable
 		NPCs = new ArrayList<BasicNPC>();
 		
 		this.player = player;
+		Screen = new Quad(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
 	}
 	
 	public ArrayList<Entity> getEntities()
@@ -64,9 +66,13 @@ public class Level implements Serializable
 	
 	public void render(Graphics g) throws SlickException
 	{
-		for(Entity e : Entities)
+		for(int i = 0; i < Entities.size(); i ++)
 		{
-			e.render(g);
+			if(Entities.get(i).getHitbox().
+					checkQuad(Screen))
+			{
+				
+			}Entities.get(i).render(g);
 		}
 		
 		for(BasicNPC n : NPCs)
@@ -79,7 +85,11 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			Entities.get(i).update();
+			if(Entities.get(i).getHitbox().
+					checkQuad(Screen))
+			{
+				
+			}Entities.get(i).update();
 		}
 	}
 
