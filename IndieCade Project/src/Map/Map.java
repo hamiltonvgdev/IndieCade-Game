@@ -112,10 +112,7 @@ public class Map implements Serializable
 			T.render(g);
 		}
 		
-		for(int i = 0; i < level.getNPCs().size(); i ++)
-		{
-			level.getNPCs().get(i).render(g);
-		}
+		level.render(g);
 	}
 	
 	public void shift(float xa, float ya)

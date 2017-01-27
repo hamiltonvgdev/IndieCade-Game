@@ -144,7 +144,7 @@ public class AfterImage
 	public void render(Graphics g) throws SlickException
 	{
 		for(int i = 0; i < sprite.length; i ++)
-		{	
+		{
 			Image image = sprite[i].getImage().copy();
 		    image = sprite[i].getImage().getFlippedCopy(sprite[i].flip, false);
 		    image.setFilter(2);
