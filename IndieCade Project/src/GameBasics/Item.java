@@ -1,11 +1,13 @@
-package GameBasics;
+	package GameBasics;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import BoneStructure.Bone;
 import Menus.CodexItemEntry;
 import Player.Player;
 import Render.AnimationSet;
@@ -22,7 +24,7 @@ public abstract class Item implements Serializable
 	int code;
 	
 	String name;
-	protected AnimationSet sprite;
+	protected ArrayList<AnimationSet> Sprites;
 	int healthBoost;
 	int armorBoost;
 	int damageBoost;
@@ -31,10 +33,14 @@ public abstract class Item implements Serializable
 	
 	CodexItemEntry entry;
 	
+	protected ArrayList<Bone> Bones;
+	
 	public Item(String name)
 	{
 		this.name = name;
 		
+		Bones = new ArrayList<Bone>();
+		Sprites = new ArrayList<AnimationSet>();
 	}
 
 	protected void setInput(int code)
@@ -50,7 +56,7 @@ public abstract class Item implements Serializable
 	
 	public Item setSprite(String ref, long delay)
 	{
-		sprite = new AnimationSet(ref, delay);
+		Sprites.add(new AnimationSet(ref, delay));
 		return this;
 	}
 	
@@ -91,11 +97,16 @@ public abstract class Item implements Serializable
 		{
 			Ability();
 		}
+		
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(float width, float height, Graphics g) throws SlickException
 	{
-		
+		for(int i = 0; i < Sprites.size(); i ++)
+		{
+			Sprites.get(i).render(Bones.get(i).getX(), Bones.get(i).getY(), 
+					width, height, Bones.get(i).getRot(), g);
+		}
 	}
 	
 	public void Ability()

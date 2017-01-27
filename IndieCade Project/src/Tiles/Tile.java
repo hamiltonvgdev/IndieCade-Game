@@ -40,6 +40,8 @@ public class Tile implements Serializable
 	
 	Map map;
 	
+	int Type;
+	
 	public Tile(String name, Color Id)
 	{
 		this.name = name;
@@ -56,6 +58,8 @@ public class Tile implements Serializable
 		
 		on = false;
 		nextTo = true;
+		
+		Type = 0;
 	}
 	
 	public void changeCoordinates(float xa, float ya)
@@ -116,7 +120,7 @@ public class Tile implements Serializable
 	}
 
 	public void render(Graphics g) throws SlickException
-	{hitbox.changeDimensions(x, y, width, height);
+	{
 		sprite.render(x, y, width, height, 0, g);
 	}
 	
@@ -173,5 +177,10 @@ public class Tile implements Serializable
 	public Map getMap()
 	{
 		return map;
+	}
+
+	public int getType() 
+	{
+		return Type;
 	}
 }

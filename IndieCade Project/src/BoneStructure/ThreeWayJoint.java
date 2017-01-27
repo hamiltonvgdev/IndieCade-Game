@@ -33,6 +33,11 @@ public class ThreeWayJoint extends Joint implements Serializable
 		bone3.setRot(bone3.getDegRot() + rot);
 	}
 	
+	public void setBone3Rot(float rot)
+	{
+		bone3.setRot(rot);
+	}
+	
 	public Bone getBone3()
 	{
 		return bone3;

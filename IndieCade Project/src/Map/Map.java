@@ -16,6 +16,10 @@ import GameBasics.Level;
 import Geo.Quad;
 import Player.Player;
 import Tiles.Tile;
+import Tiles.Ladder;
+import Tiles.InteractTile;
+import Tiles.PortalTile;
+import Tiles.SpawnTile;
 import Tiles.TileList;
 
 public class Map implements Serializable
@@ -80,9 +84,9 @@ public class Map implements Serializable
 	{	
 		level.update();
 		
-		for(Tile T: TileMap)
+		for(int i = 0; i < TileMap.size(); i ++ )
 		{
-			T.update();
+			TileMap.get(i).update();
 		}
 		
 		for(int i = 0; i < level.getNPCs().size(); i ++)
@@ -144,7 +148,7 @@ public class Map implements Serializable
 		return TileMap;
 	}
 	
-	public Tile getCurrentTile(float x, float y)
+	public Tile getTile(float x, float y)
 	{
 		Tile derp = new Tile(null, null);
 		

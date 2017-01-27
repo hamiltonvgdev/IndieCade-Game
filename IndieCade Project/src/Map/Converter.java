@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 
+import Tiles.InteractTile;
+import Tiles.Ladder;
+import Tiles.PortalTile;
+import Tiles.SpawnTile;
 import Tiles.Tile;
 
 public class Converter 
@@ -15,12 +19,7 @@ public class Converter
 		{
 			Color ID = Id.get(i);
 			for(int j = 0; j < PossibleTiles.size(); j ++) 
-			{
-				if(i == 2)
-				{
-					System.out.println(PossibleTiles.get(2).getID());
-				}
-				
+			{	
 				if(Math.abs(PossibleTiles.get(j).getID().a - ID.a) <= 0.04)
 				{
 					if(Math.abs(PossibleTiles.get(j).getID().r - ID.r) <= 0.04)
@@ -29,12 +28,39 @@ public class Converter
 						{
 							if(Math.abs(PossibleTiles.get(j).getID().b - ID.b) <= 0.04)
 							{
-								Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
-										setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
-										setColidable(PossibleTiles.get(j).getCollidable()).
-										setFriction(PossibleTiles.get(j).getFriction()).
-										setSound(PossibleTiles.get(j).getSoundRef()));
 								
+								if(PossibleTiles.get(j).getType() == 0)
+								{
+									Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()));
+								}else if(PossibleTiles.get(j).getType() == 1)
+								{
+									Tiles.add(new PortalTile(PossibleTiles.get(j).getName(), ((PortalTile) PossibleTiles.get(j)).getWorld(),
+											PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()));
+								}else if(PossibleTiles.get(j).getType() == 2)
+								{
+									Tiles.add(new SpawnTile(PossibleTiles.get(j).getName(), ((SpawnTile) PossibleTiles.get(j)).getEnt(), 
+											((SpawnTile) PossibleTiles.get(j)).getCD(), PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()));
+								}else if(PossibleTiles.get(j).getType() == 3)
+								{
+									Tiles.add(new Ladder(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
+											PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()));
+								}
 								break;
 							}
 						}

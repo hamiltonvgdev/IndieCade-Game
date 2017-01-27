@@ -40,7 +40,8 @@ public class Player implements Serializable
 	int Jumps;
 	int MaxJumps;
 	long JumpTick;
-	boolean Jumping;
+	public boolean Jumping;
+	boolean collidable;
 	
 	//Horizontal Movement
 	float x;
@@ -105,6 +106,7 @@ public class Player implements Serializable
 		setJumps(1);
 		JumpTick = System.currentTimeMillis();
 		Jumping = false;
+		collidable = true;
 		
 		Vx = 0;
 		Vy = 0;
@@ -134,8 +136,6 @@ public class Player implements Serializable
 		Stun = 0;
 		
 		Body = new BoneStructure(this, 2F);
-		
-		walk = new Stance("Walk Cycle", Body, 6);
 	}
 	
 	public void setMap(Map map)
@@ -146,6 +146,16 @@ public class Player implements Serializable
 	public void setJumps(int jumps)
 	{
 		MaxJumps = jumps;
+	}
+	
+	public void clearJump()
+	{
+		Jumps = 0;
+	}
+	
+	public void setCollidable(boolean collide)
+	{
+		collidable = collide;
 	}
 	
 	public void setJumpV(float jumpV)
@@ -198,12 +208,15 @@ public class Player implements Serializable
 		
 		if(CollisionY)
 		{
-			Jumping = false;
-			if(Jumps < MaxJumps && Vy >= 0)
+			if(collidable)
 			{
-				Jumps ++;
+				Jumping = false;
+				if(Jumps < MaxJumps && Vy >= 0)
+				{
+					Jumps ++;
+				}
+				setVy(0);
 			}
-			setVy(0);
 		}else
 		{
 			Vy += Ay;
@@ -280,7 +293,7 @@ public class Player implements Serializable
 			{
 				if(Vx < 0)
 				{
-					Ax = map.getCurrentTile(x, y + 50).getFriction();
+					Ax = map.getTile(x, y + 50).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
@@ -288,14 +301,14 @@ public class Player implements Serializable
 				
 				if(Vx > 0)
 				{
-					Ax = -map.getCurrentTile(x, y + 50).getFriction();
+					Ax = -map.getTile(x, y + 50).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
 				}
 			}
 			
-			if(Math.abs(Vx) < map.getCurrentTile(x, y + 50).getFriction())
+			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
 			{
 				setVx(0);
 			}
@@ -407,6 +420,16 @@ public class Player implements Serializable
 	public float getVy()
 	{
 		return Vy;
+	}
+	
+	public float getAx()
+	{
+		return Ax;
+	}
+	
+	public float getAy()
+	{
+		return Ay;
 	}
 	
 	public float getSpeed()

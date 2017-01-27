@@ -11,9 +11,13 @@ public class PortalTile extends InteractTile
 	int xa;
 	int ya;
 	
-	public PortalTile(String name, Color Id)
+	public PortalTile(String name, World world, Color Id)
 	{
-		super(name, Id);
+		super(name, world.getPlayer(), Id);
+
+		this.world = world;
+		
+		Type = 1;
 	}
 	
 	public PortalTile setDirection(int xa, int ya)
@@ -21,12 +25,6 @@ public class PortalTile extends InteractTile
 		this.xa = xa;
 		this.ya = ya;
 		
-		return this;
-	}
-	
-	public PortalTile setWorld(World world)
-	{
-		this.world = world;
 		return this;
 	}
 	
@@ -40,5 +38,9 @@ public class PortalTile extends InteractTile
 	{
 		world.move(xa, ya);
 	}
-
+	
+	public World getWorld()
+	{
+		return world;
+	}
 }
