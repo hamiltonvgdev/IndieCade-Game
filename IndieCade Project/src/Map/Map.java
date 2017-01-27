@@ -106,7 +106,6 @@ public class Map implements Serializable
 	public void render(Graphics g) throws SlickException
 	{
 		g.drawImage(BackGround, x, y );
-		System.out.println(x + " " + y);
 		
 		for(Tile T: TileMap)
 		{
