@@ -68,11 +68,7 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			if(Entities.get(i).getHitbox().
-					checkQuad(Screen))
-			{
-				
-			}Entities.get(i).render(g);
+			Entities.get(i).render(g);
 		}
 		
 		for(BasicNPC n : NPCs)
@@ -85,11 +81,12 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			if(Entities.get(i).getHitbox().
-					checkQuad(Screen))
-			{
-				
-			}Entities.get(i).update();
+			Entities.get(i).update();
+		}
+		
+		for(int i = 0; i < NPCs.size(); i ++)
+		{
+			NPCs.get(i).update();
 		}
 	}
 
