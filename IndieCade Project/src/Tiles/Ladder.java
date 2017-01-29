@@ -9,7 +9,9 @@ import Player.Player;
 
 public class Ladder extends InteractTile
 {
-
+	boolean left;
+	boolean right;
+	
 	public Ladder(String name, Player player, Color Id) 
 	{
 		super(name, player, Id);
@@ -37,9 +39,22 @@ public class Ladder extends InteractTile
 			}
 		}
 		
-		map.getTile(x + 1, y).setColidable(false);
-		map.getTile(x - 1, y).setColidable(false);
+		if(player.Hitbox.checkQuad(hitbox))
+		{
+			if(map.getTile(x + 64, y).collidable)
+			{
+				
+			}
+			
+			if(map.getTile(x - 64, y).collidable)
+			{
+				
+			}
+		}
+			
 	}
+	
+	
 	
 	public void Action(int factor)
 	{
