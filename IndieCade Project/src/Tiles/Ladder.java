@@ -30,28 +30,38 @@ public class Ladder extends InteractTile
 			if(player.getInput().isKeyDown(Input.KEY_W))
 			{
 				Action(-1);
+				
+				if(map.getTile(x + 64, y).collidable)
+				{
+					map.getTile(x + 64, y).setColidable(false);
+				}
+				
+				if(map.getTile(x - 64, y).collidable)
+				{
+					map.getTile(x - 64, y).setColidable(false);
+				}
+				
 			}else if(player.getInput().isKeyDown(Input.KEY_S))
 			{
 				Action(1);
+				
+				if(map.getTile(x + 64, y).collidable)
+				{
+					map.getTile(x + 64, y).setColidable(false);
+					System.out.println("derp");
+				}
+				
+				if(map.getTile(x - 64, y).collidable)
+				{
+					map.getTile(x - 64, y).setColidable(false);
+				}
 			}else
 			{
 				action();
 			}
-		}
-		
-		if(player.Hitbox.checkQuad(hitbox))
-		{
-			if(map.getTile(x + 64, y).collidable)
-			{
-				
-			}
 			
-			if(map.getTile(x - 64, y).collidable)
-			{
-				
-			}
-		}
 			
+		}
 	}
 	
 	

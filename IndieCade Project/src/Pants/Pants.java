@@ -9,7 +9,7 @@ public class Pants extends Item
 	{
 		super(name);
 		
-		setInput(player.getInput().KEY_SPACE);
+		setInput(player.getInput().KEY_L);
 	}
 
 }

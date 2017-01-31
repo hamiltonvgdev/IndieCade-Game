@@ -134,6 +134,8 @@ public class Map implements Serializable
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
 		}
+		
+		level.getEntities().clear();
 
 		x = 0; 
 		y = 0;

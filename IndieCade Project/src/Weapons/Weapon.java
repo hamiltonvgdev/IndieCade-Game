@@ -2,6 +2,7 @@ package Weapons;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Graphics;
@@ -25,12 +26,12 @@ public abstract class Weapon implements Serializable
 	Map map;
 	
 	AnimationSet sprite;
-	float xOffset;
 	
 	float damage;
 	float atkSpeed;
 	float Range;
 	
+	Random gen;
 	float critChance;
 	float critMultiplier;
 	float statusChance;
@@ -38,6 +39,9 @@ public abstract class Weapon implements Serializable
 	
 	long atkTick;
 	ArrayList<Entity> Hit;
+	
+	float x;
+	float y;
 	
 	float width;
 	float height;
@@ -52,6 +56,12 @@ public abstract class Weapon implements Serializable
 		atkTick = System.currentTimeMillis();
 		
 		Hit = new ArrayList<Entity>();
+		
+		x = player.getBody().getJoint("Wrist 2").getBone2().getX();
+		y = player.getBody().getJoint("Wrist 2").getBone2().getY();
+		rot = player.getBody().getJoint("Wrist 2").getBone2().getRot();
+		
+		gen = new Random();
 	}
 	
 	public Weapon setSprite(String ref, long delay)
@@ -64,7 +74,6 @@ public abstract class Weapon implements Serializable
 	{
 		this.width = width;
 		this.height = height;
-		xOffset = width / 2;
 		return this;
 	}
 	
@@ -96,33 +105,14 @@ public abstract class Weapon implements Serializable
 			}
 		}
 		
-		if(player.getVx() > 0)
-		{
-			sprite.setFlip(false);
-			if(xOffset < 0)
-			{
-				xOffset = -xOffset;
-				rot = -rot;
-			}
-		}
-		
-		if(player.getVx() < 0)
-		{
-			sprite.setFlip(true);
-			
-			if(xOffset > 0)
-			{
-				xOffset = -xOffset;
-				rot = -rot;
-			}
-		}
-		
-		
+		x = player.getBody().getJoint("Wrist 2").getBone2().getX();
+		y = player.getBody().getJoint("Wrist 2").getBone2().getY();
+		rot = player.getBody().getJoint("Wrist 2").getBone2().getRot();
 	}
 	
 	public void render(Graphics g) throws SlickException
 	{
-		sprite.render(player.getX(), player.getY(), width, height, rot, g);
+		sprite.render(x, y, width, height, rot, g);
 	}
 	
 	public void updateMap(Map map)
@@ -133,6 +123,27 @@ public abstract class Weapon implements Serializable
 	public AnimationSet getSprite()
 	{
 		return sprite;
+	}
+	
+	public float getX()
+	{
+		return x;
+	}
+	
+	public float getY()
+	{
+		return y;
+	}
+	
+	public float getDamage()
+	{
+		if((gen.nextInt(100) + 1) <= critChance)
+		{
+			return damage * critMultiplier;
+		}else
+		{
+			return damage;
+		}
 	}
 	
 	public abstract void attack();

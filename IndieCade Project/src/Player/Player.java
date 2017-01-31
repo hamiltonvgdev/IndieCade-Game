@@ -132,10 +132,12 @@ public class Player implements Serializable
 		this.baseSpeed = 5;
 		speed = 1;
 		Speed = baseSpeed * speed;
-		
 		Stun = 0;
 		
 		Body = new BoneStructure(this, 2F);
+		
+		walk = new Stance("Derp", Body, 1);
+		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
 	}
 	
 	public void setMap(Map map)
@@ -179,13 +181,6 @@ public class Player implements Serializable
 		
 		boolean CollisionX = false;
 		boolean CollisionY = false;
-		
-		if(input.isKeyDown(input.KEY_K))
-		{
-			Entity e = new Entity(this, 0).setAnimationSet("res/NPC/Test/Image", 100).setDimensions(32, 32);
-			e.setDimensions(x, y);
-			map.getLevel().addEntity(e);
-		}
 		
 		
 		for(int i = -1; i <= 1; i ++)
@@ -247,11 +242,9 @@ public class Player implements Serializable
 				die();
 			}
 			
-			if(input.isKeyDown(input.KEY_P) && map.getLevel().getEntities().size() < 100)
+			if(input.isKeyDown(input.KEY_P))
 			{
-				Entity e = new Entity(this, 0).setAnimationSet("res/NPC/Test/Image", 100).setDimensions(64, 64);
-				e.setPosition(x, y);
-				map.directSpawn(e);
+				Body.flip(true);
 			}
 			
 			Physics();
@@ -382,6 +375,7 @@ public class Player implements Serializable
 	public void die()
 	{
 		map.reset();
+		health = maxHealth;
 	}
 	
 	public void Jump()

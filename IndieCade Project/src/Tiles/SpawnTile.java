@@ -16,7 +16,9 @@ public class SpawnTile extends Tile
 	{
 		super(name, Id);
 		
-		this.mob = mob;
+		this.mob = new Entity(mob.getPlayer(), mob.getDamage(), mob.getSpeed()).
+		setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+		setDimensions(mob.getWidth(), mob.getHeight());
 		
 		this.CD = CD;
 		
@@ -50,7 +52,7 @@ public class SpawnTile extends Tile
 		{
 			if(System.currentTimeMillis() - tick > CD)
 			{
-				//spawn();
+				spawn();
 			}
 		}else
 		{
@@ -60,13 +62,14 @@ public class SpawnTile extends Tile
 	
 	public void spawn()
 	{
-		mob.setDimensions(x, y - mob.getHeight());
+		mob.setPosition(x, y - mob.getHeight() / 2 - 32);
 		map.getLevel().addEntity(mob);
 		
 		if(spawnRef != null)
 		{
 			Sound.Sound.playSound(spawnRef);
 		}
+		
 	}
 	
 	public Entity getEnt()
