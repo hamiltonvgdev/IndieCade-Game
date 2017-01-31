@@ -180,13 +180,6 @@ public class Player implements Serializable
 		boolean CollisionX = false;
 		boolean CollisionY = false;
 		
-		if(input.isKeyDown(input.KEY_P))
-		{
-			Entity e = new Entity(this, 0).setAnimationSet("res/NPC/Test/Image", 100).setDimensions(32, 32);
-			e.setDimensions(x, y);
-			map.getLevel().addEntity(e);
-		}
-		
 		
 		for(int i = -1; i <= 1; i ++)
 		{
