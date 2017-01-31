@@ -8,7 +8,7 @@ public class Helmet extends Item
 	{
 		super(name);
 		
-		setInput(player.getInput().KEY_Q);
+		setInput(player.getInput().KEY_I);
 		
 		Bones.add(player.getBody().getJoint("Neck").getBone1());
 	}

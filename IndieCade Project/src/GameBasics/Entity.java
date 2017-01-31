@@ -1,67 +1,427 @@
 package GameBasics;
 
 import java.io.Serializable;
+import java.util.Random;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
+import BoneStructure.BoneStructure;
 import Geo.Quad;
+import Main.Config;
+import Map.Map;
+import Player.Player;
 import Render.AnimationSet;
 import Render.BasicImage;
+import Tiles.Tile;
 
-public abstract class Entity implements Serializable
+public class Entity implements Serializable
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1335939607570570293L;
+	
+	Player player;
+	boolean paused;
+	
+	//Horizontal movement
 	float x;
-	float y;
 	float Vx;
 	float Vy;
 	float Ax;
 	float Ay;
+	float acceleration;
 	
-	Quad Hitbox;
+	//Vertical movement
+	float y;
+	float jumpV;
+	int jump;
+	int maxjump;
+	long jumpTick;
+	boolean jumping;
 	
-	float height;
+	//Combat statistics
+	float maxHealth;
+	float health;
+	float damage;
+	float defense;
+	float speed;
+	float tenacity;
+	boolean stun;
+	
+	//Combat values
+	float Stun;
+	float Speed;
+	
+	//World
+	Map map;
+	
+	//Renders
 	float width;
-	AnimationSet Base;
-	public Entity()
-	{
-		
-	}
+	float height;
+	public Quad Hitbox;
+	Level level;
 	
-	public void init()
+	//animation
+	AnimationSet sprite;
+	
+	Random gen = new Random();
+	
+	public Entity(Player player, float damage, float speed)
 	{
-		width = ((BasicImage)Base.getSet().get(0)).getImage().getWidth();
-		height = ((BasicImage)Base.getSet().get(0)).getImage().getHeight();
+		this.player = player;
+		
+		paused = false;
+		
+		jumpV = -10F;
+		jump = 0;
+		maxjump = 2;
+		jumpTick = System.currentTimeMillis();
+		jumping = false;
+		
+		Vx = 0;
+		Vy = 0;
+		
+		Ax = 0;
+		Ay = 0.5F;
+		acceleration = 0.5F;
+		
 		Hitbox = new Quad(x, y, width, height);
 		
-		//Finish initializing
+		maxHealth = 100;
+		health = maxHealth;
+		defense = 5;
+		this.damage = damage;
+		tenacity = 0;
+		this.speed = speed;
+	}
+	public void setMap(Map map)
+	{
+		this.map = map;
 	}
 	
-	public Entity setLocation(float xa, float ya)
+	public void setPosition(float x, float y)
 	{
-		x = xa;
-		y = ya;
-		
-		
-		
+		this.x = x;
+		this.y = y;
+	}
+	
+	public Entity setAnimationSet(String ref, long delay)
+	{
+		sprite = new AnimationSet(ref, delay);
+		return this;
+	}
+	
+	public Entity setDimensions(float width, float height)
+	{
+		this.width = width;
+		this.height = height;
 		return this;
 	}
 	
 	public void update()
-	{
+	{		
+		if(!paused)
+		{
+			setMap(player.getMap());
+			sprite.resetAnimate();
+			
+			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
+			{
+				Vx = 0;
+			}
+			
+			if(health <= 0)
+			{
+				die();
+			}
+			
+			if(player.getX() < x)
+			{
+				sprite.setFlip(true);
+			}else
+			{
+				sprite.setFlip(false);
+			}
+			
+			if(player.Hitbox.checkQuad(Hitbox))
+			{
+				player.damage((int) damage);
+				player.Jump();
+				player.setVx(5 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+			}
+		}
+		
+		Vx += Ax;
+		Vy += Ay;
+		
+		move(Vx, 0);
+		move(0, Vy);
+		
+		Hitbox.changeDimensions(x, y, width, height);
 		
 	}
 	
-	public void render(Graphics g)
+	public void render(Graphics g) throws SlickException
 	{
-		
+		sprite.render(x, y, width, height, 0, g);
 	}
 	
-	public Quad getHitbox()
+	public void jump()
+	{
+		Vy = jumpV;
+		jump --;
+		jumping = true;
+		
+		jumpTick = System.currentTimeMillis();
+	}
+	
+	public void pause()
+	{
+		paused = true;
+	}
+	
+	public void unpause()
+	{
+		paused = false;
+	}
+	
+	public float getX()
+	{
+		return x;
+	}
+	
+	public float getY()
+	{
+		return y;
+	}
+	
+	public float getVx()
+	{
+		return Vx;
+	}
+	
+	public float getVy()
+	{
+		return Vy;
+	}
+	
+	public float getDamage()
+	{
+		return damage;
+	}
+	
+	public float getDefense()
+	{
+		return defense;
+	}
+	
+	public float getMaxHealth()
+	{
+		return maxHealth;
+	}
+	
+	public float getTenacity()
+	{
+		return tenacity;
+	}
+	
+	public float getSpeed()
+	{
+		return speed;
+	}
+	
+	public float getHeight()
+	{
+		return height;
+	}
+	
+	public float getWidth()
+	{
+		return width;
+	}
+	
+	public AnimationSet getSprite()
+	{
+		return sprite;
+	}
+	
+	public Player getPlayer()
+	{
+		return player;
+	}
+	
+	public Map getMap()
+	{
+		return map;
+	}
+	
+	public void damage(float f)
+	{
+		health -= f;
+	}
+	
+	public void die()
+	{
+		for(int i = 0; i < level.getEntities().size(); i ++)
+		{
+			if(level.getEntities().get(i) == this)
+			{
+				level.getEntities().remove(i);
+			}
+		}
+		
+	}
+	public Quad getHitbox() 
 	{
 		return Hitbox;
+	}
+	
+	public void follow(Player player)
+	{
+		float distX = player.getX() - x;
+		float distY = player.getY() - y;
+		
+		if(distY != 0)
+		{
+			try
+			{
+				move(0, (distY) / (Math.abs(distY)));
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+		
+		if(distX != 0)
+		{
+			try
+			{
+				move((distX) / (Math.abs(distX)) , 0);
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+	}
+	
+	public void move(float Xa, float Ya)
+	{
+		if(!stun)
+		{
+			x += Xa * speed;
+			y += Ya * speed;
+		}
+	}
+	
+	public void Move(float Xa, float Ya)
+	{
+		x += Xa;
+		y += Ya;
+	}
+	
+	public void follow(Entity patient)
+	{
+		float distX = patient.getX() - x;
+		float distY = patient.getY() - y;
+		
+		if(distY != 0)
+		{
+			try
+			{
+				move(0, (distY) / (Math.abs(distY)));
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+		
+		if(distX != 0)
+		{
+			try
+			{
+				move((distX) / (Math.abs(distX)) , 0);
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else
+		{
+			move(0, 0);
+		}
+	}
+	
+	public boolean distanceSense(float distance, Entity patient)
+	{
+		double space = Math.sqrt(Math.pow(x -
+				patient.getX(), 2) + Math.pow(y - patient.getY(), 2));
+		
+		if(space <= distance)
+		{
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
+	
+	public void wander()
+	{
+		int movement = gen.nextInt(8) + 1;
+		
+		switch(movement)
+		{
+			default:
+			{
+				move(0, 0);
+				break;
+			}
+			
+			case 1:
+			{
+				move(speed, 0);
+				break;
+			}
+			
+			case 2:
+			{
+				move(0, jump);
+				break;
+			}
+			
+			case 3:
+			{
+				move(-speed, 0);
+				break;
+			}
+			
+			
+			case 4:
+			{
+				move(speed, jump);
+				break;
+			}
+			
+			case 5:
+			{
+				move(-speed, jump);
+				break;
+			}
+		}
+		
 	}
 }

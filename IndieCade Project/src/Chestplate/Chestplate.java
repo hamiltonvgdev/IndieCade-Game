@@ -10,7 +10,7 @@ public class Chestplate extends Item
 	{
 		super(name);
 		
-		setInput(player.getInput().KEY_E);
+		setInput(player.getInput().KEY_O);
 		
 		Bones.add(player.getBody().getJoint("Torso").getBone2());
 		Bones.add(((FourWayJoint) player.getBody().getJoint("Torso")).getBone3());

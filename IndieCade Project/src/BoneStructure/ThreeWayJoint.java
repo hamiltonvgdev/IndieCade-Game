@@ -26,6 +26,14 @@ public class ThreeWayJoint extends Joint implements Serializable
 		
 		bone3.setX((float) (x + bone3.getLength() / 2 * Math.cos(bone3.getRot())));
 		bone3.setY((float) (y + constant * bone3.getLength() / 2 * Math.sin(bone3.getRot())));
+		
+		if(bone2.flip)
+		{
+			
+		}else
+		{
+			
+		}
 	}
 	
 	public void rotBone3(float rot)

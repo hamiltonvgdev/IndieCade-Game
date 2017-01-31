@@ -9,6 +9,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import BoneStructure.BoneStructure;
+import GameBasics.Entity;
 import GameBasics.Item;
 import Geo.Quad;
 import Main.Config;
@@ -131,10 +132,12 @@ public class Player implements Serializable
 		this.baseSpeed = 5;
 		speed = 1;
 		Speed = baseSpeed * speed;
-		
 		Stun = 0;
 		
 		Body = new BoneStructure(this, 2F);
+		
+		walk = new Stance("Derp", Body, 1);
+		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
 	}
 	
 	public void setMap(Map map)
@@ -179,24 +182,28 @@ public class Player implements Serializable
 		boolean CollisionX = false;
 		boolean CollisionY = false;
 		
-		for(Tile T : map.getTiles())
+		
+		for(int i = -1; i <= 1; i ++)
 		{
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+			for(int j = -1; j <= 1; j ++)
 			{
-				CollisionX = true;
-				T.nextTo = true;
-			}else
-			{
-				T.nextTo = false;
-			}
-			
-			if(T.getCollidable() && T.getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
-			{
-				CollisionY = true;
-				T.on = true;
-			}else
-			{
-				T.on = false;
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+				{
+					CollisionX = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = false;
+				}
+				
+				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
+				{
+					CollisionY = true;
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = true;
+				}else
+				{
+					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = false;
+				}
 			}
 		}
 		
@@ -230,6 +237,16 @@ public class Player implements Serializable
 	{
 		if(!paused)
 		{
+			if(health <= 0)
+			{
+				die();
+			}
+			
+			if(input.isKeyDown(input.KEY_P))
+			{
+				Body.flip(true);
+			}
+			
 			Physics();
 			
 			Speed = baseSpeed * speed;
@@ -345,6 +362,20 @@ public class Player implements Serializable
 		Screen.render(g);
 		
 		Body.render(g);
+		
+		for(int i = -1; i <= 1; i ++)
+		{
+			for(int j = -1; j <= 1; j ++)
+			{
+				
+			}
+		}
+	}
+	
+	public void die()
+	{
+		map.reset();
+		health = maxHealth;
 	}
 	
 	public void Jump()

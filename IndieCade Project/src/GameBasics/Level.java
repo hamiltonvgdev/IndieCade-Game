@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import Geo.Quad;
 import Main.Config;
 import Player.Player;
+import Projectiles.BasicProjectile;
 
 public class Level implements Serializable
 {
@@ -19,17 +20,21 @@ public class Level implements Serializable
 	private static final long serialVersionUID = -6513983764060293943L;
 	ArrayList<Entity> Entities;
 	ArrayList<Item> Items;
+	ArrayList<BasicProjectile> Projectiles;
 	ArrayList<BasicNPC> NPCs;
 	
 	Player player;
+	Quad Screen;
 	
 	public Level(Player player)
 	{
 		Entities = new ArrayList<Entity>();
 		Items = new ArrayList<Item>();
 		NPCs = new ArrayList<BasicNPC>();
+		Projectiles = new ArrayList<BasicProjectile>();
 		
 		this.player = player;
+		Screen = new Quad(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
 	}
 	
 	public ArrayList<Entity> getEntities()
@@ -62,14 +67,36 @@ public class Level implements Serializable
 		NPCs.remove(npc);
 	}
 	
-	public void render(GameContainer gc, Graphics g) throws SlickException
+	public ArrayList<BasicProjectile> getProjectiles()
 	{
-		for(Entity e : Entities)
+		return Projectiles;
+	}
+	
+	public void addProjectile(BasicProjectile projectile)
+	{
+		Projectiles.add(projectile);
+	}
+	
+	public void removeProjectile(BasicProjectile projectile)
+	{
+		Projectiles.remove(projectile);
+	}
+	
+	public void render(Graphics g) throws SlickException
+	{
+		for(int i = 0; i < Entities.size(); i ++)
 		{
-			if(e.getHitbox().checkQuad(new Quad(Config.WIDTH / 2, Config.HEIGHT / 2, Config.WIDTH, Config.HEIGHT)))
-			{
-				e.render(g);
-			}
+			Entities.get(i).render(g);
+		}
+		
+		for(BasicNPC n : NPCs)
+		{
+			n.render(g);
+		}
+		
+		for(int i = 0; i < Projectiles.size(); i ++)
+		{
+			Projectiles.get(i).render(g);
 		}
 	}
 	
@@ -79,18 +106,34 @@ public class Level implements Serializable
 		{
 			Entities.get(i).update();
 		}
+		
+		for(int i = 0; i < NPCs.size(); i ++)
+		{
+			NPCs.get(i).update();
+		}
+		
+		for(int i = 0; i < Projectiles.size(); i ++)
+		{
+			Projectiles.get(i).update();
+		}
+		Screen.changeDimensions(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
 	}
 
 	public void shift(float xa, float ya) 
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			//move each entity
+			Entities.get(i).Move(xa, ya);
 		}
 		
 		for(int i = 0; i < NPCs.size(); i ++)
 		{
 			NPCs.get(i).shift(xa, ya);
+		}
+		
+		for(int i = 0; i < Projectiles.size(); i ++)
+		{
+			Projectiles.get(i).move(xa, ya);
 		}
 	}
 

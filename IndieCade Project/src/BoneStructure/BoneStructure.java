@@ -254,4 +254,13 @@ public class BoneStructure implements Serializable
 	{
 		return Bones;
 	}
+	
+	public void flip(boolean flip)
+	{
+		//Figure out how to flip Use ThreeWayJoint and FourWayJoint
+		for(Bone bone: Bones)
+		{
+			bone.setFlip(flip);
+		}
+	}
 }
