@@ -17,12 +17,16 @@ public class Bone implements Serializable
 	float length;
 	float rot;
 	
+	boolean flip;
+	
 	public Bone(float length)
 	{
 		x = 0;
 		y = 0;
 		rot = 0;
 		this.length = length;
+		
+		flip = false;
 	}
 	
 	public void setRot(float rot)
@@ -38,6 +42,11 @@ public class Bone implements Serializable
 	public void setY(float y)
 	{
 		this.y = y;
+	}
+	
+	public void setFlip(boolean flip)
+	{
+		this.flip = flip;
 	}
 	
 	public void render(Graphics g)

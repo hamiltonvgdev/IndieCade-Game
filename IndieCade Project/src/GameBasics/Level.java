@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import Geo.Quad;
 import Main.Config;
 import Player.Player;
+import Projectiles.BasicProjectile;
 
 public class Level implements Serializable
 {
@@ -19,6 +20,7 @@ public class Level implements Serializable
 	private static final long serialVersionUID = -6513983764060293943L;
 	ArrayList<Entity> Entities;
 	ArrayList<Item> Items;
+	ArrayList<BasicProjectile> Projectiles;
 	ArrayList<BasicNPC> NPCs;
 	
 	Player player;
@@ -29,6 +31,7 @@ public class Level implements Serializable
 		Entities = new ArrayList<Entity>();
 		Items = new ArrayList<Item>();
 		NPCs = new ArrayList<BasicNPC>();
+		Projectiles = new ArrayList<BasicProjectile>();
 		
 		this.player = player;
 		Screen = new Quad(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
@@ -64,6 +67,21 @@ public class Level implements Serializable
 		NPCs.remove(npc);
 	}
 	
+	public ArrayList<BasicProjectile> getProjectiles()
+	{
+		return Projectiles;
+	}
+	
+	public void addProjectile(BasicProjectile projectile)
+	{
+		Projectiles.add(projectile);
+	}
+	
+	public void removeProjectile(BasicProjectile projectile)
+	{
+		Projectiles.remove(projectile);
+	}
+	
 	public void render(Graphics g) throws SlickException
 	{
 		for(int i = 0; i < Entities.size(); i ++)
@@ -74,6 +92,11 @@ public class Level implements Serializable
 		for(BasicNPC n : NPCs)
 		{
 			n.render(g);
+		}
+		
+		for(int i = 0; i < Projectiles.size(); i ++)
+		{
+			Projectiles.get(i).render(g);
 		}
 	}
 	
@@ -88,6 +111,12 @@ public class Level implements Serializable
 		{
 			NPCs.get(i).update();
 		}
+		
+		for(int i = 0; i < Projectiles.size(); i ++)
+		{
+			Projectiles.get(i).update();
+		}
+		Screen.changeDimensions(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
 	}
 
 	public void shift(float xa, float ya) 
@@ -100,6 +129,11 @@ public class Level implements Serializable
 		for(int i = 0; i < NPCs.size(); i ++)
 		{
 			NPCs.get(i).shift(xa, ya);
+		}
+		
+		for(int i = 0; i < Projectiles.size(); i ++)
+		{
+			Projectiles.get(i).move(xa, ya);
 		}
 	}
 

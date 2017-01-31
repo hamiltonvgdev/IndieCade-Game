@@ -68,7 +68,7 @@ public class Entity implements Serializable
 	
 	Random gen = new Random();
 	
-	public Entity(Player player, float speed)
+	public Entity(Player player, float damage, float speed)
 	{
 		this.player = player;
 		
@@ -92,7 +92,7 @@ public class Entity implements Serializable
 		maxHealth = 100;
 		health = maxHealth;
 		defense = 5;
-		damage = 5;
+		this.damage = damage;
 		tenacity = 0;
 		this.speed = speed;
 	}
@@ -120,69 +120,12 @@ public class Entity implements Serializable
 		return this;
 	}
 	
-	public void Physics()
-	{
-		Vx += Ax;
-		
-		boolean CollisionX = false;
-		boolean CollisionY = false;
-		
-		//This is problem
-		for(int i = -1; i <= 1; i ++)
-		{
-			for(int j = -1; j <= 1; j ++)
-			{
-				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
-				{
-					CollisionX = true;
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = true;
-				}else
-				{
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = false;
-				}
-				
-				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
-				{
-					CollisionY = true;
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = true;
-				}else
-				{
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = false;
-				}
-			}
-		}
-		
-		if(CollisionX)
-		{
-			Vx = 0;
-		}
-		
-		if(CollisionY)
-		{
-			jumping = false;
-			if(jump < maxjump && Vy > 0)
-			{
-				jump ++;
-			}
-			Vy = 0;
-		}else
-		{
-			Vy += Ay;
-			if(!jumping)
-			{
-				jump = 0;
-			}
-		}
-	}
-	
-	
 	public void update()
 	{		
-		
 		if(!paused)
 		{
 			setMap(player.getMap());
-			Physics();
+			sprite.resetAnimate();
 			
 			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
 			{
@@ -193,9 +136,26 @@ public class Entity implements Serializable
 			{
 				die();
 			}
+			
+			if(player.getX() < x)
+			{
+				sprite.setFlip(true);
+			}else
+			{
+				sprite.setFlip(false);
+			}
+			
+			if(player.Hitbox.checkQuad(Hitbox))
+			{
+				player.damage((int) damage);
+				player.Jump();
+				player.setVx(5 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+			}
 		}
-		move(-Vx, 0);
-		move(0, -Vy);
+		
+		Vx += Ax;
+		Vy += Ay;
+		
 		move(Vx, 0);
 		move(0, Vy);
 		
@@ -247,6 +207,31 @@ public class Entity implements Serializable
 		return Vy;
 	}
 	
+	public float getDamage()
+	{
+		return damage;
+	}
+	
+	public float getDefense()
+	{
+		return defense;
+	}
+	
+	public float getMaxHealth()
+	{
+		return maxHealth;
+	}
+	
+	public float getTenacity()
+	{
+		return tenacity;
+	}
+	
+	public float getSpeed()
+	{
+		return speed;
+	}
+	
 	public float getHeight()
 	{
 		return height;
@@ -257,14 +242,24 @@ public class Entity implements Serializable
 		return width;
 	}
 	
+	public AnimationSet getSprite()
+	{
+		return sprite;
+	}
+	
+	public Player getPlayer()
+	{
+		return player;
+	}
+	
 	public Map getMap()
 	{
 		return map;
 	}
 	
-	public void damage(int damage)
+	public void damage(float f)
 	{
-		health -= damage;
+		health -= f;
 	}
 	
 	public void die()

@@ -254,11 +254,12 @@ public class BoneStructure implements Serializable
 		return Bones;
 	}
 	
-	public void flip()
+	public void flip(boolean flip)
 	{
+		//Figure out how to flip Use ThreeWayJoint and FourWayJoint
 		for(Bone bone: Bones)
 		{
-			bone.setRot(bone.getDegRot() + 90);
+			bone.setFlip(flip);
 		}
 	}
 }
