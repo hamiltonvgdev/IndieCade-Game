@@ -75,6 +75,14 @@ public class TileList
 				setColidable(true).
 				setFriction(0.5F);
 		Tiles.add(GearBox);
+		
+		SpawnTile grid = (SpawnTile) new SpawnTile("grid",
+				new Entity(player, 5, 0).setAnimationSet("res/Entities/test/Images", 300).setDimensions(19 * 5, 23 * 5),
+				100, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Spawntest/Images", 100).
+				setColidable(true).
+				setFriction(0.1F);
+		Tiles.add(grid);
 	}
 	
 	public static ArrayList<Tile> getTiles()

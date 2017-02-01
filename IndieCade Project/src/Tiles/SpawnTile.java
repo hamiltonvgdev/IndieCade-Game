@@ -8,6 +8,7 @@ public class SpawnTile extends Tile
 {
 	Entity mob;
 	String spawnRef;
+	Entity test;
 	
 	long CD;
 	long tick;
@@ -19,6 +20,10 @@ public class SpawnTile extends Tile
 		this.mob = new Entity(mob.getPlayer(), mob.getDamage(), mob.getSpeed()).
 		setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
 		setDimensions(mob.getWidth(), mob.getHeight());
+		
+		this.test = new Entity(mob.getPlayer(), mob.getDamage(), mob.getSpeed()).
+				setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+				setDimensions(mob.getWidth(), mob.getHeight());
 		
 		this.CD = CD;
 		
@@ -64,6 +69,9 @@ public class SpawnTile extends Tile
 	{
 		mob.setPosition(x, y - mob.getHeight() / 2 - 32);
 		map.getLevel().addEntity(mob);
+		
+		test.setPosition(x, y - mob.getHeight() / 2 - 32);
+		map.getLevel().addEntity(test);
 		
 		if(spawnRef != null)
 		{
