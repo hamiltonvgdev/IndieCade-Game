@@ -23,6 +23,7 @@ import Stance.Action;
 import Stance.Stance;
 import Tiles.Tile;
 import Weapons.MeleeWeapon;
+import Weapons.RangedWeapon;
 import Weapons.Weapon;
 
 public class Player implements Serializable
@@ -138,6 +139,11 @@ public class Player implements Serializable
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
+		
+		Wpn = ((RangedWeapon) new RangedWeapon("Bow", this).
+				setAtkStats(10, 500, 15).setChance(50, 2, 0, 0).
+				setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100)).
+				setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, 45);
 	}
 	
 	public void setMap(Map map)
@@ -237,6 +243,7 @@ public class Player implements Serializable
 	{
 		if(!paused)
 		{
+			Body.Wrist2.rotBone2(1);
 			if(health <= 0)
 			{
 				die();
@@ -338,13 +345,13 @@ public class Player implements Serializable
 			
 			Body.update();
 			
-			
+
+			Wpn.update();
 			/*	
 			Helmet.update();
 			Chestplate.update();
 			Pants.update();
 			Gauntlet.update();
-			Wpn.update();
 			
 			maxHealth = 1 * (100 + Helmet.getHealth() + Chestplate.getHealth() + Pants.getHealth() + Gauntlet.getHealth()) / 100;
 			armor = 1 * (100 + Helmet.getArmor() + Chestplate.getArmor() + Pants.getArmor() + Gauntlet.getArmor()) / 100;
@@ -363,13 +370,7 @@ public class Player implements Serializable
 		
 		Body.render(g);
 		
-		for(int i = -1; i <= 1; i ++)
-		{
-			for(int j = -1; j <= 1; j ++)
-			{
-				
-			}
-		}
+		Wpn.render(g);
 	}
 	
 	public void die()

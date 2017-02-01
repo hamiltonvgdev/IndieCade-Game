@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import GameBasics.Entity;
@@ -30,6 +31,7 @@ public abstract class Weapon implements Serializable
 	float damage;
 	float atkSpeed;
 	float Range;
+	int factor;
 	
 	Random gen;
 	float critChance;
@@ -62,11 +64,14 @@ public abstract class Weapon implements Serializable
 		rot = player.getBody().getJoint("Wrist 2").getBone2().getRot();
 		
 		gen = new Random();
+		
+		factor = 1;
 	}
 	
 	public Weapon setSprite(String ref, long delay)
 	{
 		sprite = new AnimationSet(ref, delay);
+		sprite.setFlip(true);
 		return this;
 	}
 	
@@ -96,7 +101,7 @@ public abstract class Weapon implements Serializable
 	
 	public void update()
 	{
-		if(Mouse.isButtonDown(player.getInput().MOUSE_LEFT_BUTTON))
+		if(player.getInput().isKeyDown(Input.KEY_P))
 		{
 			if(System.currentTimeMillis() - atkTick >= atkSpeed)
 			{
@@ -105,9 +110,14 @@ public abstract class Weapon implements Serializable
 			}
 		}
 		
+		if(player.getVx() != 0)
+		{
+			factor = (int) (player.getVx() / Math.abs(player.getVx()));
+		}
+		
 		x = player.getBody().getJoint("Wrist 2").getBone2().getX();
 		y = player.getBody().getJoint("Wrist 2").getBone2().getY();
-		rot = player.getBody().getJoint("Wrist 2").getBone2().getRot();
+		rot = player.getBody().getJoint("Wrist 2").getBone2().getDegRot();
 	}
 	
 	public void render(Graphics g) throws SlickException
