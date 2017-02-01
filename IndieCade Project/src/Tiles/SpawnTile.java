@@ -68,6 +68,7 @@ public class SpawnTile extends Tile
 	public void spawn()
 	{
 		mob.setPosition(x, y - mob.getHeight() / 2 - 32);
+		mob.reset();
 		map.getLevel().addEntity(mob);
 		
 		test.setPosition(x, y - mob.getHeight() / 2 - 32);

@@ -99,6 +99,7 @@ public class Entity implements Serializable
 	public void setMap(Map map)
 	{
 		this.map = map;
+		level = map.getLevel();
 	}
 	
 	public void setPosition(float x, float y)
@@ -269,9 +270,9 @@ public class Entity implements Serializable
 			if(level.getEntities().get(i) == this)
 			{
 				level.getEntities().remove(i);
+				break;
 			}
 		}
-		
 	}
 	public Quad getHitbox() 
 	{
@@ -423,4 +424,13 @@ public class Entity implements Serializable
 			}
 		}
 	}
+	
+	public void reset() 
+	{
+		health = maxHealth;
+		jump = 0;
+		stun = false;
+	}
+	
 }
+

@@ -70,7 +70,7 @@ public class TileList
 
 		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox", 
 				new Entity(player, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
-				100, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
+				2000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
 				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
 				setColidable(true).
 				setFriction(0.5F);
