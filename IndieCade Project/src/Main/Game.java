@@ -45,8 +45,8 @@ public class Game extends BasicGameState implements Serializable
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException 
 	{	
-		player.render(g);
 		world.render(g);
+		player.render(g);
 		gui.render(g, player);
 	}
 

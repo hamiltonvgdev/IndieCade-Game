@@ -14,6 +14,7 @@ import GameBasics.BasicNPC;
 import GameBasics.Entity;
 import GameBasics.Level;
 import Geo.Quad;
+import Main.Config;
 import Player.Player;
 import Tiles.Tile;
 import Tiles.Ladder;
@@ -61,8 +62,8 @@ public class Map implements Serializable
 			TileMap.get(i).setMap(this);
 		}
 
-		x = width * 64 / 2; 
-		y = height * 64 / 2;
+		x = 0; 
+		y = 0;
 		Hitbox = new Quad(x, y, width * 64, height * 64);
 		
 		themeMusic = null;
@@ -104,17 +105,14 @@ public class Map implements Serializable
 
 	public void render(Graphics g) throws SlickException
 	{
-		g.drawImage(BackGround, 0, 0);
+		g.drawImage(BackGround, x, y );
 		
 		for(Tile T: TileMap)
 		{
 			T.render(g);
 		}
 		
-		for(int i = 0; i < level.getNPCs().size(); i ++)
-		{
-			level.getNPCs().get(i).render(g);
-		}
+		level.render(g);
 	}
 	
 	public void shift(float xa, float ya)
@@ -136,9 +134,11 @@ public class Map implements Serializable
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
 		}
+		
+		level.getEntities().clear();
 
-		x = width * 64 / 2; 
-		y = height * 64 / 2;
+		x = 0; 
+		y = 0;
 	}
 	
 	public Color getID()

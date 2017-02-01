@@ -9,7 +9,7 @@ public class Gauntlet extends Item
 	{
 		super(name);
 		
-		setInput(player.getInput().KEY_LSHIFT);
+		setInput(player.getInput().KEY_K);
 	}
 
 }

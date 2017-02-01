@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 
+import GameBasics.Entity;
 import Map.World;
 import Player.Player;
 
@@ -37,10 +38,6 @@ public class TileList
 				setColidable(true).setFriction(0.5F);
 		Tiles.add(Wood);
 		
-		Tile GearBox = new Tile("Gear Box", new Color(204 / 255F, 204 / 255F, 204 / 255F)).
-				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
-				setColidable(true).setFriction(0.5F);
-		Tiles.add(GearBox);
 	}
 	
 	public static void initPortals(World world)
@@ -68,6 +65,16 @@ public class TileList
 				setAnimation("res/Tiles/Ladders/Wood/Images", 100).
 				setFriction(0);
 		Tiles.add(ladder);
+		
+		///////////////////////////////////////////////////////////////////	
+
+		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox", 
+				new Entity(player, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
+				100, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
+				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
+				setColidable(true).
+				setFriction(0.5F);
+		Tiles.add(GearBox);
 	}
 	
 	public static ArrayList<Tile> getTiles()

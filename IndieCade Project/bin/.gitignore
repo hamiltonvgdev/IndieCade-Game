@@ -1,5 +1,11 @@
-/BoneStructure
-/Chestplate
-/GUI
-/GameBasics
 /Player
+/GameBasics
+/Tiles
+/Map
+/BoneStructure
+/Pants
+/Gauntlets
+/Chestplate
+/Helmets
+/Projectiles
+/Weapons
