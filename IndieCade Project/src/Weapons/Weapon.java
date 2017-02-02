@@ -110,9 +110,12 @@ public abstract class Weapon implements Serializable
 			}
 		}
 		
-		if(player.getVx() != 0)
+		if(player.leftMove)
 		{
-			factor = (int) (player.getVx() / Math.abs(player.getVx()));
+			factor = -1;
+		}else if(player.rightMove)
+		{
+			factor = 1;
 		}
 		
 		x = player.getBody().getJoint("Wrist 2").getBone2().getX();

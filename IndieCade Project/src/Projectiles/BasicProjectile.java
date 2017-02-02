@@ -78,6 +78,7 @@ public class BasicProjectile
 			if(player.Hitbox.checkQuad(hitbox))
 			{
 				player.damage((int) entity.getDamage());
+				weapon.affect();
 				end();
 			}
 		}else if(type == 1)
@@ -87,6 +88,7 @@ public class BasicProjectile
 				if(player.getMap().getLevel().getEntities().get(i).Hitbox.checkQuad(hitbox))
 				{
 					player.getMap().getLevel().getEntities().get(i).damage(weapon.getDamage());
+					weapon.affect();
 					end();
 				}
 			}

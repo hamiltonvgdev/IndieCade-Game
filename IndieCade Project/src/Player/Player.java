@@ -54,8 +54,8 @@ public class Player implements Serializable
 	
 	//Input
 	transient Input input;
-	boolean rightMove;
-	boolean leftMove;
+	public boolean rightMove;
+	public boolean leftMove;
 	
 	//World
 	Map map;
@@ -243,7 +243,6 @@ public class Player implements Serializable
 	{
 		if(!paused)
 		{
-			Body.Wrist2.rotBone2(1);
 			if(health <= 0)
 			{
 				die();
@@ -263,6 +262,7 @@ public class Player implements Serializable
 				if(input.isKeyDown(input.KEY_D) && !input.isKeyDown(input.KEY_A))
 				{
 					rightMove = true;
+					leftMove = false;
 				}else
 				{
 					rightMove = false;
@@ -271,6 +271,7 @@ public class Player implements Serializable
 				if(input.isKeyDown(input.KEY_A) && !input.isKeyDown(input.KEY_D))
 				{
 					leftMove = true;
+					rightMove = false;
 				}else
 				{
 					leftMove = false;

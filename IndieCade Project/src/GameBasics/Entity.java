@@ -138,7 +138,7 @@ public class Entity implements Serializable
 				die();
 			}
 			
-			if(player.getX() < x)
+			if(player.getX() > x)
 			{
 				sprite.setFlip(true);
 			}else
