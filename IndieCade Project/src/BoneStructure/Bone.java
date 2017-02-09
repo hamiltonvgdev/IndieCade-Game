@@ -46,6 +46,11 @@ public class Bone implements Serializable
 	
 	public void setFlip(boolean flip)
 	{
+		if(this.flip != flip)
+		{
+			setRot(180 - getDegRot());
+		}
+		
 		this.flip = flip;
 	}
 	
@@ -67,6 +72,17 @@ public class Bone implements Serializable
 		return (float) Math.toDegrees(rot);
 	}
 	
+	public float getPureRot()
+	{
+		if(flip)
+		{
+			return 180 - ((float) Math.toDegrees(rot));
+		}else
+		{
+			return (float) Math.toDegrees(rot);
+		}
+	}
+	
 	public float getX()
 	{
 		return x;
@@ -75,6 +91,11 @@ public class Bone implements Serializable
 	public float getY()
 	{
 		return y;
+	}
+	
+	public boolean getFlip()
+	{
+		return flip;
 	}
 	
 	public float getLength()

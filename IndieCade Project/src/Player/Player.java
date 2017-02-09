@@ -19,6 +19,7 @@ import Map.Map;
 import Menus.CodexItemEntry;
 import Menus.CodexMenu;
 import Render.AnimationSet;
+import Render.BasicImage;
 import Stance.Action;
 import Stance.Stance;
 import Tiles.Tile;
@@ -92,6 +93,8 @@ public class Player implements Serializable
 	Stance startWalk;
 	Stance stopWalk;
 	
+	ArrayList<BasicImage> Model;
+	
 	public Player(Game game, float x, float y)
 	{
 		this.game = game;
@@ -135,7 +138,7 @@ public class Player implements Serializable
 		Speed = baseSpeed * speed;
 		Stun = 0;
 		
-		Body = new BoneStructure(this, 2F);
+		Body = new BoneStructure(this, 4F);
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
@@ -144,6 +147,27 @@ public class Player implements Serializable
 				setAtkStats(10, 500, 15).setChance(50, 2, 0, 0).
 				setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100)).
 				setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, 45);
+		
+		Model = new ArrayList<BasicImage>();
+		Model.add(new BasicImage("res/Player/Head/Head.png"));
+		Model.add(new BasicImage("res/Player/Neck/Neck.png"));
+		Model.add(new BasicImage("res/Player/Torso/Shoulders.png"));
+		Model.add(new BasicImage("res/Player/Torso/Shoulders.png"));
+		Model.add(new BasicImage("res/Player/Torso/Lower Torso.png"));
+		Model.add(new BasicImage("res/Player/Torso/Upper Torso.png"));
+		Model.add(new BasicImage("res/Player/Leg/Upper Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Upper Leg.png"));
+		Model.add(new BasicImage("res/Player/Arm/Upper Arm.png"));
+		Model.add(new BasicImage("res/Player/Arm/Lower Arm.png"));
+		Model.add(new BasicImage("res/Player/Arm/Hand.png"));
+		Model.add(new BasicImage("res/Player/Arm/Upper Arm.png"));
+		Model.add(new BasicImage("res/Player/Arm/Lower Arm.png"));
+		Model.add(new BasicImage("res/Player/Arm/Hand.png"));
+		Model.add(new BasicImage("res/Player/Leg/Lower Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Foot.png"));
+		Model.add(new BasicImage("res/Player/Leg/Lower Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Foot.png"));
+		
 	}
 	
 	public void setMap(Map map)
@@ -240,17 +264,12 @@ public class Player implements Serializable
 	}
 	
 	public void update()
-	{
+	{	
 		if(!paused)
 		{
 			if(health <= 0)
 			{
 				die();
-			}
-			
-			if(input.isKeyDown(input.KEY_P))
-			{
-				Body.flip(true);
 			}
 			
 			Physics();
@@ -371,8 +390,17 @@ public class Player implements Serializable
 		
 		Body.render(g);
 		
-		Wpn.render(g);
-	}
+		//Wpn.render(g);
+		
+		for(int i = 0; i < Model.size(); i ++)
+		{
+			Model.get(i).setFlip(Body.getBones().get(i).getFlip());
+			Model.get(i).render(Body.getBones().get(i).getX(), Body.getBones().get(i).getY(), 
+					Model.get(i).getImage().getWidth(), 
+					Model.get(i).getImage().getHeight(), 
+					Body.getBones().get(i).getPureRot(), g);
+		}
+}
 	
 	public void die()
 	{
