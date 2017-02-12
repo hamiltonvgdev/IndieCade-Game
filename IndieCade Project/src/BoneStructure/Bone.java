@@ -87,10 +87,10 @@ public class Bone implements Serializable
 	{
 		if(flip)
 		{
-			return - getPureRot();
+			return getPureRot();
 		}else
 		{
-		 return getPureRot();
+		 return -getPureRot();
 		}
 	}
 	

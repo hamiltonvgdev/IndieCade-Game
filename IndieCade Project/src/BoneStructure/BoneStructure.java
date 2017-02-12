@@ -95,9 +95,9 @@ public class BoneStructure implements Serializable
 		PelvicR = new Joint(Pelvic1, ULeg1);
 		PelvicL = new Joint(Pelvic2, ULeg2);
 		
-		UArm1 = new Bone(size * 11);
+		UArm1 = new Bone(size * 5);
 		Bones.add(UArm1);
-		LArm1 = new Bone(size * 16);
+		LArm1 = new Bone(size * 22);
 		Bones.add(LArm1);
 		Hand1 = new Bone(size * 21);
 		Bones.add(Hand1);
@@ -105,9 +105,9 @@ public class BoneStructure implements Serializable
 		Elbow1 = new Joint(UArm1, LArm1);
 		Wrist1 = new Joint(LArm1, Hand1);
 
-		UArm2 = new Bone(size * 11);
+		UArm2 = new Bone(size * 5);
 		Bones.add(UArm2);
-		LArm2 = new Bone(size * 16);
+		LArm2 = new Bone(size * 22);
 		Bones.add(LArm2);
 		Hand2 = new Bone(size * 21);
 		Bones.add(Hand2);
@@ -132,7 +132,10 @@ public class BoneStructure implements Serializable
 		
 		torso.rotBone2(-15);
 		torso.rotBone3(15);
-		shoulder1.rotBone2(15);
+		shoulder1.rotBone2(40);
+		shoulder2.rotBone2(40);
+		Elbow1.rotBone2(-60);
+		Elbow2.rotBone2(-60);
 		
 		
 		Pelvic.getBone2().setRot(0);
@@ -154,12 +157,6 @@ public class BoneStructure implements Serializable
 	
 	public void update()
 	{
-		for(Bone derp : getBones())
-		{
-			derp.setRot(derp.getDegRot() + 1F);
-		}
-		Pelvic.rotBone2(-1);
-		Pelvic.rotBone3(1);
 		
 		neck.update();
 		torso.update();

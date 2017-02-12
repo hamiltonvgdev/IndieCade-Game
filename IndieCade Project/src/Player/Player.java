@@ -138,7 +138,7 @@ public class Player implements Serializable
 		Speed = baseSpeed * speed;
 		Stun = 0;
 		
-		Body = new BoneStructure(this, 2F);
+		Body = new BoneStructure(this, 4F);
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
@@ -390,16 +390,16 @@ public class Player implements Serializable
 		
 		Body.render(g);
 		
-		//Wpn.render(g);
+		Wpn.render(g);
 		
-	/*	for(int i = 0; i < Model.size(); i ++)
+		for(int i = 0; i < Model.size(); i ++)
 		{
 			Model.get(i).setFlip(Body.getBones().get(i).getFlip());
 			Model.get(i).render(Body.getBones().get(i).getX(), Body.getBones().get(i).getY(), 
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize(), 
-					Body.getBones().get(i).getPureRot(), g);
-		}*/
+					Body.getBones().get(i).getRenderRot(), g);
+		}
 }
 	
 	public void die()
