@@ -138,7 +138,7 @@ public class Player implements Serializable
 		Speed = baseSpeed * speed;
 		Stun = 0;
 		
-		Body = new BoneStructure(this, 4F);
+		Body = new BoneStructure(this, 2F);
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
@@ -155,17 +155,17 @@ public class Player implements Serializable
 		Model.add(new BasicImage("res/Player/Torso/Shoulders.png"));
 		Model.add(new BasicImage("res/Player/Torso/Lower Torso.png"));
 		Model.add(new BasicImage("res/Player/Torso/Upper Torso.png"));
-		Model.add(new BasicImage("res/Player/Leg/Upper Leg.png"));
-		Model.add(new BasicImage("res/Player/Leg/Upper Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Upper Left Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Upper Right Leg.png"));
 		Model.add(new BasicImage("res/Player/Arm/Upper Arm.png"));
 		Model.add(new BasicImage("res/Player/Arm/Lower Arm.png"));
 		Model.add(new BasicImage("res/Player/Arm/Hand.png"));
 		Model.add(new BasicImage("res/Player/Arm/Upper Arm.png"));
 		Model.add(new BasicImage("res/Player/Arm/Lower Arm.png"));
 		Model.add(new BasicImage("res/Player/Arm/Hand.png"));
-		Model.add(new BasicImage("res/Player/Leg/Lower Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Lower Left Leg.png"));
 		Model.add(new BasicImage("res/Player/Leg/Foot.png"));
-		Model.add(new BasicImage("res/Player/Leg/Lower Leg.png"));
+		Model.add(new BasicImage("res/Player/Leg/Lower Right Leg.png"));
 		Model.add(new BasicImage("res/Player/Leg/Foot.png"));
 		
 	}
@@ -392,14 +392,14 @@ public class Player implements Serializable
 		
 		//Wpn.render(g);
 		
-		for(int i = 0; i < Model.size(); i ++)
+	/*	for(int i = 0; i < Model.size(); i ++)
 		{
 			Model.get(i).setFlip(Body.getBones().get(i).getFlip());
 			Model.get(i).render(Body.getBones().get(i).getX(), Body.getBones().get(i).getY(), 
-					Model.get(i).getImage().getWidth(), 
-					Model.get(i).getImage().getHeight(), 
+					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
+					Model.get(i).getImage().getHeight() / 4 * Body.getSize(), 
 					Body.getBones().get(i).getPureRot(), g);
-		}
+		}*/
 }
 	
 	public void die()

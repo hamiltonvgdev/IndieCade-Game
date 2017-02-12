@@ -74,12 +74,23 @@ public class Bone implements Serializable
 	
 	public float getPureRot()
 	{
-		if(flip)
+		if(!flip)
 		{
 			return 180 - ((float) Math.toDegrees(rot));
 		}else
 		{
 			return (float) Math.toDegrees(rot);
+		}
+	}
+	
+	public float getRenderRot()
+	{
+		if(flip)
+		{
+			return - getPureRot();
+		}else
+		{
+		 return getPureRot();
 		}
 	}
 	
