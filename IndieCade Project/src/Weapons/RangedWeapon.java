@@ -32,13 +32,13 @@ public class RangedWeapon extends Weapon
 	public void attack() 
 	{
 		shot = new BasicProjectile(player, null, this, 1).setSprite(Pref, Pdelay).
-				setDimensions(Pwidth, Pheight, Prot);
+				setDimensions(Pwidth, Pheight, -Prot);
 		shot.shoot(Range * factor);
 		
 		if(factor < 0)
 		{
 			shot.getSprite().setFlip(true);
-			shot = shot.setDimensions(Pwidth, Pheight, -Prot);
+			shot = shot.setDimensions(Pwidth, Pheight, Prot);
 		}
 	}
 

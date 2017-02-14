@@ -138,7 +138,7 @@ public class Player implements Serializable
 		Speed = baseSpeed * speed;
 		Stun = 0;
 		
-		Body = new BoneStructure(this, 4F);
+		Body = new BoneStructure(this, 2F);
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
@@ -146,7 +146,7 @@ public class Player implements Serializable
 		Wpn = ((RangedWeapon) new RangedWeapon("Bow", this).
 				setAtkStats(10, 500, 15).setChance(50, 2, 0, 0).
 				setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100)).
-				setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, 45);
+				setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, -45);
 		
 		Model = new ArrayList<BasicImage>();
 		Model.add(new BasicImage("res/Player/Head/Head.png"));
@@ -388,18 +388,16 @@ public class Player implements Serializable
 		Hitbox.render(g);
 		Screen.render(g);
 		
-		Body.render(g);
-		
-		Wpn.render(g);
-		
 		for(int i = 0; i < Model.size(); i ++)
 		{
-			Model.get(i).setFlip(Body.getBones().get(i).getFlip());
+			Model.get(i).setFlip(!Body.getBones().get(i).getFlip());
 			Model.get(i).render(Body.getBones().get(i).getX(), Body.getBones().get(i).getY(), 
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize(), 
 					Body.getBones().get(i).getRenderRot(), g);
 		}
+		
+		Wpn.render(g);
 }
 	
 	public void die()

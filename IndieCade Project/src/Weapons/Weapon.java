@@ -120,8 +120,8 @@ public abstract class Weapon implements Serializable
 		
 		x = player.getBody().getJoint("Wrist 2").getBone2().getX();
 		y = player.getBody().getJoint("Wrist 2").getBone2().getY();
-		rot = player.getBody().getJoint("Wrist 2").getBone2().getPureRot();
-		sprite.setFlip(!player.getBody().getJoint("Wrist 2").getBone2().getFlip());
+		rot = player.getBody().getJoint("Wrist 2").getBone2().getRenderRot() - 90;
+		sprite.setFlip(player.getBody().getJoint("Wrist 2").getBone2().getFlip());
 	}
 	
 	public void render(Graphics g) throws SlickException
