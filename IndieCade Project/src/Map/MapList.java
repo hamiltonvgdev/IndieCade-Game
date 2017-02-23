@@ -7,6 +7,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import GameBasics.BasicNPC;
+import GameBasics.Entity;
 import NPCs.AudioNPC;
 import NPCs.ImageNPC;
 import Player.Player;
@@ -30,11 +31,14 @@ public class MapList
 							setPhrase("Please listen to my music!!"));
 			Maps.add(TrainingHall);
 			
+			
+			
 			Map TrainingHallDoor = new Map(player,  new Image("res/Maps/Training Hall.png"),
 					new Image("res/Maps/Training Hall Back.png"), 
 					new Color(9 / 255F, 10 / 255F, 0 / 255F));
 			Maps.add(TrainingHallDoor);
-		} catch (SlickException e) {
+		} catch (SlickException e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -42,5 +46,15 @@ public class MapList
 	public static ArrayList<Map> getMaps()
 	{
 		return Maps;
+	}
+
+	public static void directSpawn(Player player) 
+	{
+		Entity Enemy = new Enemy.Enemy(player, 100, 15, 1).
+				setAnimationSet("res/Entities/goblin/Images/Stale", 800).
+				setDimensions(19 * 5, 23 * 5);
+		Enemy.setMap(player.getMap());
+		Enemy.setPosition(100, 1250);
+		Maps.get(1).directSpawn(Enemy);
 	}
 }

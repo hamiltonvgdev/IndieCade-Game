@@ -88,6 +88,8 @@ public class Game extends BasicGameState implements Serializable
 		world = new World(player);
 		
 		TileList.initPortals(world);
+		
+		MapList.directSpawn(player);
 	}
 	
 	public GameContainer getGc()

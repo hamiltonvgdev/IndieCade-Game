@@ -1,50 +1,5 @@
-<<<<<<< HEAD
-/Player
-<<<<<<< HEAD
-<<<<<<< HEAD
-/Helmets/
-/Main/
 /Map/
-/NPCs/
-/Tiles/
+/Enemy/
+/GameBasics/
 /Render/
-=======
-/Main
-/Tiles
-=======
->>>>>>> refs/remotes/origin/Hummus-Branch
-/GameBasics
-/Tiles
-/Map
-=======
->>>>>>> refs/remotes/origin/Hummus-Branch
-/BoneStructure
-/Chestplate
-/GUI
-/GameBasics
-/Gauntlets
-/Geo
-/Helmets
-<<<<<<< HEAD
-<<<<<<< HEAD
-/Render
-/NPCs
->>>>>>> refs/remotes/origin/Hummus-Branch
-=======
-=======
-/Load
-/Main
-/Map
-/Menus
-/NPCs
-/Pants
-/Player
->>>>>>> refs/remotes/origin/Hummus-Branch
-/Projectiles
-/Render
-/Weapons
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/Hummus-Branch
-=======
-/Tiles
->>>>>>> refs/remotes/origin/Hummus-Branch
+/Tiles/

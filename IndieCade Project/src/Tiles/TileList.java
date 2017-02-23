@@ -38,6 +38,11 @@ public class TileList
 				setColidable(true).setFriction(0.5F);
 		Tiles.add(Wood);
 		
+		Tile dirt= new Tile("dirt", new Color(0 / 255F, 200 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Dirt/Images", 100).
+				setColidable(true).setFriction(0.5F);
+		Tiles.add(dirt);
+		
 	}
 	
 	public static void initPortals(World world)
@@ -69,24 +74,24 @@ public class TileList
 		///////////////////////////////////////////////////////////////////	
 
 		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox", 
-				new Entity(player, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
-				2000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
+				new Entity(player, 100, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
+				4000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
 				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
 				setColidable(true).
 				setFriction(0.5F);
 		Tiles.add(GearBox);
 		
-		SpawnTile grid = (SpawnTile) new SpawnTile("grid",
-				new Entity(player, 5, 0).setAnimationSet("res/Entities/test/Images", 300).setDimensions(19 * 5, 23 * 5),
-				100, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
-				setAnimation("res/Tiles/Spawntest/Images", 100).
+		SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
+				new Entity(player, 50, 5, 0).setAnimationSet("res/Entities/goblin/Images/Stale", 800).setDimensions(19 * 5, 23 * 5),
+				4000, new Color(0 / 255F, 255 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Dirt/Images", 100).
 				setColidable(true).
 				setFriction(0.1F);
-		Tiles.add(grid);
+		Tiles.add(dirtSpawn);
 	}
 	
 	public static ArrayList<Tile> getTiles()
 	{
-		return Tiles;
+		return Tiles;	
 	}
 }
