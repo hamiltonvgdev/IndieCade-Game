@@ -8,6 +8,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import com.sun.xml.internal.ws.client.sei.ResponseBuilder.Body;
+
 import BoneStructure.BoneStructure;
 import GameBasics.Entity;
 import GameBasics.Item;
@@ -64,7 +66,6 @@ public class Player implements Serializable
 	//Renders
 	float width;
 	float height;
-	public Quad Hitbox;
 	Quad Screen;
 	
 	//Gear
@@ -94,6 +95,7 @@ public class Player implements Serializable
 	Stance stopWalk;
 	
 	ArrayList<BasicImage> Model;
+	ArrayList<Quad> Hitboxes;
 	
 	public Player(Game game, float x, float y)
 	{
@@ -105,7 +107,7 @@ public class Player implements Serializable
 		
 		this.x = x;
 		this.y = y;
-		JumpV = -7F;
+		JumpV = -15F;
 		Jumps = 0;
 		setJumps(1);
 		JumpTick = System.currentTimeMillis();
@@ -116,16 +118,17 @@ public class Player implements Serializable
 		Vy = 0;
 		
 		
-		input = new Input(1);
+		input = game.getGc().getInput();
 		
 		Ax = 0;
-		Ay = 0.3F;
-		acceleration = 0.5F;
+		Ay = 1.5F;
+		acceleration = 5F;
 		
-		width = 64;
-		height = 64;
+		Body = new BoneStructure(this, 0.9F);
 		
-		Hitbox = new Quad(x, y, width, height);
+		width = 110 * Body.getSize();
+		height = 150 * Body.getSize();
+		
 		Screen = new Quad(x, y, Config.WIDTH, Config.HEIGHT);
 		
 		maxHealth = 100;
@@ -133,18 +136,16 @@ public class Player implements Serializable
 		armor = 0;
 		damage = 5;
 		tenacity = 0;
-		this.baseSpeed = 5;
+		this.baseSpeed = 15;
 		speed = 1;
 		Speed = baseSpeed * speed;
 		Stun = 0;
-		
-		Body = new BoneStructure(this, 2F);
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
 		
 		Wpn = ((RangedWeapon) new RangedWeapon("Bow", this).
-				setAtkStats(10, 500, 15).setChance(50, 2, 0, 0).
+				setAtkStats(1000, 500, 50).setChance(50, 2, 0, 0).
 				setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100)).
 				setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, -45);
 		
@@ -167,6 +168,14 @@ public class Player implements Serializable
 		Model.add(new BasicImage("res/Player/Leg/Foot.png"));
 		Model.add(new BasicImage("res/Player/Leg/Lower Right Leg.png"));
 		Model.add(new BasicImage("res/Player/Leg/Foot.png"));
+		
+		Hitboxes = new ArrayList<Quad>();
+		
+		for(int i = 0; i < Model.size(); i ++)
+		{
+			Hitboxes.add(new Quad(0, 0, 
+					Model.get(i).getImage().getWidth(), Model.get(i).getImage().getHeight()));
+		}
 		
 	}
 	
@@ -213,26 +222,33 @@ public class Player implements Serializable
 		boolean CollisionY = false;
 		
 		
-		for(int i = -1; i <= 1; i ++)
+		for(int k = Hitboxes.size() - 3; k < Hitboxes.size(); k += 2)
 		{
-			for(int j = -1; j <= 1; j ++)
+			for(int i = -1; i <= 1; i ++)
 			{
-				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x + Vx + Ax, y, width, height)))
+				for(int j = -1; j <= 1; j ++)
 				{
-					CollisionX = true;
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = true;
-				}else
-				{
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).nextTo = false;
-				}
-				
-				if(map.getTile(x + i * (width + 5), y + j * (height + 5)).getCollidable() && map.getTile(x + i * (width + 5), y + j * (height + 5)).getHitbox().checkQuad(new Quad(x, y + Vy + Ay, width, height)))
-				{
-					CollisionY = true;
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = true;
-				}else
-				{
-					map.getTile(x + i * (width + 5), y + j * (height + 5)).on = false;
+					if(map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getCollidable() 
+							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getHitbox().
+							checkQuad(new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2 + Vx + Ax, Hitboxes.get(k).y + Hitboxes.get(k).height / 2, Hitboxes.get(k).width, Hitboxes.get(k).height)))
+					{
+						CollisionX = true;
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).nextTo = true;
+					}else
+					{
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).nextTo = false;
+					}
+					
+					if(map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getCollidable() 
+							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getHitbox().
+							checkQuad(new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2, Hitboxes.get(k).y + Hitboxes.get(k).height / 2 + Vy + Ay, Hitboxes.get(k).width, Hitboxes.get(k).height)))
+					{
+						CollisionY = true;
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).on = true;
+					}else
+					{
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).on = false;
+					}
 				}
 			}
 		}
@@ -251,6 +267,7 @@ public class Player implements Serializable
 				{
 					Jumps ++;
 				}
+				System.out.println("derp");
 				setVy(0);
 			}
 		}else
@@ -282,6 +299,11 @@ public class Player implements Serializable
 				{
 					rightMove = true;
 					leftMove = false;
+					
+					if(Body.flip)
+					{
+						Body.flip();
+					}
 				}else
 				{
 					rightMove = false;
@@ -291,6 +313,11 @@ public class Player implements Serializable
 				{
 					leftMove = true;
 					rightMove = false;
+					
+					if(!Body.flip)
+					{
+						Body.flip();
+					}
 				}else
 				{
 					leftMove = false;
@@ -329,7 +356,7 @@ public class Player implements Serializable
 			{
 				if(Vx < 0)
 				{
-					Ax = map.getTile(x, y + 50).getFriction();
+					Ax = map.getTile(x, y + 50 + 64 * 2 * Body.getSize()).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
@@ -337,14 +364,14 @@ public class Player implements Serializable
 				
 				if(Vx > 0)
 				{
-					Ax = -map.getTile(x, y + 50).getFriction();
+					Ax = -map.getTile(x, y + 64 * 2 * Body.getSize()).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
 				}
 			}
 			
-			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
+			if(Math.abs(Vx) < map.getTile(x, y + 50 + 64 * 2 * Body.getSize()).getFriction())
 			{
 				setVx(0);
 			}
@@ -360,11 +387,9 @@ public class Player implements Serializable
 			map.shift(-Vx, 0);
 			map.shift(0, -Vy);
 			
-			Hitbox.changeDimensions(x, y, width, height);
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 			
 			Body.update();
-			
 
 			Wpn.update();
 			/*	
@@ -385,7 +410,6 @@ public class Player implements Serializable
 	
 	public void render(Graphics g) throws SlickException
 	{
-		Hitbox.render(g);
 		Screen.render(g);
 		
 		for(int i = 0; i < Model.size(); i ++)
@@ -395,6 +419,18 @@ public class Player implements Serializable
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize(), 
 					Body.getBones().get(i).getRenderRot(), g);
+			
+			Hitboxes.get(i).changeDimensions(Body.getBones().get(i).getX(), 
+					Body.getBones().get(i).getY(), 
+					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
+					Model.get(i).getImage().getHeight() / 4 * Body.getSize());
+		}
+		
+		for(int k = Hitboxes.size() - 3; k < Hitboxes.size(); k += 2)
+		{
+			Hitboxes.get(k).render(g);
+			new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2, Hitboxes.get(k).y +  Hitboxes.get(k).height / 2 + Vy + Ay, 
+					Hitboxes.get(k).width, Hitboxes.get(k).height).render(g);
 		}
 		
 		Wpn.render(g);
@@ -531,5 +567,72 @@ public class Player implements Serializable
 	public Weapon getWeapon()
 	{
 		return Wpn;
+	}
+	
+	public ArrayList<Quad> getHitboxes()
+	{
+		return Hitboxes;
+	}
+	
+	public Quad getHitbox(String name)
+	{
+		if(name.equals("Head"))
+		{
+			return Hitboxes.get(0);
+		}else if(name.equals("Neck"))
+		{
+			return Hitboxes.get(1);
+		}else if(name.equals("Shoulder 1"))
+		{
+			return Hitboxes.get(2);
+		}else if(name.equals("Shoulder 2"))
+		{
+			return Hitboxes.get(3);
+		}else if(name.equals("Lower Spine"))
+		{
+			return Hitboxes.get(4);
+		}else if(name.equals("Upper Spine"))
+		{
+			return Hitboxes.get(5);
+		}else if(name.equals("Upper Leg 1"))
+		{
+			return Hitboxes.get(6);
+		}else if(name.equals("Upper Leg 2"))
+		{
+			return Hitboxes.get(7);
+		}else if(name.equals("Upper Arm 1"))
+		{
+			return Hitboxes.get(8);
+		}else if(name.equals("Lower Arm 1"))
+		{
+			return Hitboxes.get(9);
+		}else if(name.equals("Hand 1"))
+		{
+			return Hitboxes.get(10);
+		}else if(name.equals("Upper Arm 2"))
+		{
+			return Hitboxes.get(11);
+		}else if(name.equals("Lower Arm 2"))
+		{
+			return Hitboxes.get(12);
+		}else if(name.equals("Hand 2"))
+		{
+			return Hitboxes.get(13);
+		}else if(name.equals("Lower Leg  1"))
+		{
+			return Hitboxes.get(14);
+		}else if(name.equals("Foot 1"))
+		{
+			return Hitboxes.get(15);
+		}else if(name.equals("Lower Leg 2"))
+		{
+			return Hitboxes.get(16);
+		}else if(name.equals("Foot 2"))
+		{
+			return Hitboxes.get(17);
+		}else
+		{
+			return null;
+		}
 	}
 }

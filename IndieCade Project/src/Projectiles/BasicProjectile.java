@@ -75,11 +75,16 @@ public class BasicProjectile
 		
 		if(type == 0)
 		{
-			if(player.Hitbox.checkQuad(hitbox))
+			for(Quad hitbox: player.getHitboxes())
 			{
-				player.damage((int) entity.getDamage());
-				weapon.affect();
-				end();
+				if(hitbox.checkQuad(this.hitbox))
+				{
+					player.damage((int) entity.getDamage());
+					weapon.affect();
+					end();
+					
+					break;
+				}
 			}
 		}else if(type == 1)
 		{

@@ -53,6 +53,8 @@ public class Entity implements Serializable
 	//Combat values
 	float Stun;
 	float Speed;
+	long atkSpeed;
+	long atkTick;
 	
 	//World
 	Map map;
@@ -68,11 +70,12 @@ public class Entity implements Serializable
 	
 	Random gen = new Random();
 	
-	public Entity(Player player, float damage, float speed)
+	public Entity(Player player, float speed)
 	{
 		this.player = player;
 		
 		paused = false;
+		stun = false;
 		
 		jumpV = -10F;
 		jump = 0;
@@ -80,10 +83,10 @@ public class Entity implements Serializable
 		jumpTick = System.currentTimeMillis();
 		jumping = false;
 		
-		Vx = 0;
+		Vx = -1;
 		Vy = 0;
 		
-		Ax = 0;
+		Ax = 0F;
 		Ay = 0.5F;
 		acceleration = 0.5F;
 		
@@ -92,9 +95,9 @@ public class Entity implements Serializable
 		maxHealth = 100;
 		health = maxHealth;
 		defense = 5;
-		this.damage = damage;
 		tenacity = 0;
 		this.speed = speed;
+
 	}
 	public void setMap(Map map)
 	{
@@ -121,12 +124,58 @@ public class Entity implements Serializable
 		return this;
 	}
 	
+	public Entity setAtkValues(float damage, long atkSpeed)
+	{
+		this.damage = damage;
+		this.atkSpeed = atkSpeed;
+		atkSpeed = System.currentTimeMillis();
+		return this;
+	}
+	
+	public void Physics()
+	{
+		Vx += Ax;
+		Vy += Ay;
+		for(int i = -1; i < 2; i += 2)
+		{
+			if(map.getTile(x + i * (width / 2 + Vx + Ax), y).getCollidable())
+			{
+				if(map.getTile(x + i * (width / 2 + Vx + Ax), y).getHitbox().checkQuad(Hitbox))
+				{
+					if(Vx * i > 0)
+					{
+						Vx = 0;
+					}
+				}
+			}
+		}
+		
+		for(int i = -1; i < 2; i += 2)
+		{
+			if(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getCollidable())
+			{
+				if(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getHitbox().checkQuad(Hitbox))
+				{
+					if(Vy * i > 0)
+					{
+						Vy = 0;
+					}
+				}
+			}
+		}
+		
+		
+		move(Vx, 0);
+		move(0, Vy);
+	}
+	
 	public void update()
 	{		
 		if(!paused)
 		{
 			setMap(player.getMap());
 			sprite.resetAnimate();
+			Physics();
 			
 			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
 			{
@@ -146,19 +195,21 @@ public class Entity implements Serializable
 				sprite.setFlip(false);
 			}
 			
-			if(player.Hitbox.checkQuad(Hitbox))
+			if(System.currentTimeMillis() - atkTick >= atkSpeed)
 			{
-				player.damage((int) damage);
-				player.Jump();
-				player.setVx(5 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+				for(Quad hitbox: player.getHitboxes())
+				{
+					if(hitbox.checkQuad(Hitbox))
+					{
+						player.damage((int) damage);
+						player.Jump();
+						player.setVx(5 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+						atkTick = System.currentTimeMillis();
+						break;
+					}
+				}
 			}
 		}
-		
-		Vx += Ax;
-		Vy += Ay;
-		
-		move(Vx, 0);
-		move(0, Vy);
 		
 		Hitbox.changeDimensions(x, y, width, height);
 		
@@ -242,7 +293,11 @@ public class Entity implements Serializable
 	{
 		return width;
 	}
-	
+
+	public long getAtkSpeed() 
+	{
+		return atkSpeed;
+	}
 	public AnimationSet getSprite()
 	{
 		return sprite;
@@ -258,9 +313,9 @@ public class Entity implements Serializable
 		return map;
 	}
 	
-	public void damage(float f)
+	public void damage(float damage)
 	{
-		health -= f;
+		health -= damage;
 	}
 	
 	public void die()

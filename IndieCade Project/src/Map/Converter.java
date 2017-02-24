@@ -8,6 +8,7 @@ import Tiles.InteractTile;
 import Tiles.Ladder;
 import Tiles.PortalTile;
 import Tiles.SpawnTile;
+import Tiles.Stairs;
 import Tiles.Tile;
 
 public class Converter 
@@ -39,7 +40,7 @@ public class Converter
 								}else if(PossibleTiles.get(j).getType() == 1)
 								{
 									Tiles.add(new PortalTile(PossibleTiles.get(j).getName(), ((PortalTile) PossibleTiles.get(j)).getWorld(),
-											PossibleTiles.get(j).getID()).
+											PossibleTiles.get(j).getID()).setDirection(((PortalTile) PossibleTiles.get(j)).getXa(), ((PortalTile) PossibleTiles.get(j)).getYa()).
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).
 											setFriction(PossibleTiles.get(j).getFriction()).
@@ -55,6 +56,14 @@ public class Converter
 								}else if(PossibleTiles.get(j).getType() == 3)
 								{
 									Tiles.add(new Ladder(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
+											PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()));
+								}else if(PossibleTiles.get(j).getType() == 4)
+								{
+									Tiles.add(new Stairs(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
 											PossibleTiles.get(j).getID()).
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).

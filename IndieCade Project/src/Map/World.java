@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import Player.Player;
@@ -29,6 +30,12 @@ public class World implements Serializable
 	{
 		paused = false;
 		
+		this.player = player;
+	}
+	
+	public void initMaps()
+	{
+
 		try {
 			world = Converter.convertMap(MapReader.readTileMap(new Image("res/World.png")), MapList.getMaps());
 		} catch (SlickException e) {
@@ -42,8 +49,7 @@ public class World implements Serializable
 		{
 			map.reset();
 		}
-		
-		this.player = player;
+
 		player.setMap(world.get(mapX + mapY * 20));
 	}
 	
@@ -53,6 +59,7 @@ public class World implements Serializable
 		{
 			player.setMap(world.get(mapX + mapY * 20));
 			world.get(mapX + mapY * 20).update();
+			
 		}
 	}
 	
@@ -65,6 +72,7 @@ public class World implements Serializable
 	{
 		mapX += xa;
 		mapY += ya;
+		world.get(mapX + mapY * 20).reset();
 	}
 	
 	public void pause()
@@ -80,5 +88,20 @@ public class World implements Serializable
 	public Player getPlayer()
 	{
 		return player;
+	}
+
+	public Map getCurrentMap()
+	{
+		return world.get(mapX + mapY * 20);
+	}
+	
+	public int getXa() 
+	{
+		return mapX;
+	}
+	
+	public int getYa()
+	{
+		return mapY;
 	}
 }

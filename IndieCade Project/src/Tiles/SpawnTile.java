@@ -16,9 +16,10 @@ public class SpawnTile extends Tile
 	{
 		super(name, Id);
 		
-		this.mob = new Entity(mob.getPlayer(), mob.getDamage(), mob.getSpeed()).
+		this.mob = new Entity(mob.getPlayer(), mob.getSpeed()).
 		setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-		setDimensions(mob.getWidth(), mob.getHeight());
+		setDimensions(mob.getWidth(), mob.getHeight()).
+		setAtkValues(mob.getDamage(), mob.getAtkSpeed());
 		
 		this.CD = CD;
 		
@@ -58,6 +59,13 @@ public class SpawnTile extends Tile
 		{
 			tick = System.currentTimeMillis();
 		}
+	}
+	
+	public void reset()
+	{
+		super.reset();
+		
+		tick = 0;
 	}
 	
 	public void spawn()

@@ -15,6 +15,7 @@ import Map.Map;
 import Map.World;
 import Player.Player;
 import Render.AnimationSet;
+import Stance.Stance;
 
 public abstract class Weapon implements Serializable
 {
@@ -27,6 +28,7 @@ public abstract class Weapon implements Serializable
 	Map map;
 	
 	AnimationSet sprite;
+	Stance stance;
 	
 	float damage;
 	float atkSpeed;
@@ -66,6 +68,13 @@ public abstract class Weapon implements Serializable
 		gen = new Random();
 		
 		factor = 1;
+	}
+
+
+	public Weapon setStance(Stance stance)
+	{
+		this.stance = stance;
+		return this;
 	}
 	
 	public Weapon setSprite(String ref, long delay)
@@ -120,7 +129,9 @@ public abstract class Weapon implements Serializable
 		
 		x = player.getBody().getJoint("Wrist 2").getBone2().getX();
 		y = player.getBody().getJoint("Wrist 2").getBone2().getY();
-		rot = player.getBody().getJoint("Wrist 2").getBone2().getRenderRot() - 90;
+		rot = player.getBody().getJoint("Wrist 2").getBone2().getRenderRot() 
+				+ 90 * player.getBody().getJoint("Wrist 2").getBone2().getRenderRot() 
+				/ Math.abs(player.getBody().getJoint("Wrist 2").getBone2().getRenderRot());
 		sprite.setFlip(player.getBody().getJoint("Wrist 2").getBone2().getFlip());
 	}
 	
@@ -160,7 +171,13 @@ public abstract class Weapon implements Serializable
 		}
 	}
 	
-	public abstract void attack();
+	public void attack()
+	{
+		if(stance != null)
+		{
+			stance.single();
+		}
+	}
 	
 	public abstract void affect();
 }

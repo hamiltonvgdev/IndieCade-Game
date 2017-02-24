@@ -15,6 +15,8 @@ public class BoneStructure implements Serializable
 	private static final long serialVersionUID = -785715115218883562L;
 	ArrayList<Bone> Bones;
 	
+	public boolean flip;
+	
 	Bone Head;
 	public Joint neck;
 	
@@ -57,11 +59,14 @@ public class BoneStructure implements Serializable
 	public Joint Knee2;
 	public Joint Ankle2;
 	
-	float size;;
+	float size;
+	Player player;
 	
 	public BoneStructure(Player player, Float size)
 	{
 		Bones = new ArrayList<Bone>();
+		
+		this.player = player;
 		
 		Head = new Bone(size * 30);
 		Head.setRot(90);
@@ -129,6 +134,10 @@ public class BoneStructure implements Serializable
 		Knee2 = new Joint(ULeg2, LLeg2);
 		Ankle2 = new Joint(LLeg2, Foot2);
 		
+
+		
+		Bones.add(Pelvic1);
+		Bones.add(Pelvic2);
 		
 		torso.rotBone2(-15);
 		torso.rotBone3(15);
@@ -154,10 +163,13 @@ public class BoneStructure implements Serializable
 		Ankle2.getBone2().setRot(180);
 		Ankle2.getBone2().setFlip(true);
 		this.size = size;
+		
+		flip = false;
 	}
 	
 	public void update()
 	{
+		
 		neck.update();
 		torso.update();
 		Pelvic.update();
@@ -227,6 +239,7 @@ public class BoneStructure implements Serializable
 		
 		Knee2.render(g);
 		Ankle2.render(g);
+		
 	}
 	
 	public Joint getJoint(String name)
@@ -289,11 +302,29 @@ public class BoneStructure implements Serializable
 		return size;
 	}
 	
-	public void flip(boolean flip)
+	public void flip()
 	{
+		//derp
+		//Legs flip incorrectly, could be rotational error. 
+		//Something may be up with the multiple images for the leg, should fix that
+		
 		for(Bone bone: Bones)
 		{
-			bone.setFlip(flip);
+			if(bone.flip)
+			{
+				bone.setFlip(false);
+			}else
+			{
+				bone.setFlip(true);
+			}
+		}
+		
+		if(flip)
+		{
+			flip = false;
+		}else
+		{
+			flip = true;
 		}
 	}
 }

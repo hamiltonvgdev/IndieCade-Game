@@ -25,37 +25,46 @@ public class TileList
 		
 		Tile AirBlock = new Tile("AirBlock", new Color(0 / 255, 0 / 255, 0 / 255)).
 				setAnimation("res/Tiles/Air/", 100).
-				setColidable(true).setFriction(0.5F);
+				setColidable(true).setFriction(1F);
 		Tiles.add(AirBlock);
 		
 		Tile Brick = new Tile("Brick", new Color(87 / 255F, 50 / 255F, 17 / 255F)).
 				setAnimation("res/Tiles/Brick/Images", 100).
-				setColidable(true).setFriction(0.5F);
+				setColidable(true).setFriction(1F);
 		Tiles.add(Brick); 
 		
 		Tile Wood = new Tile("Wood", new Color(168 / 255F, 127 / 255F, 90 / 255F)).
 				setAnimation("res/Tiles/Wood/Images", 100).
-				setColidable(true).setFriction(0.5F);
+				setColidable(true).setFriction(1F);
 		Tiles.add(Wood);
+		
+		Tile Stone = new Tile("Stone", new Color(105 / 255F, 105 / 255F, 105 / 255F)).
+				setAnimation("res/Tiles/Stone/Images", 100).
+				setColidable(true).setFriction(1F);
+		Tiles.add(Stone);
 		
 	}
 	
 	public static void initPortals(World world)
 	{
-		PortalTile Up = new PortalTile("Up", world, new Color(1, 0, 0, 0.25F)).
-				setDirection(0, -1);
+		PortalTile Up = (PortalTile) new PortalTile("Up", world, new Color(1, 1, 1, 0.25F)).
+				setDirection(0, -1).
+				setAnimation("res/Tiles/Air", 100);
 		Tiles.add(Up);
 
-		PortalTile Left = new PortalTile("Left", world, new Color(0, 1, 0, 0.25F)).
-				setDirection(-1, 0);
+		PortalTile Left = (PortalTile) new PortalTile("Left", world, new Color(1, 0, 0, 0.25F)).
+				setDirection(-1, 0).
+				setAnimation("res/Tiles/Air", 100);
 		Tiles.add(Left);
 		
-		PortalTile Right = new PortalTile("Right", world,  new Color(0, 0, 1, 0.25F)).
-				setDirection(1, 0);
+		PortalTile Right = (PortalTile) new PortalTile("Right", world,  new Color(0, 1, 1, 0.25F)).
+				setDirection(1, 0).
+				setAnimation("res/Tiles/Air", 100);
 		Tiles.add(Right);
 		
-		PortalTile Down = new PortalTile("Down", world, new Color(0, 0, 0, 0.25F)).
-				setDirection(0, 1);
+		PortalTile Down = (PortalTile) new PortalTile("Down", world, new Color(0, 0, 0, 0.25F)).
+				setDirection(0, 1).
+				setAnimation("res/Tiles/Air", 100);
 		Tiles.add(Down);
 	}
 	
@@ -67,9 +76,17 @@ public class TileList
 		Tiles.add(ladder);
 		
 		///////////////////////////////////////////////////////////////////	
+		
+		Stairs WoodenStairs = (Stairs) new Stairs("Wooden Stairs", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Ladders/Wood/Images", 100).
+				setFriction(0);
+		Tiles.add(WoodenStairs);//Incorporate stairs
+		
+		///////////////////////////////////////////////////////////////////	
 
 		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox", 
-				new Entity(player, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
+				new Entity(player, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).
+				setDimensions(19 * 5, 23 * 5).setAtkValues( 5, 100),
 				4000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
 				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
 				setColidable(true).

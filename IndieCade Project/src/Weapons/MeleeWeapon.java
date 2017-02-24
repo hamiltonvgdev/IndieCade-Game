@@ -9,12 +9,6 @@ public class MeleeWeapon extends Weapon
 	{
 		super(name, player);
 	}
-
-	public Weapon setStance()
-	{
-		 
-		return this;
-	}
 	
 	@Override
 	public void attack() 
