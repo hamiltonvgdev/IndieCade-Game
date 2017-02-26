@@ -14,12 +14,10 @@ import Util.Button;
 
 public class PauseMenu extends BasicMenu
 {
-	boolean pausing;
+	public boolean pausing;
 	boolean saving;
-	boolean hoarding;
 	
 	Button resume;
-	Button inventory;
 	Button save;
 	Button exit;
 	
@@ -35,15 +33,11 @@ public class PauseMenu extends BasicMenu
 	{
 		pausing = false;
 		saving = false;
-		hoarding = false;
 		
 		resume = new Button("Resume", Config.WIDTH / 2, Config.HEIGHT / 2 - 150, 0).setDimensions(138, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
-		inventory = new Button("Inventory", Config.WIDTH / 2, Config.HEIGHT / 2 - 50, 0).setDimensions(138, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		
-		save = new Button("Save", Config.WIDTH / 2, Config.HEIGHT / 2 + 50, 0).setDimensions(138, 50).
+		save = new Button("Save", Config.WIDTH / 2, Config.HEIGHT / 2, 0).setDimensions(138, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT / 2 + 150, 0).setDimensions(138, 50).
@@ -96,30 +90,15 @@ public class PauseMenu extends BasicMenu
 				{
 					saving = false;
 				}
-			}else if(hoarding)
-			{
-				Invent.update(player.getInventory());
-				InvBack.update();
-				
-				if(InvBack.clicked)
-				{
-					hoarding = false;
-				}
 			}else
 			{
 				resume.update();
 				save.update();
 				exit.update();
-				inventory.update();
 				
 				if(resume.clicked)
 				{
 					unpause(world, player);
-				}
-				
-				if(inventory.clicked)
-				{
-					hoarding = true;
 				}
 				
 				if(save.clicked)
@@ -152,14 +131,9 @@ public class PauseMenu extends BasicMenu
 				save2.render(g);
 				save3.render(g);
 				back.render(g);
-			}else if(hoarding)
-			{
-				Invent.render(g, player.getInventory());
-				InvBack.render(g);
 			}else	
 			{
 				resume.render(g);
-				inventory.render(g);
 				save.render(g);
 				exit.render(g);
 				g.setBackground(Color.black);

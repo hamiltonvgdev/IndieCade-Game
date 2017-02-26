@@ -11,6 +11,8 @@ public class Helmet extends Item
 		setInput(player.getInput().KEY_I);
 		
 		Bones.add(player.getBody().getJoint("Neck").getBone1());
+		
+		type = 0;
 	}
 
 	

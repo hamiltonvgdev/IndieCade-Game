@@ -7,6 +7,7 @@ import org.newdawn.slick.Color;
 import GameBasics.Entity;
 import Map.World;
 import Player.Player;
+import Weapons.RangedWeapon;
 
 public class TileList
 {
@@ -77,10 +78,21 @@ public class TileList
 		
 		///////////////////////////////////////////////////////////////////	
 		
-		Stairs WoodenStairs = (Stairs) new Stairs("Wooden Stairs", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
+		/*Stairs WoodenStairs = (Stairs) new Stairs("Wooden Stairs", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
 				setAnimation("res/Tiles/Ladders/Wood/Images", 100).
 				setFriction(0);
-		Tiles.add(WoodenStairs);//Incorporate stairs
+		Tiles.add(WoodenStairs);//Incorporate stairs*/
+		
+		///////////////////////////////////////////////////////////////////	
+		
+		ItemTile BowTile = (ItemTile) new ItemTile("Bow", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
+				setItem(((RangedWeapon) new RangedWeapon("Bow", player).
+						setAtkStats(1000, 500, 50).setChance(50, 2, 0, 0).
+						setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100).setDimensions(64, 64)).
+						setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, -45)).
+						setAnimation("res/Tiles/Air", 100).
+						setColidable(false).setFriction(1F);
+		Tiles.add(BowTile);
 		
 		///////////////////////////////////////////////////////////////////	
 

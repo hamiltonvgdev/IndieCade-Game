@@ -70,6 +70,7 @@ public class Player implements Serializable
 	
 	//Gear
 	ArrayList<Item> Inventory;
+	ArrayList<Item> Equiped;
 	Item Helmet;
 	Item Chestplate;
 	Item Pants;
@@ -102,6 +103,11 @@ public class Player implements Serializable
 		this.game = game;
 		
 		Inventory = new ArrayList<Item>();
+		Equiped = new ArrayList<Item>();
+		for(int i = 0; i < 5; i ++)
+		{
+			Equiped.add(null);
+		}
 		
 		paused = false;
 		
@@ -143,11 +149,6 @@ public class Player implements Serializable
 		
 		walk = new Stance("Derp", Body, 1);
 		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
-		
-		Wpn = ((RangedWeapon) new RangedWeapon("Bow", this).
-				setAtkStats(1000, 500, 50).setChance(50, 2, 0, 0).
-				setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100)).
-				setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, -45);
 		
 		Model = new ArrayList<BasicImage>();
 		Model.add(new BasicImage("res/Player/Head/Head.png"));
@@ -228,26 +229,26 @@ public class Player implements Serializable
 			{
 				for(int j = -1; j <= 1; j ++)
 				{
-					if(map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getCollidable() 
-							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getHitbox().
+					if(map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).getCollidable() 
+							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).getHitbox().
 							checkQuad(new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2 + Vx + Ax, Hitboxes.get(k).y + Hitboxes.get(k).height / 2, Hitboxes.get(k).width, Hitboxes.get(k).height)))
 					{
 						CollisionX = true;
-						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).nextTo = true;
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).nextTo = true;
 					}else
 					{
-						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).nextTo = false;
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).nextTo = false;
 					}
 					
-					if(map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getCollidable() 
-							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).getHitbox().
+					if(map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).getCollidable() 
+							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).getHitbox().
 							checkQuad(new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2, Hitboxes.get(k).y + Hitboxes.get(k).height / 2 + Vy + Ay, Hitboxes.get(k).width, Hitboxes.get(k).height)))
 					{
 						CollisionY = true;
-						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).on = true;
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).on = true;
 					}else
 					{
-						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + 5)).on = false;
+						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).on = false;
 					}
 				}
 			}
@@ -255,9 +256,8 @@ public class Player implements Serializable
 		
 		if(CollisionX)
 		{
-			Vx = 0;
+			setVx(0);
 		}
-		
 		if(CollisionY)
 		{
 			if(collidable)
@@ -267,7 +267,6 @@ public class Player implements Serializable
 				{
 					Jumps ++;
 				}
-				System.out.println("derp");
 				setVy(0);
 			}
 		}else
@@ -364,13 +363,13 @@ public class Player implements Serializable
 				
 				if(Vx > 0)
 				{
-					Ax = -map.getTile(x, y + 64 * 2 * Body.getSize()).getFriction();
+					Ax = -map.getTile(x, y + 50 + 64 * 2 * Body.getSize()).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
 				}
 			}
-			
+
 			if(Math.abs(Vx) < map.getTile(x, y + 50 + 64 * 2 * Body.getSize()).getFriction())
 			{
 				setVx(0);
@@ -391,7 +390,8 @@ public class Player implements Serializable
 			
 			Body.update();
 
-			Wpn.update();
+		//	Wpn.update();
+			
 			/*	
 			Helmet.update();
 			Chestplate.update();
@@ -404,7 +404,13 @@ public class Player implements Serializable
 			tenacity = 1 * (100 + Helmet.getTenacity() + Chestplate.getTenacity() + Pants.getTenacity() + Gauntlet.getTenacity()) / 100;
 			speed = 1 * (100 + Helmet.getSpeed() + Chestplate.getSpeed() + Pants.getSpeed() + Gauntlet.getSpeed()) / 100;
 			*/
-			
+			for(int i = 0; i < Equiped.size(); i ++)
+			{
+				if(Equiped.get(i) != null)
+				{
+					Equiped.get(i).update();
+				}
+			}
 		}
 	}	
 	
@@ -425,15 +431,14 @@ public class Player implements Serializable
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize());
 		}
-		
-		for(int k = Hitboxes.size() - 3; k < Hitboxes.size(); k += 2)
+		for(int i = 0; i < Equiped.size(); i ++)
 		{
-			Hitboxes.get(k).render(g);
-			new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2, Hitboxes.get(k).y +  Hitboxes.get(k).height / 2 + Vy + Ay, 
-					Hitboxes.get(k).width, Hitboxes.get(k).height).render(g);
+			if(Equiped.get(i) != null)
+			{
+				Equiped.get(i).render(g);;
+			}
 		}
-		
-		Wpn.render(g);
+		//Wpn.render(g);
 }
 	
 	public void die()
@@ -457,6 +462,12 @@ public class Player implements Serializable
 		
 		((CodexMenu) ((MainMenu) game.getSbg().getState(1)).getMenus().get(2)).
 		addItemEntry(new CodexItemEntry(((CodexMenu) ((MainMenu) game.getSbg().getState(1)).getMenus().get(2)), item));;
+	}
+	
+	public void equip(Item equi, int index)
+	{
+		Equiped.remove(index);
+		Equiped.add(index, equi);
 	}
 	
 	public void pause()
@@ -564,7 +575,7 @@ public class Player implements Serializable
 		return Gauntlet;
 	}
 	
-	public Weapon getWeapon()
+	public Item getWeapon()
 	{
 		return Wpn;
 	}

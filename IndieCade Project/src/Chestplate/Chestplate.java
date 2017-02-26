@@ -16,6 +16,8 @@ public class Chestplate extends Item
 		Bones.add(((FourWayJoint) player.getBody().getJoint("Torso")).getBone3());
 		Bones.add(((FourWayJoint) player.getBody().getJoint("Torso")).getBone4());
 		Bones.add(player.getBody().getJoint("Spine").getBone2());
+		
+		type = 1;
 	}
 
 }

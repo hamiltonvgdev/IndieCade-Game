@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 
 import Tiles.InteractTile;
+import Tiles.ItemTile;
 import Tiles.Ladder;
 import Tiles.PortalTile;
 import Tiles.SpawnTile;
@@ -65,6 +66,14 @@ public class Converter
 								{
 									Tiles.add(new Stairs(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
 											PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()));
+								}else if(PossibleTiles.get(j).getType() == 5)
+								{
+									Tiles.add(new ItemTile(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
+											PossibleTiles.get(j).getID()).setItem(((ItemTile) PossibleTiles.get(j)).getItem()).
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).
 											setFriction(PossibleTiles.get(j).getFriction()).
