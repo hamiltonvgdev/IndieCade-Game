@@ -1,4 +1,17 @@
 /Map
+<<<<<<< HEAD
+=======
+/Player
+<<<<<<< HEAD
+/Helmets/
+/Main/
+/Map/
+/NPCs/
+/Tiles/
+/Render/
+=======
+/Main
+>>>>>>> refs/remotes/origin/Craig-Branch
 /Tiles
 /Player
 /Weapons
@@ -7,7 +20,14 @@
 /Menus
 /GUI
 /Helmets
+<<<<<<< HEAD
 /Chestplate
 /Gauntlets
 /Pants
 /Geo
+=======
+/Render
+/NPCs
+>>>>>>> refs/remotes/origin/Hummus-Branch
+>>>>>>> refs/remotes/origin/Craig-Branch
+/BoneStructure

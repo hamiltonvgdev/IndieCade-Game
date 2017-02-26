@@ -211,6 +211,9 @@ public class Entity implements Serializable
 			}
 		}
 		
+		move(-Vx, 0);
+		move(0, -Vy);
+		
 		Hitbox.changeDimensions(x, y, width, height);
 		
 	}
@@ -478,8 +481,8 @@ public class Entity implements Serializable
 				break;
 			}
 		}
-		
 	}
+	
 	public void reset() 
 	{
 		health = maxHealth;
