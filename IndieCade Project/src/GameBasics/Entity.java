@@ -26,7 +26,7 @@ public class Entity implements Serializable
 	boolean paused;
 	
 	//Horizontal movement
-	float x;
+	protected float x;
 	float Vx;
 	float Vy;
 	float Ax;
@@ -34,7 +34,7 @@ public class Entity implements Serializable
 	float acceleration;
 	
 	//Vertical movement
-	float y;
+	protected float y;
 	float jumpV;
 	int jump;
 	int maxjump;
@@ -45,9 +45,7 @@ public class Entity implements Serializable
 	float maxHealth;
 	float health;
 	float damage;
-	float defense;
 	float speed;
-	float tenacity;
 	boolean stun;
 	
 	//Combat values
@@ -66,11 +64,11 @@ public class Entity implements Serializable
 	Level level;
 	
 	//animation
-	AnimationSet sprite;
+	protected AnimationSet sprite;
 	
 	Random gen = new Random();
 	
-	public Entity(Player player, float speed)
+	public Entity(Player player, float health, float damage, float speed)
 	{
 		this.player = player;
 		
@@ -92,10 +90,9 @@ public class Entity implements Serializable
 		
 		Hitbox = new Quad(x, y, width, height);
 		
-		maxHealth = 100;
-		health = maxHealth;
-		defense = 5;
-		tenacity = 0;
+		maxHealth = health;
+		this.health = maxHealth;
+		this.damage = damage;
 		this.speed = speed;
 
 	}
@@ -267,19 +264,9 @@ public class Entity implements Serializable
 		return damage;
 	}
 	
-	public float getDefense()
-	{
-		return defense;
-	}
-	
 	public float getMaxHealth()
 	{
 		return maxHealth;
-	}
-	
-	public float getTenacity()
-	{
-		return tenacity;
 	}
 	
 	public float getSpeed()
@@ -438,6 +425,22 @@ public class Entity implements Serializable
 		}
 	}
 	
+	public boolean distanceSense(float distance, Player player)
+	{
+		double space = Math.sqrt(Math.pow(x - 
+				player.getX(), 2) + Math.pow(y - player.getY(), 2));
+		
+		if(space <= distance)
+		{
+			return true;
+		}
+		
+		else
+		{
+			return false;
+		}
+	}
+	
 	public void wander()
 	{
 		int movement = gen.nextInt(8) + 1;
@@ -489,4 +492,5 @@ public class Entity implements Serializable
 		jump = 0;
 		stun = false;
 	}
+	
 }

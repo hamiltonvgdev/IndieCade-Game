@@ -87,6 +87,7 @@ public class Game extends BasicGameState implements Serializable
 		world = new World(player);
 		
 		TileList.initPortals(world);
+
 		MapList.init(player);
 		
 		world.initMaps();

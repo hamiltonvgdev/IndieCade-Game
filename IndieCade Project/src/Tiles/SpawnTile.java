@@ -8,6 +8,7 @@ public class SpawnTile extends Tile
 {
 	Entity mob;
 	String spawnRef;
+	Entity goblin;
 	
 	long CD;
 	long tick;
@@ -16,10 +17,15 @@ public class SpawnTile extends Tile
 	{
 		super(name, Id);
 		
-		this.mob = new Entity(mob.getPlayer(), mob.getSpeed()).
-		setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-		setDimensions(mob.getWidth(), mob.getHeight()).
-		setAtkValues(mob.getDamage(), mob.getAtkSpeed());
+		
+		this.mob = new Entity(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
+				setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+				setDimensions(mob.getWidth(), mob.getHeight()).
+				setAtkValues(mob.getDamage(), mob.getAtkSpeed());
+		
+		this.goblin = new Entity(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
+				setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+				setDimensions(mob.getWidth(), mob.getHeight());
 		
 		this.CD = CD;
 		
@@ -73,6 +79,9 @@ public class SpawnTile extends Tile
 		mob.setPosition(x, y - mob.getHeight() / 2 - 32);
 		mob.reset();
 		map.getLevel().addEntity(mob);
+		
+		goblin.setPosition(x, y - mob.getHeight() / 2 - 32);
+		map.getLevel().addEntity(goblin);
 		
 		if(spawnRef != null)
 		{

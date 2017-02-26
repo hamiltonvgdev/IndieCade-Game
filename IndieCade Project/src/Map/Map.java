@@ -219,7 +219,7 @@ public class Map implements Serializable
 	public Map directSpawn(Entity e)
 	{
 		level.addEntity(e);
-		
+
 		return this;
 	}
 }

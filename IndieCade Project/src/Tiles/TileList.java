@@ -38,11 +38,16 @@ public class TileList
 				setAnimation("res/Tiles/Wood/Images", 100).
 				setColidable(true).setFriction(1F);
 		Tiles.add(Wood);
-		
+
 		Tile Stone = new Tile("Stone", new Color(105 / 255F, 105 / 255F, 105 / 255F)).
 				setAnimation("res/Tiles/Stone/Images", 100).
 				setColidable(true).setFriction(1F);
 		Tiles.add(Stone);
+
+		Tile dirt= new Tile("dirt", new Color(0 / 255F, 200 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Dirt/Images", 100).
+				setColidable(true).setFriction(0.5F);
+		Tiles.add(dirt);
 		
 	}
 	
@@ -96,18 +101,25 @@ public class TileList
 		
 		///////////////////////////////////////////////////////////////////	
 
-		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox", 
-				new Entity(player, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).
-				setDimensions(19 * 5, 23 * 5).setAtkValues( 5, 100),
+		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox",
+				new Entity(player, 100, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
 				4000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
 				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
 				setColidable(true).
 				setFriction(0.5F);
 		Tiles.add(GearBox);
+		
+		SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
+				new Entity(player, 50, 5, 0).setAnimationSet("res/Entities/goblin/Images/Stale", 800).setDimensions(19 * 5, 23 * 5),
+				4000, new Color(0 / 255F, 255 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Dirt/Images", 100).
+				setColidable(true).
+				setFriction(0.1F);
+		Tiles.add(dirtSpawn);
 	}
 	
 	public static ArrayList<Tile> getTiles()
 	{
-		return Tiles;
+		return Tiles;	
 	}
 }
