@@ -253,6 +253,12 @@ public class BoneStructure implements Serializable
 		}else if(name.equals("Pelvic"))
 		{
 			return Pelvic;
+		}else if(name.equals("Pelvic 1"))
+		{
+			return PelvicL;
+		}else if(name.equals("Pelvic 2"))
+		{
+			return PelvicR;
 		}else if(name.equals("Spine"))
 		{
 			return Spine;

@@ -90,7 +90,7 @@ public class Game extends BasicGameState implements Serializable
 
 		MapList.init(player);
 		
-		world.initMaps();
+		world.initMaps(1);
 	}
 	
 	public GameContainer getGc()

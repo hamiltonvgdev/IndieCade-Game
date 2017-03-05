@@ -1,40 +1,19 @@
-<<<<<<< HEAD
-/Map
-<<<<<<< HEAD
-=======
-/Player
-<<<<<<< HEAD
-/Helmets/
-/Main/
-=======
->>>>>>> refs/remotes/origin/Craig-Branch
-/Map/
-/Enemy/
-/GameBasics/
-/Render/
-<<<<<<< HEAD
-=======
-/Main
->>>>>>> refs/remotes/origin/Craig-Branch
-/Tiles
-/Player
-/Weapons
-/Projectiles
-/GameBasics
-/Menus
-/GUI
-/Helmets
-<<<<<<< HEAD
-/Chestplate
-/Gauntlets
-/Pants
-/Geo
-=======
-/Render
-/NPCs
->>>>>>> refs/remotes/origin/Hummus-Branch
->>>>>>> refs/remotes/origin/Craig-Branch
 /BoneStructure
-=======
-/Tiles/
->>>>>>> refs/remotes/origin/Craig-Branch
+/Chestplate
+/Enemy
+/GUI
+/GameBasics
+/Gauntlets
+/Geo
+/Helmets
+/Load
+/Main
+/Map
+/Menus
+/NPCs
+/Pants
+/Player
+/Projectiles
+/Quests
+/Stance
+/Tiles

@@ -33,7 +33,7 @@ public class Stairs extends InteractTile
 	public void update()
 	{
 		derp
-		//nextTo and on is never changed
+		//Ask Carter
 		if(nextTo)
 		{
 			if(player.getVx() * direction > 0)

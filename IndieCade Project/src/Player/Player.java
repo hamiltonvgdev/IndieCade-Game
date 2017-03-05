@@ -20,6 +20,7 @@ import Main.MainMenu;
 import Map.Map;
 import Menus.CodexItemEntry;
 import Menus.CodexMenu;
+import Quests.BasicQuest;
 import Render.AnimationSet;
 import Render.BasicImage;
 import Stance.Action;
@@ -37,6 +38,8 @@ public class Player implements Serializable
 	private static final long serialVersionUID = 6654083572168084434L;
 	transient Game game;
 	boolean paused;
+	
+	ArrayList<BasicQuest> quests;
 	
 	//Vertical Movement
 	float y;
@@ -147,8 +150,34 @@ public class Player implements Serializable
 		Speed = baseSpeed * speed;
 		Stun = 0;
 		
-		walk = new Stance("Derp", Body, 1);
-		walk.addAction(new Action("Pelvic", 0, 10, 100), 0);
+		//Upper and Lower Leg out of Sync
+		walk = new Stance("Walk", Body, 3);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 240, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 233, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 260, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 303, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 293, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 303, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 260, 200), 0);
+		walk.addAction(new Action(Body, "Pelvic 2", 0, 233, 200), 0);
+		
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 312, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 310, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 270, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 221, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 240, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 221, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 270, 200), 1);
+		walk.addAction(new Action(Body, "Pelvic 1", 0, 310, 200), 1);
+
+		walk.addAction(new Action(Body, "Knee 2", 0, 240, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 310, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 350, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 340, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 324, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 340, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 350, 200), 2);
+		walk.addAction(new Action(Body, "Knee 2", 0, 310, 200), 2);
 		
 		Model = new ArrayList<BasicImage>();
 		Model.add(new BasicImage("res/Player/Head/Head.png"));
@@ -178,6 +207,7 @@ public class Player implements Serializable
 					Model.get(i).getImage().getWidth(), Model.get(i).getImage().getHeight()));
 		}
 		
+		quests = new ArrayList<BasicQuest>();
 	}
 	
 	public void setMap(Map map)
@@ -283,6 +313,13 @@ public class Player implements Serializable
 	{	
 		if(!paused)
 		{
+			walk.loop();
+			
+			for(int i = 0; i < quests.size(); i ++)
+			{
+				quests.get(i).update();
+			}
+			
 			if(health <= 0)
 			{
 				die();
@@ -389,21 +426,7 @@ public class Player implements Serializable
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 			
 			Body.update();
-
-		//	Wpn.update();
-			
-			/*	
-			Helmet.update();
-			Chestplate.update();
-			Pants.update();
-			Gauntlet.update();
-			
-			maxHealth = 1 * (100 + Helmet.getHealth() + Chestplate.getHealth() + Pants.getHealth() + Gauntlet.getHealth()) / 100;
-			armor = 1 * (100 + Helmet.getArmor() + Chestplate.getArmor() + Pants.getArmor() + Gauntlet.getArmor()) / 100;
-			damage = 1 * (100 + Helmet.getDamage() + Chestplate.getDamage() + Pants.getDamage() + Gauntlet.getDamage()) / 100;
-			tenacity = 1 * (100 + Helmet.getTenacity() + Chestplate.getTenacity() + Pants.getTenacity() + Gauntlet.getTenacity()) / 100;
-			speed = 1 * (100 + Helmet.getSpeed() + Chestplate.getSpeed() + Pants.getSpeed() + Gauntlet.getSpeed()) / 100;
-			*/
+				
 			for(int i = 0; i < Equiped.size(); i ++)
 			{
 				if(Equiped.get(i) != null)
@@ -420,11 +443,11 @@ public class Player implements Serializable
 		
 		for(int i = 0; i < Model.size(); i ++)
 		{
-			Model.get(i).setFlip(!Body.getBones().get(i).getFlip());
+		/*	Model.get(i).setFlip(!Body.getBones().get(i).getFlip());
 			Model.get(i).render(Body.getBones().get(i).getX(), Body.getBones().get(i).getY(), 
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize(), 
-					Body.getBones().get(i).getRenderRot(), g);
+					Body.getBones().get(i).getRenderRot(), g);*/
 			
 			Hitboxes.get(i).changeDimensions(Body.getBones().get(i).getX(), 
 					Body.getBones().get(i).getY(), 
@@ -438,7 +461,7 @@ public class Player implements Serializable
 				Equiped.get(i).render(g);;
 			}
 		}
-		//Wpn.render(g);
+		Body.render(g);
 }
 	
 	public void die()
@@ -535,6 +558,11 @@ public class Player implements Serializable
 		return Speed;
 	}
 	
+	public float getHealth() 
+	{
+		return health;
+	}
+	
 	public Map getMap()
 	{
 		return map;
@@ -583,6 +611,11 @@ public class Player implements Serializable
 	public ArrayList<Quad> getHitboxes()
 	{
 		return Hitboxes;
+	}
+	
+	public ArrayList<BasicQuest> getQuests()
+	{
+		return quests;
 	}
 	
 	public Quad getHitbox(String name)
@@ -646,4 +679,5 @@ public class Player implements Serializable
 			return null;
 		}
 	}
+
 }

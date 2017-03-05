@@ -18,6 +18,7 @@ public class GUI
 	InventoryMenu Inventory;
 	Button pause;
 	Button Inv;
+	Button Quest;
 	
 	public GUI()
 	{
@@ -26,7 +27,12 @@ public class GUI
 						new AnimationSet("res/Buttons/GUI/Pause/Select", 100));
 		
 		Inv = new Button("", Config.WIDTH - 56, 16, 0).setDimensions(32, 32).
-				setImage(new AnimationSet("res/Buttons/GUI/Inventory", 100), null);
+				setImage(new AnimationSet("res/Buttons/GUI/Inventory/Idle", 100), 
+						new AnimationSet("res/Buttons/GUI/Inventory/Select", 100));
+		
+		Quest = new Button("", Config.WIDTH - 96, 16, 0).setDimensions(32, 32).
+				setImage(new AnimationSet("res/Buttons/GUI/Quests/Idle", 100), 
+						new AnimationSet("res/Buttons/GUI/Quests/Select", 100));
 		
 		Pause = new PauseMenu();
 		Inventory = new InventoryMenu();
@@ -41,6 +47,7 @@ public class GUI
 		{
 			pause.update();
 			Inv.update();
+			Quest.update();
 		}
 		
 		if(pause.clicked)
@@ -61,5 +68,6 @@ public class GUI
 		
 		pause.render(g);
 		Inv.render(g);
+		Quest.render(g);
 	}
 }

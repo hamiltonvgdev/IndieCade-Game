@@ -33,11 +33,11 @@ public class World implements Serializable
 		this.player = player;
 	}
 	
-	public void initMaps()
+	public void initMaps(int id)
 	{
 
 		try {
-			world = Converter.convertMap(MapReader.readTileMap(new Image("res/World.png")), MapList.getMaps());
+			world = Converter.convertMap(MapReader.readTileMap(new Image("res/World " + id + ".png")), MapList.getMaps());
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

@@ -46,7 +46,7 @@ public class TileList
 
 		Tile dirt= new Tile("dirt", new Color(0 / 255F, 200 / 255F, 0 / 255F)).
 				setAnimation("res/Tiles/Dirt/Images", 100).
-				setColidable(true).setFriction(0.5F);
+				setColidable(true).setFriction(1F);
 		Tiles.add(dirt);
 		
 	}
@@ -90,31 +90,40 @@ public class TileList
 		
 		///////////////////////////////////////////////////////////////////	
 		
-		ItemTile BowTile = (ItemTile) new ItemTile("Bow", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
+		ItemTile BowTile = (ItemTile) new ItemTile("Bow Tile", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
 				setItem(((RangedWeapon) new RangedWeapon("Bow", player).
-						setAtkStats(1000, 500, 50).setChance(50, 2, 0, 0).
+						setAtkStats(5, 500, 50).setChance(50, 2, 0, 0).
 						setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100).setDimensions(64, 64)).
 						setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, -45)).
 						setAnimation("res/Tiles/Air", 100).
 						setColidable(false).setFriction(1F);
 		Tiles.add(BowTile);
 		
+		ItemTile LBowTile = (ItemTile) new ItemTile("Legendary Bow Tile", player, new Color(0 / 255F, 0 / 255F, 255 / 255F)).
+				setItem(((RangedWeapon) new RangedWeapon("Legendary Bow", player).
+						setAtkStats(1, 100, 50).setChance(50, 2, 0, 0).
+						setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/LegendBow/Bow", 100).setDimensions(64, 64)).
+						setProjectile("res/Gear/Weapons/LegendBow/Arrow", 100, 10 * 5, 10 * 5, -45)).
+						setAnimation("res/Tiles/Air", 100).
+						setColidable(false).setFriction(1F);
+		Tiles.add(LBowTile);
+		
 		///////////////////////////////////////////////////////////////////	
 
 		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox",
-				new Entity(player, 100, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
+				new Entity(player, 10, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
 				4000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
 				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
 				setColidable(true).
-				setFriction(0.5F);
+				setFriction(1F);
 		Tiles.add(GearBox);
 		
 		SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
-				new Entity(player, 50, 5, 0).setAnimationSet("res/Entities/goblin/Images/Stale", 800).setDimensions(19 * 5, 23 * 5),
+				new Entity(player, 15, 5, 0).setAnimationSet("res/Entities/goblin/Images/Stale", 800).setDimensions(19 * 5, 23 * 5),
 				4000, new Color(0 / 255F, 255 / 255F, 0 / 255F)).
 				setAnimation("res/Tiles/Dirt/Images", 100).
 				setColidable(true).
-				setFriction(0.1F);
+				setFriction(1F);
 		Tiles.add(dirtSpawn);
 	}
 	

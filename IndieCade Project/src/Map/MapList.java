@@ -37,6 +37,14 @@ public class MapList
 			Map TrainingHallDoor = new Map(player, new Image("res/Maps/Training Hall/Training Hall Door.png"),
 					null, new Color(9 / 255F, 10 / 255F, 0 / 255F));
 			Maps.add(TrainingHallDoor);
+			
+			Map OutsideMeadow = new Map(player, new Image("res/Maps/Meadow.png"),
+					null, new Color(10 / 255F, 10 / 255F, 0 / 255F));
+			Maps.add(OutsideMeadow);
+			
+			Map Room = new Map(player, new Image("res/Maps/Room.png"),
+					null, new Color(11 / 255F, 10 / 255F, 0 / 255F));
+			Maps.add(Room);
 		} catch (SlickException e) 
 		{
 			e.printStackTrace();

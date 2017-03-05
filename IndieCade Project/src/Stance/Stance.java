@@ -33,10 +33,10 @@ public class Stance implements Serializable
 		for(int i = 0; i < size; i ++)
 		{
 			ActionLists.add(new ArrayList<Action>());
-			ActionLists.get(i).add(new Action(null, 0, 0, 1));
 			
 			Index[i] = 0;
 			Tick[i] = System.currentTimeMillis();
+			
 		}
 		index = 0;
 	}
@@ -49,6 +49,7 @@ public class Stance implements Serializable
 			{
 				Tick[i] = System.currentTimeMillis();
 				Index[i] = 0;
+				ActionLists.get(i).get(Index[i]).reset();
 			}
 			
 			if(System.currentTimeMillis() - Tick[i] > ActionLists.get(i).get(Index[i]).time)
@@ -56,12 +57,16 @@ public class Stance implements Serializable
 				if(Index[i] < ActionLists.get(i).size())
 				{
 					Index[i] ++;
+					if(Index[i] < ActionLists.get(i).size())
+					{
+						ActionLists.get(i).get(Index[i]).reset();
+					}
 					Tick[i] = System.currentTimeMillis();
 				}
 			}else
 			{
 				index = Index[i];
-				ActionLists.get(i).get(Index[i]).update(body, this);
+				ActionLists.get(i).get(Index[i]).update(this);
 			}
 		}
 	}
@@ -79,12 +84,19 @@ public class Stance implements Serializable
 						if(Index[i] < ActionLists.get(i).size())
 						{
 							Index[i] ++;
+							if(Index[i] < ActionLists.get(i).size())
+							{
+								ActionLists.get(i).get(Index[i]).reset();
+							}else
+							{
+								ActionLists.get(i).get(0).reset();
+							}
 							Tick[i] = System.currentTimeMillis();
 						}
 					}else
 					{
 						index = Index[i];
-						ActionLists.get(i).get(Index[i]).update(body, this);
+						ActionLists.get(i).get(Index[i]).update(this);
 					}
 				}
 				
@@ -94,9 +106,22 @@ public class Stance implements Serializable
 	
 	public Stance addAction(Action action, int Index)
 	{
-		ActionLists.get(Index).add(action);
+		Action Caction = action;
+		Caction.reset();
+		ActionLists.get(Index).add(Caction);
 		
 		return this;
+	}
+	
+	public void reset()
+	{
+		for(int i = 0; i < ActionLists.size(); i ++)
+		{
+			for(int j = 0; j < ActionLists.get(i).size(); j ++)
+			{
+				ActionLists.get(i).get(j).reset();
+			}
+		}
 	}
 	
 	public String getName()

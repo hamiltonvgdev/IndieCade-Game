@@ -19,7 +19,7 @@ public class BasicNPC implements Serializable
 	 */
 	private static final long serialVersionUID = -5091083775805350494L;
 	protected String name;
-	Player player;
+	protected Player player;
 	String phrase;
 	
 	protected AnimationSet Idle;
@@ -189,12 +189,17 @@ public class BasicNPC implements Serializable
 		
 	}
 	
-	public void speak(Graphics g)
+	public void speak(Graphics g) throws SlickException
 	{
 		if(phrase != null)
 		{
-			g. drawString(phrase, x - phrase.length() * 4, y - height);
+			speak(phrase, g);
 		}
+	}
+	
+	public void speak(String phrase, Graphics g) throws SlickException
+	{
+		g.drawString(phrase, x - phrase.length() * 4, y - height);
 	}
 	
 	public boolean distanceSense(Player protag)
@@ -222,5 +227,10 @@ public class BasicNPC implements Serializable
 	{
 		x += xa;
 		y += ya;
+	}
+
+	public Player getPlayer() 
+	{
+		return player;
 	}
 }
