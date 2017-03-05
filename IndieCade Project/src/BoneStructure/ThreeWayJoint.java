@@ -16,8 +16,14 @@ public class ThreeWayJoint extends Joint implements Serializable
 		
 		this.bone3 = bone3;
 		
-		bone2.setRot((float)Math.toDegrees((bone1.getRot() + constant *  Math.toRadians(60))));
-		bone3.setRot((float)Math.toDegrees((bone1.getRot() - constant *  Math.toRadians(60))));
+		bone1.setFlip(false);
+		bone2.setFlip(false);
+		bone3.setFlip(false);
+		
+		
+		bone2.setRot((float)Math.toDegrees((Math.toRadians(bone1.getPureRot()) + constant *  Math.toRadians(60))));
+		bone3.setRot((float)Math.toDegrees((Math.toRadians(bone1.getPureRot()) + constant *  Math.toRadians(60))));
+		bone3.setFlip(!bone2.getFlip());
 	}
 	
 	public void update()

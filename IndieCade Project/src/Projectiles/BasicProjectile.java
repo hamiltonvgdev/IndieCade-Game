@@ -14,6 +14,7 @@ public class BasicProjectile
 {
 	Player player;
 	RangedWeapon weapon;
+	Entity entity;
 	int type;
 	
 	float x;
@@ -33,8 +34,8 @@ public class BasicProjectile
 	public BasicProjectile(Player player, Entity ent, RangedWeapon weapon, int type)
 	{
 		this.player = player;
-		
 		this.weapon = weapon;
+		entity = ent;
 		
 		x = weapon.getX();
 		y = weapon.getY();
@@ -54,10 +55,11 @@ public class BasicProjectile
 		return this;
 	}
 	
-	public BasicProjectile setDimensions(float width, float height)
+	public BasicProjectile setDimensions(float width, float height, float rot)
 	{
 		this.width = width;
 		this.height = height;
+		this.rot = rot;
 		return this;
 	}
 	
@@ -73,11 +75,17 @@ public class BasicProjectile
 		
 		if(type == 0)
 		{
-			//Code for attacking player
-			/*if()
+			for(Quad hitbox: player.getHitboxes())
 			{
-				
-			}*/
+				if(hitbox.checkQuad(this.hitbox))
+				{
+					player.damage((int) entity.getDamage());
+					weapon.affect();
+					end();
+					
+					break;
+				}
+			}
 		}else if(type == 1)
 		{
 			for(int i = 0; i < player.getMap().getLevel().getEntities().size(); i ++)
@@ -85,6 +93,8 @@ public class BasicProjectile
 				if(player.getMap().getLevel().getEntities().get(i).Hitbox.checkQuad(hitbox))
 				{
 					player.getMap().getLevel().getEntities().get(i).damage(weapon.getDamage());
+					weapon.affect();
+					end();
 				}
 			}
 		}
@@ -104,5 +114,16 @@ public class BasicProjectile
 	{
 		x += xa;
 		y += ya;
+	}
+	
+	public void shoot(float xa)
+	{
+		Vx = xa;
+		player.getMap().getLevel().addProjectile(this);
+	}
+	
+	public AnimationSet getSprite()
+	{
+		return sprite;
 	}
 }

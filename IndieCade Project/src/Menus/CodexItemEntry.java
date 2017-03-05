@@ -44,7 +44,11 @@ public class CodexItemEntry
 		nxt = new Button("Next", Config.WIDTH - 50, Config.HEIGHT / 2, 0);
 		nxt = nxt.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 		pre = new Button("Previous", 50, Config.HEIGHT / 2, 0);
-		pre = pre.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
+		pre = pre.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
+		
+		Icon = item.getSprite();
+		
+		Bar = new BasicImage("res/Defaults/Bar/Default Bar.png");
 	}
 	
 	public CodexItemEntry(CodexMenu codex)
@@ -97,7 +101,10 @@ public class CodexItemEntry
 	{
 		Icon.render(Config.WIDTH / 2, -25 + 300 / 2, 300, 300, 0, g);
 		g.drawString(name, Config.WIDTH / 2 - name.length() * 10 / 2, 0);
-		g.drawString(des, Config.WIDTH / 2 - des.length() * 10 / 2, 300);
+		if(des != null)
+		{
+			g.drawString(des, Config.WIDTH / 2 - des.length() * 10 / 2, 300);
+		}
 
 
 		g.drawString("Health", Config.WIDTH / 2 - 230, 340);

@@ -22,8 +22,10 @@ public abstract class Item implements Serializable
 	private static final long serialVersionUID = 4271756499787690439L;
 	protected Player player;
 	int code;
+	protected int type;
 	
 	String name;
+	String description;
 	protected ArrayList<AnimationSet> Sprites;
 	int healthBoost;
 	int armorBoost;
@@ -34,6 +36,8 @@ public abstract class Item implements Serializable
 	CodexItemEntry entry;
 	
 	protected ArrayList<Bone> Bones;
+	protected float width;
+	protected float height;
 	
 	public Item(String name)
 	{
@@ -60,6 +64,11 @@ public abstract class Item implements Serializable
 		return this;
 	}
 	
+	public Item setDes(String des)
+	{
+		description = des;
+		return this;
+	}
 	
 	public Item setHealth(int health)
 	{
@@ -91,16 +100,23 @@ public abstract class Item implements Serializable
 		return this;
 	}
 	
+	public Item setDimensions(float width, float height)
+	{
+		this.width = width;
+		this.height = height;
+		return this;
+	}
+	
+	
 	public void update()
 	{
 		if(player.getInput().isKeyDown(code))
 		{
 			Ability();
 		}
-		
 	}
 	
-	public void render(float width, float height, Graphics g) throws SlickException
+	public void render(Graphics g) throws SlickException
 	{
 		for(int i = 0; i < Sprites.size(); i ++)
 		{
@@ -112,6 +128,11 @@ public abstract class Item implements Serializable
 	public void Ability()
 	{
 		
+	}
+	
+	public void equip() 
+	{
+		player.equip(this, type);
 	}
 	
 	public String getName()
@@ -142,5 +163,20 @@ public abstract class Item implements Serializable
 	public int getSpeed()
 	{
 		return speedBoost;
+	}
+	
+	public float getWidth()
+	{
+		return width;
+	}
+	
+	public float getHeight()
+	{
+		return height;
+	}
+	
+	public AnimationSet getSprite()
+	{
+		return Sprites.get(0);
 	}
 }

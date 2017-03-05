@@ -31,6 +31,7 @@ public class Map implements Serializable
 	private static final long serialVersionUID = -7167480686083434369L;
 	Level level;
 	ArrayList<Tile> TileMap;
+	ArrayList<Tile> Stairs;
 	transient Image tilemap;
 	float height;
 	float width;
@@ -52,6 +53,7 @@ public class Map implements Serializable
 		
 		this.tilemap = tilemap;
 		TileMap = Converter.convertTile(MapReader.readTileMap(tilemap), TileList.getTiles());
+		Stairs = new ArrayList<Tile>();
 		width = tilemap.getWidth();
 		height = tilemap.getHeight();
 		
@@ -60,6 +62,16 @@ public class Map implements Serializable
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
 			TileMap.get(i).setMap(this);
+			
+			if(TileMap.get(i).getType() == 4)
+			{
+				Stairs.add(TileMap.get(i));
+			}
+		}
+		
+		for(int i = 0; i < Stairs.size(); i ++)
+		{
+			((Tiles.Stairs) Stairs.get(i)).directionalize();
 		}
 
 		x = 0; 
@@ -105,7 +117,10 @@ public class Map implements Serializable
 
 	public void render(Graphics g) throws SlickException
 	{
-		g.drawImage(BackGround, x, y );
+		if(BackGround != null)
+		{
+			g.drawImage(BackGround, x, y );
+		}
 		
 		for(Tile T: TileMap)
 		{
@@ -133,9 +148,11 @@ public class Map implements Serializable
 		{
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
+			TileMap.get(i).reset();
 		}
 		
 		level.getEntities().clear();
+		level.getProjectiles().clear();
 
 		x = 0; 
 		y = 0;
@@ -168,6 +185,32 @@ public class Map implements Serializable
 		return derp;
 	}
 	
+	public Tile getTile(Color ID)
+	{
+		Tile derp = new Tile(null, null);
+		
+		for(int i = 0; i < TileMap.size(); i ++)
+		{
+			if(Math.abs(TileMap.get(i).getID().a - ID.a) <= 0.00)
+			{
+				if(Math.abs(TileMap.get(i).getID().r - ID.r) <= 0.04)
+				{
+					if(Math.abs(TileMap.get(i).getID().g - ID.g) <= 0.04)
+					{
+						if(Math.abs(TileMap.get(i).getID().b - ID.b) <= 0.04)
+						{
+							derp = TileMap.get(i);
+							
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return derp;
+	}
+	
 	public Level getLevel()
 	{
 		return level;
@@ -176,7 +219,7 @@ public class Map implements Serializable
 	public Map directSpawn(Entity e)
 	{
 		level.addEntity(e);
-		
+
 		return this;
 	}
 }

@@ -34,7 +34,8 @@ public class Joint implements Serializable
 		x = (float) (bone1.getX() + bone1.getLength() / 2 * Math.cos(bone1.getRot()));
 		y = (float) (bone1.getY() + constant * bone1.getLength() / 2 * Math.sin(bone1.getRot()));
 		
-		bone2.setRot((float) Math.toDegrees((bone1.getRot() - constant *  Math.toRadians(0))));
+		bone2.setRot(bone1.getPureRot());
+		bone2.setFlip(!bone1.getFlip());
 		
 	}
 	

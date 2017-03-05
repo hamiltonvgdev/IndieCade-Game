@@ -10,6 +10,8 @@ public class Pants extends Item
 		super(name);
 		
 		setInput(player.getInput().KEY_L);
+		
+		type = 3;
 	}
 
 }

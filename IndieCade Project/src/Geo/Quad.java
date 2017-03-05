@@ -20,13 +20,16 @@ public class Quad implements Serializable
 		this.height = height;
 	}
 
-	public boolean checkPoint(float x, float y) {
+	public boolean checkPoint(float x, float y)
+	{
+		boolean derp = false;
+		
 		if (x >= this.x)
 			if (y >= this.y)
 				if (x <= this.x + this.width)
 					if (y <= this.y + this.height)
-						return true;
-		return false;
+						derp = true;
+		return derp;
 	}
 	
 	public boolean checkQuad(Quad quad)

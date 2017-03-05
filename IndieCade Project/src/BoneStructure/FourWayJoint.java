@@ -15,9 +15,15 @@ public class FourWayJoint extends ThreeWayJoint implements Serializable
 		super(bone1, bone2, bone3);
 		this.bone4 = bone4;
 		
-		bone2.setRot((float) Math.toDegrees((bone1.getRot() + constant *  Math.toRadians(90))));
-		bone3.setRot((float) Math.toDegrees((bone1.getRot() - constant *  Math.toRadians(90))));
-		bone4.setRot((float) Math.toDegrees((bone1.getRot() + constant *  Math.toRadians(0))));
+		bone1.setFlip(false);	
+		bone2.setFlip(false);
+		bone3.setFlip(false);
+		bone4.setFlip(false);
+		
+		bone2.setRot((float) Math.toDegrees((Math.toRadians(bone1.getPureRot()) + constant *  Math.toRadians(90))));
+		bone3.setRot((float) Math.toDegrees((Math.toRadians(bone1.getPureRot()) + constant *  Math.toRadians(90))));
+		bone3.setFlip(true);
+		bone4.setRot((float) Math.toDegrees((Math.toRadians(bone1.getPureRot()) + constant *  Math.toRadians(0))));
 	}
 	
 	public void update()

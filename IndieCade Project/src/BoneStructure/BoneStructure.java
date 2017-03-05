@@ -15,6 +15,8 @@ public class BoneStructure implements Serializable
 	private static final long serialVersionUID = -785715115218883562L;
 	ArrayList<Bone> Bones;
 	
+	public boolean flip;
+	
 	Bone Head;
 	public Joint neck;
 	
@@ -23,9 +25,13 @@ public class BoneStructure implements Serializable
 	Bone Shoulder2;
 	Bone USpine;
 	Bone LSpine;
+	Bone Pelvic1;
+	Bone Pelvic2;
 	public FourWayJoint torso;
 	public ThreeWayJoint Pelvic;
 	public Joint Spine;
+	public Joint PelvicR;
+	public Joint PelvicL;
 	
 	Bone UArm1;
 	Bone LArm1;
@@ -53,91 +59,122 @@ public class BoneStructure implements Serializable
 	public Joint Knee2;
 	public Joint Ankle2;
 	
-	int tick;
+	float size;
+	Player player;
 	
 	public BoneStructure(Player player, Float size)
 	{
 		Bones = new ArrayList<Bone>();
 		
-		Head = new Bone(size * 9);
+		this.player = player;
+		
+		Head = new Bone(size * 30);
 		Head.setRot(90);
 		Head.setX(player.getX());
 		Head.setY(player.getY());
 		Bones.add(Head);
 		
-		Neck = new Bone(size * 4);
+		Neck = new Bone(size * 8);
 		Bones.add(Neck);
 		
 		neck = new Joint(Head, Neck);
 
-		Shoulder1 = new Bone(size * 9);
+		Shoulder1 = new Bone(size * 30);
 		Bones.add(Shoulder1);
-		Shoulder2 = new Bone(size * 9);
+		Shoulder2 = new Bone(size * 30);
 		Bones.add(Shoulder2);
-		LSpine = new Bone(size * 12);
+		LSpine = new Bone(size * 20);
 		Bones.add(LSpine);
-		USpine = new Bone(size * 12);
+		USpine = new Bone(size * 20);
 		Bones.add(USpine);
 		torso = new FourWayJoint(Neck, Shoulder1, Shoulder2, USpine);
 		
 		Spine = new Joint(USpine, LSpine);
-		ULeg1 = new Bone(size * 17);
+		ULeg1 = new Bone(size * 25);
 		Bones.add(ULeg1);
-		ULeg2 = new Bone(size * 17);
+		ULeg2 = new Bone(size * 25);
 		Bones.add(ULeg2);
-		Pelvic = new ThreeWayJoint(LSpine, ULeg1, ULeg2);
+		Pelvic1 = new Bone(size * 7.5F);
+		Pelvic2 = new Bone(size * 7.5F);
+		Pelvic = new ThreeWayJoint(LSpine, Pelvic1, Pelvic2);
+		PelvicR = new Joint(Pelvic1, ULeg1);
+		PelvicL = new Joint(Pelvic2, ULeg2);
 		
-		UArm1 = new Bone(size * 12);
+		UArm1 = new Bone(size * 5);
 		Bones.add(UArm1);
-		LArm1 = new Bone(size * 12);
+		LArm1 = new Bone(size * 22);
 		Bones.add(LArm1);
-		Hand1 = new Bone(size * 8);
+		Hand1 = new Bone(size * 7);
 		Bones.add(Hand1);
 		shoulder1 = new Joint(Shoulder1, UArm1);
 		Elbow1 = new Joint(UArm1, LArm1);
 		Wrist1 = new Joint(LArm1, Hand1);
 
-		UArm2 = new Bone(size * 12);
+		UArm2 = new Bone(size * 5);
 		Bones.add(UArm2);
-		LArm2 = new Bone(size * 12);
+		LArm2 = new Bone(size * 22);
 		Bones.add(LArm2);
-		Hand2 = new Bone(size * 8);
+		Hand2 = new Bone(size * 7);
 		Bones.add(Hand2);
 		shoulder2 = new Joint(Shoulder2, UArm2);
 		Elbow2 = new Joint(UArm2, LArm2);
 		Wrist2 = new Joint(LArm2, Hand2);
 		
-		LLeg1 = new Bone(size * 15);
+		LLeg1 = new Bone(size * 34);
 		Bones.add(LLeg1);
-		Foot1 = new Bone(size * 4);
+		Foot1 = new Bone(size * 20);
 		Bones.add(Foot1);
 		Knee1 = new Joint(ULeg1, LLeg1);
 		Ankle1 = new Joint(LLeg1, Foot1);
 		
-		LLeg2 = new Bone(size * 15);
+		LLeg2 = new Bone(size * 34);
 		Bones.add(LLeg2);
-		Foot2 = new Bone(size * 4);
+		Foot2 = new Bone(size * 20);
 		Bones.add(Foot2);
 		Knee2 = new Joint(ULeg2, LLeg2);
 		Ankle2 = new Joint(LLeg2, Foot2);
 		
+
 		
-		Pelvic.getBone2().setRot(-225);
-		Pelvic.getBone3().setRot(45);
+		Bones.add(Pelvic1);
+		Bones.add(Pelvic2);
 		
-		Knee1.getBone2().setRot(90);
-		Knee2.getBone2().setRot(90);
+		torso.rotBone2(-15);
+		torso.rotBone3(15);
+		shoulder1.rotBone2(40);
+		shoulder2.rotBone2(40);
+		Elbow1.rotBone2(-60);
+		Elbow2.rotBone2(-60);
+		Wrist1.rotBone2(60);
+		Wrist2.rotBone2(60);
+		
+		Pelvic.getBone2().setRot(0);
+		Pelvic.getBone2().setFlip(true);
+		Pelvic.getBone3().setRot(0);
+		PelvicR.setBone2Rot(100);
+		PelvicL.setBone2Rot(100);
+		PelvicL.getBone2().setFlip(true);
+		
+		Knee1.getBone2().setRot(80);
+		Knee2.getBone2().setRot(80);
+		Knee1.getBone2().setFlip(true);
 		
 		Ankle1.getBone2().setRot(0);
-		Ankle2.getBone2().setRot(0);
-		tick = 10;
+		Ankle2.getBone2().setRot(180);
+		Ankle2.getBone2().setFlip(true);
+		this.size = size;
+		
+		flip = false;
 	}
 	
 	public void update()
 	{
+		
 		neck.update();
 		torso.update();
 		Pelvic.update();
+		PelvicR.update();
+		PelvicL.update();
 		Spine.update();
 		
 		shoulder1.update();
@@ -165,6 +202,10 @@ public class BoneStructure implements Serializable
 		Shoulder2.render(g);
 		USpine.render(g);
 		LSpine.render(g);
+		Pelvic1.render(g);
+		Pelvic2.render(g);
+		PelvicR.render(g);
+		PelvicL.render(g);
 		
 		UArm1.render(g);
 		LArm1.render(g);
@@ -198,6 +239,7 @@ public class BoneStructure implements Serializable
 		
 		Knee2.render(g);
 		Ankle2.render(g);
+		
 	}
 	
 	public Joint getJoint(String name)
@@ -211,6 +253,12 @@ public class BoneStructure implements Serializable
 		}else if(name.equals("Pelvic"))
 		{
 			return Pelvic;
+		}else if(name.equals("Pelvic 1"))
+		{
+			return PelvicL;
+		}else if(name.equals("Pelvic 2"))
+		{
+			return PelvicR;
 		}else if(name.equals("Spine"))
 		{
 			return Spine;
@@ -255,12 +303,34 @@ public class BoneStructure implements Serializable
 		return Bones;
 	}
 	
-	public void flip(boolean flip)
+	public float getSize()
 	{
-		//Figure out how to flip Use ThreeWayJoint and FourWayJoint
+		return size;
+	}
+	
+	public void flip()
+	{
+		//derp
+		//Legs flip incorrectly, could be rotational error. 
+		//Something may be up with the multiple images for the leg, should fix that
+		
 		for(Bone bone: Bones)
 		{
-			bone.setFlip(flip);
+			if(bone.flip)
+			{
+				bone.setFlip(false);
+			}else
+			{
+				bone.setFlip(true);
+			}
+		}
+		
+		if(flip)
+		{
+			flip = false;
+		}else
+		{
+			flip = true;
 		}
 	}
 }

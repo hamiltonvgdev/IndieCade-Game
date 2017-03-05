@@ -1,6 +1,8 @@
 package Tiles;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 
 import Player.Player;
 
@@ -22,16 +24,29 @@ public abstract class InteractTile extends Tile
 	public void update()
 	{	
 		super.update();
-		
-		if(player.getInput().isKeyDown(player.getInput().KEY_LALT) && hitbox.checkQuad(player.Hitbox))
+
+		for(int i = 0; i < player.getHitboxes().size(); i ++)
 		{
-			interact = true;
+			if(player.getHitboxes().get(i).checkQuad(hitbox) && 
+					player.getInput().isKeyPressed(player.getInput().KEY_BACKSLASH))
+			{
+				interact = true;
+				break;
+			}
+			
 		}
 		
 		if(interact)
 		{
 			action();
 		}
+	}
+	
+	public void reset()
+	{
+		super.reset();
+		
+		interact = false;
 	}
 	
 	public void action()

@@ -32,6 +32,7 @@ public class Tile implements Serializable
 	AnimationSet sprite;
 	final float width = 64;
 	final float height = 64;
+	float rot;
 	
 	boolean sounded;
 	String ref;
@@ -60,6 +61,7 @@ public class Tile implements Serializable
 		nextTo = true;
 		
 		Type = 0;
+		rot = 0;
 	}
 	
 	public void changeCoordinates(float xa, float ya)
@@ -103,6 +105,12 @@ public class Tile implements Serializable
 		y += ya;
 	}
 	
+	public void reset()
+	{
+		on = false;
+		nextTo = false;
+	}
+	
 	public void update()
 	{
 		hitbox.changeDimensions(x, y, width, height);
@@ -121,7 +129,7 @@ public class Tile implements Serializable
 
 	public void render(Graphics g) throws SlickException
 	{
-		sprite.render(x, y, width, height, 0, g);
+		sprite.render(x, y, width, height, rot, g);
 	}
 	
 	public String getName()
