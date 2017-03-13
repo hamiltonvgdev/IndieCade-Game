@@ -48,6 +48,15 @@ public class PortalTile extends InteractTile
 					Config.HEIGHT / 2 - 
 					world.getCurrentMap().getTile(new Color(1 - Id.r, 1 - Id.g, 1 - Id.b, Id.a)).y +
 					player.getBody().getSize() * 32);
+			player.Move(world.getCurrentMap().getTile(new Color(1 - Id.r, 1 - Id.g, 1 - Id.b, Id.a)).x - player.getX(),
+					world.getCurrentMap().getTile(new Color(1 - Id.r, 1 - Id.g, 1 - Id.b, Id.a)).y - player.getY() - 
+					player.getBody().getSize() * 32);
+			
+			player.setOffset(Config.WIDTH/ 2 - 
+					world.getCurrentMap().getTile(new Color(1 - Id.r, 1 - Id.g, 1 - Id.b, Id.a)).x,
+					Config.HEIGHT / 2 - 
+					world.getCurrentMap().getTile(new Color(1 - Id.r, 1 - Id.g, 1 - Id.b, Id.a)).y + 
+					player.getBody().getSize() * 32);
 		}
 	}
 	

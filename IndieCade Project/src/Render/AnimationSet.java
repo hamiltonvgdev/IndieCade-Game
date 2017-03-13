@@ -228,7 +228,7 @@ public class AnimationSet implements Serializable
 		return Animation;
 	}
 	
-	public int getCurrentFrame()
+	public int getCurrentIndex()
 	{
 		return frame;
 	}
@@ -241,5 +241,10 @@ public class AnimationSet implements Serializable
 	public boolean getFlip()
 	{
 		return flip;
+	}
+	
+	public BasicImage getCurrentFrame()
+	{
+		return Animation.get(getCurrentIndex());
 	}
 }

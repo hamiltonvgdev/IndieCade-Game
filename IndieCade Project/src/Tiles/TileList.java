@@ -4,9 +4,14 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 
+import Enemy.Enemy;
+import Enemy.RushEnemy;
+import Enemy.ShootEnemy;
 import GameBasics.Entity;
 import Map.World;
 import Player.Player;
+import Projectiles.BasicProjectile;
+import Projectiles.WaveProjectile;
 import Weapons.RangedWeapon;
 
 public class TileList
@@ -111,15 +116,28 @@ public class TileList
 		///////////////////////////////////////////////////////////////////	
 
 		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox",
-				new Entity(player, 10, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
+				new Entity(player, 10, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).
+				setDimensions(19 * 5, 23 * 5),
 				4000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
 				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
 				setColidable(true).
 				setFriction(1F);
 		Tiles.add(GearBox);
 		
-		SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
-				new Entity(player, 15, 5, 0).setAnimationSet("res/Entities/goblin/Images/Stale", 800).setDimensions(19 * 5, 23 * 5),
+		/*SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
+				((ShootEnemy) new ShootEnemy(player, 100, 5, 1).setAnimationSet("res/Entities/goblin/Images/Stale", 100).
+				setAtkSpeed(1000).setDimensions(128, 128)).
+				setProjectile("res/Gear/Weapons/LegendBow/Arrow", 100, 10 * 5, 10 * 5, 45 ,20).
+				setRange(300).setTriggeredAnimation("res/Entities/goblin/Images/SideL", 100),
+				4000, new Color(0 / 255F, 255 / 255F, 0 / 255F)).
+				setAnimation("res/Tiles/Dirt/Images", 100).
+				setColidable(true).
+				setFriction(1F);
+		Tiles.add(dirtSpawn);*/
+		 		SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
+				((RushEnemy) new RushEnemy(player, 100, 5, 10).setAnimationSet("res/Entities/goblin/Images/Stale", 100).
+				setAtkSpeed(1000).setDimensions(128, 128)).
+				setRange(200).setTriggeredAnimation("res/Entities/goblin/Images/SideL", 100),
 				4000, new Color(0 / 255F, 255 / 255F, 0 / 255F)).
 				setAnimation("res/Tiles/Dirt/Images", 100).
 				setColidable(true).

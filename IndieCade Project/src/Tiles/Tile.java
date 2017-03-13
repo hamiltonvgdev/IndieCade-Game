@@ -42,6 +42,9 @@ public class Tile implements Serializable
 	Map map;
 	
 	int Type;
+
+	float yOffset;
+	float xOffset;
 	
 	public Tile(String name, Color Id)
 	{
@@ -62,6 +65,9 @@ public class Tile implements Serializable
 		
 		Type = 0;
 		rot = 0;
+		
+		xOffset = 0;
+		yOffset = 0;
 	}
 	
 	public void changeCoordinates(float xa, float ya)
@@ -101,14 +107,16 @@ public class Tile implements Serializable
 	
 	public void shift(float xa, float ya)
 	{
-		x += xa;
-		y += ya;
+		xOffset += xa;
+		yOffset += ya;
 	}
 	
 	public void reset()
 	{
 		on = false;
 		nextTo = false;
+		xOffset = 0;
+		yOffset = 0;
 	}
 	
 	public void update()
@@ -129,7 +137,12 @@ public class Tile implements Serializable
 
 	public void render(Graphics g) throws SlickException
 	{
-		sprite.render(x, y, width, height, rot, g);
+		sprite.render(x + xOffset, y + yOffset, width, height, rot, g);
+		
+		if(collidable)
+		{
+			hitbox.render(g);
+		}
 	}
 	
 	public String getName()

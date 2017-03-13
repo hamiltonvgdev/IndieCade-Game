@@ -32,6 +32,7 @@ public class Launcher extends StateBasedGame
 			appc.setVSync(Config.VSYNC);
 			appc.setMinimumLogicUpdateInterval(1000 / Config.Ticks);
 			appc.setMaximumLogicUpdateInterval(1000 / Config.Ticks);
+			appc.setUpdateOnlyWhenVisible(true);
 			appc.start();
 		}catch (SlickException e) 
 		{

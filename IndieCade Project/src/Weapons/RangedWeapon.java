@@ -28,11 +28,22 @@ public class RangedWeapon extends Weapon
 		return this;
 	}
 
+	public RangedWeapon setProjectile(BasicProjectile projectile)
+	{
+		Pref = projectile.getSprite().getFolder();
+		Pdelay = projectile.getSprite().getDelay();
+		Pwidth = projectile.getWidth();
+		Pheight = projectile.getHeight();
+		Prot = projectile.getRot();
+		return this;
+	}
+	
 	@Override
 	public void attack() 
 	{
-		shot = new BasicProjectile(player, null, this, 1).setSprite(Pref, Pdelay).
+		shot = new BasicProjectile(player, 1).setSprite(Pref, Pdelay).
 				setDimensions(Pwidth, Pheight, -Prot);
+		shot.setShooter(null, this);
 		shot.shoot(Range * factor);
 		
 		if(factor < 0)

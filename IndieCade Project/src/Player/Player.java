@@ -25,6 +25,7 @@ import Render.AnimationSet;
 import Render.BasicImage;
 import Stance.Action;
 import Stance.Stance;
+import Stance.StanceList;
 import Tiles.Tile;
 import Weapons.MeleeWeapon;
 import Weapons.RangedWeapon;
@@ -70,6 +71,8 @@ public class Player implements Serializable
 	float width;
 	float height;
 	Quad Screen;
+	float xOffset;
+	float yOffset;
 	
 	//Gear
 	ArrayList<Item> Inventory;
@@ -94,12 +97,9 @@ public class Player implements Serializable
 	float Stun;
 	float Speed;
 	
-	Stance walk;
-	Stance startWalk;
-	Stance stopWalk;
-	
 	ArrayList<BasicImage> Model;
 	ArrayList<Quad> Hitboxes;
+	
 	
 	public Player(Game game, float x, float y)
 	{
@@ -150,35 +150,6 @@ public class Player implements Serializable
 		Speed = baseSpeed * speed;
 		Stun = 0;
 		
-		//Upper and Lower Leg out of Sync
-		walk = new Stance("Walk", Body, 3);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 240, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 233, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 260, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 303, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 293, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 303, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 260, 200), 0);
-		walk.addAction(new Action(Body, "Pelvic 2", 0, 233, 200), 0);
-		
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 312, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 310, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 270, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 221, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 240, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 221, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 270, 200), 1);
-		walk.addAction(new Action(Body, "Pelvic 1", 0, 310, 200), 1);
-
-		walk.addAction(new Action(Body, "Knee 2", 0, 240, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 310, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 350, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 340, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 324, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 340, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 350, 200), 2);
-		walk.addAction(new Action(Body, "Knee 2", 0, 310, 200), 2);
-		
 		Model = new ArrayList<BasicImage>();
 		Model.add(new BasicImage("res/Player/Head/Head.png"));
 		Model.add(new BasicImage("res/Player/Neck/Neck.png"));
@@ -208,6 +179,12 @@ public class Player implements Serializable
 		}
 		
 		quests = new ArrayList<BasicQuest>();
+		
+		xOffset = 0;
+		yOffset = 0;
+		
+		
+		StanceList.init(Body);
 	}
 	
 	public void setMap(Map map)
@@ -263,7 +240,7 @@ public class Player implements Serializable
 							&& map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).getHitbox().
 							checkQuad(new Quad(Hitboxes.get(k).x + Hitboxes.get(k).width / 2 + Vx + Ax, Hitboxes.get(k).y + Hitboxes.get(k).height / 2, Hitboxes.get(k).width, Hitboxes.get(k).height)))
 					{
-						CollisionX = true;
+						//CollisionX = true;
 						map.getTile(Hitboxes.get(k).x + i * (Hitboxes.get(k).width + Vx + 5), Hitboxes.get(k).y + j * (Hitboxes.get(k).height + Vy + 5)).nextTo = true;
 					}else
 					{
@@ -313,7 +290,10 @@ public class Player implements Serializable
 	{	
 		if(!paused)
 		{
-			walk.loop();
+			if(Vx != 0)
+			{
+				StanceList.getStance("Walk").loop();
+			}
 			
 			for(int i = 0; i < quests.size(); i ++)
 			{
@@ -368,23 +348,32 @@ public class Player implements Serializable
 			
 			if(leftMove && !rightMove)
 			{
-				if(Math.abs(Vx) < Speed - acceleration)
+				if(Math.abs(Vx) <= Speed - acceleration)
 				{
 					Ax = -acceleration;
 				}else
 				{
 					Ax = 0;
 				}
+				if(Math.abs(Vx) >= Speed - acceleration)
+				{
+					Vx = -Speed;
+				}
 			}
 			
 			if(rightMove && !leftMove)
 			{
-				if(Math.abs(Vx) < Speed - acceleration)
+				if(Math.abs(Vx) <= Speed - acceleration)
 				{
 					Ax = acceleration;
 				}else
 				{
 					Ax = 0;
+				}
+				
+				if(Math.abs(Vx) >= Speed - acceleration)
+				{
+					Vx = Speed;
 				}
 			}
 			
@@ -392,7 +381,7 @@ public class Player implements Serializable
 			{
 				if(Vx < 0)
 				{
-					Ax = map.getTile(x, y + 50 + 64 * 2 * Body.getSize()).getFriction();
+					Ax = map.getTile(x, y + 60 + 64 * 2 * Body.getSize()).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
@@ -400,7 +389,7 @@ public class Player implements Serializable
 				
 				if(Vx > 0)
 				{
-					Ax = -map.getTile(x, y + 50 + 64 * 2 * Body.getSize()).getFriction();
+					Ax = -map.getTile(x, y + 60 + 64 * 2 * Body.getSize()).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
@@ -420,8 +409,7 @@ public class Player implements Serializable
 				Jump();
 			}
 			
-			map.shift(-Vx, 0);
-			map.shift(0, -Vy);
+			move(-Vx, -Vy);
 			
 			Screen.changeDimensions(x, y, Config.WIDTH, Config.HEIGHT);
 			
@@ -434,40 +422,73 @@ public class Player implements Serializable
 					Equiped.get(i).update();
 				}
 			}
+			
+			
 		}
 	}	
 	
+	public void move(float xa, float ya) 
+	{
+		x -= xa;
+		y -= ya;
+		map.shift(-Vx, 0);
+		map.shift(0, -Vy);
+		
+		Body.move(-xa, -ya);
+		
+		xOffset += xa;
+		yOffset += ya;
+	}
+	
+	public void Move(float xa, float ya)
+	{
+		x += xa;
+		y += ya;
+		Body.move(xa, ya);
+	}
+	
+	public void setOffset(float xa, float ya)
+	{
+		xOffset = xa;
+		yOffset = ya;
+	}
+	
 	public void render(Graphics g) throws SlickException
 	{
-		Screen.render(g);
-		
 		for(int i = 0; i < Model.size(); i ++)
 		{
-		/*	Model.get(i).setFlip(!Body.getBones().get(i).getFlip());
-			Model.get(i).render(Body.getBones().get(i).getX(), Body.getBones().get(i).getY(), 
+			Model.get(i).setFlip(!Body.getBones().get(i).getFlip());
+			Model.get(i).render(Body.getBones().get(i).getX() + xOffset, Body.getBones().get(i).getY() + yOffset, 
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize(), 
-					Body.getBones().get(i).getRenderRot(), g);*/
+					Body.getBones().get(i).getRenderRot(), g);
 			
 			Hitboxes.get(i).changeDimensions(Body.getBones().get(i).getX(), 
 					Body.getBones().get(i).getY(), 
 					Model.get(i).getImage().getWidth() / 4 * Body.getSize(), 
 					Model.get(i).getImage().getHeight() / 4 * Body.getSize());
+			
+			Hitboxes.get(i).render(g);
+			
 		}
 		for(int i = 0; i < Equiped.size(); i ++)
 		{
 			if(Equiped.get(i) != null)
 			{
-				Equiped.get(i).render(g);;
+				Equiped.get(i).render(g, xOffset, yOffset);
 			}
 		}
-		Body.render(g);
 }
 	
 	public void die()
 	{
 		map.reset();
 		health = maxHealth;
+		x += xOffset;
+		y += yOffset;
+		Body.move(xOffset, yOffset);
+		xOffset = 0;
+		yOffset = 0;
 	}
 	
 	public void Jump()

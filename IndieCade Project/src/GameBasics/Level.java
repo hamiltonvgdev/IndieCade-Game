@@ -26,6 +26,9 @@ public class Level implements Serializable
 	Player player;
 	Quad Screen;
 	
+	float xOffset;
+	float yOffset;
+	
 	public Level(Player player)
 	{
 		Entities = new ArrayList<Entity>();
@@ -35,6 +38,8 @@ public class Level implements Serializable
 		
 		this.player = player;
 		Screen = new Quad(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
+		xOffset = 0;
+		yOffset = 0;
 	}
 	
 	public ArrayList<Entity> getEntities()
@@ -86,17 +91,17 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			Entities.get(i).render(g);
+			Entities.get(i).render(g, xOffset, yOffset);
 		}
 		
 		for(BasicNPC n : NPCs)
 		{
-			n.render(g);
+			n.render(g, xOffset, yOffset);
 		}
 		
 		for(int i = 0; i < Projectiles.size(); i ++)
 		{
-			Projectiles.get(i).render(g);
+			Projectiles.get(i).render(g, xOffset, yOffset);
 		}
 	}
 	
@@ -105,6 +110,7 @@ public class Level implements Serializable
 		for(int i = 0; i < Entities.size(); i ++)
 		{
 			Entities.get(i).update();
+			Entities.get(i).Physics();
 		}
 		
 		for(int i = 0; i < NPCs.size(); i ++)
@@ -121,20 +127,17 @@ public class Level implements Serializable
 
 	public void shift(float xa, float ya) 
 	{
-		for(int i = 0; i < Entities.size(); i ++)
-		{
-			Entities.get(i).Move(xa, ya);
-		}
+		xOffset += xa;
+		yOffset += ya;
+	}
+	
+	public void reset()
+	{
+		Entities.clear();
+		Projectiles.clear();
 		
-		for(int i = 0; i < NPCs.size(); i ++)
-		{
-			NPCs.get(i).shift(xa, ya);
-		}
-		
-		for(int i = 0; i < Projectiles.size(); i ++)
-		{
-			Projectiles.get(i).move(xa, ya);
-		}
+		xOffset = 0;
+		yOffset = 0;
 	}
 
 	public Player getPlayer() 

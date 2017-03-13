@@ -42,6 +42,8 @@ public class Map implements Serializable
 	public Quad Hitbox;
 	float x;
 	float y;
+	float xOffset;
+	float yOffset;
 	
 	transient Color ID;
 	
@@ -76,6 +78,8 @@ public class Map implements Serializable
 
 		x = 0; 
 		y = 0;
+		xOffset = 0;
+		yOffset = 0;
 		Hitbox = new Quad(x, y, width * 64, height * 64);
 		
 		themeMusic = null;
@@ -119,7 +123,7 @@ public class Map implements Serializable
 	{
 		if(BackGround != null)
 		{
-			g.drawImage(BackGround, x, y );
+			g.drawImage(BackGround, x + xOffset, y + yOffset);
 		}
 		
 		for(Tile T: TileMap)
@@ -132,14 +136,15 @@ public class Map implements Serializable
 	
 	public void shift(float xa, float ya)
 	{
+		level.shift(xa, ya);
+		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).shift(xa, ya);
 		}
-		x += xa;
-		y += ya;
 		
-		level.shift(xa, ya);
+		xOffset += xa;
+		yOffset += ya;
 	}
 	
 	public void reset()
@@ -151,11 +156,13 @@ public class Map implements Serializable
 			TileMap.get(i).reset();
 		}
 		
-		level.getEntities().clear();
-		level.getProjectiles().clear();
+		level.reset();
 
 		x = 0; 
 		y = 0;
+		
+		xOffset = 0;
+		yOffset = 0;
 	}
 	
 	public Color getID()

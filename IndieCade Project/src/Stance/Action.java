@@ -53,16 +53,7 @@ public class Action implements Serializable
 		if(joint != null && body != null)
 		{
 			Joint Joint = body.getJoint(joint);
-			int constant;
-			
-			
-			if(stance.index == 0)
-			{
-				constant = 40;
-			}else
-			{
-				constant = 40;
-			}
+			float constant = 40F;
 			
 			
 			if(id == 0)
@@ -75,7 +66,6 @@ public class Action implements Serializable
 			{
 				((FourWayJoint) Joint).rotBone4((rot - cRot) / time * constant);
 			}
-			
 		}
 	}
 }

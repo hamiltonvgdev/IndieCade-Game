@@ -50,7 +50,8 @@ public class ItemTile extends InteractTile
 		
 		if(!given)
 		{
-			item.getSprite().render(x, (float) (y - 10 -  item.getHeight() / 2 - 10 * Math.sin(Math.toRadians(angle)))
+			item.getSprite().render(x + xOffset, 
+					(float) (y - 10 -  item.getHeight() / 2 - 10 * Math.sin(Math.toRadians(angle))) + yOffset
 					, item.getWidth(), item.getHeight(), 0, g);
 		}
 	}

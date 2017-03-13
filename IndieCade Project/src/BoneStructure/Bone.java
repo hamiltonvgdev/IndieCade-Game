@@ -113,4 +113,10 @@ public class Bone implements Serializable
 	{
 		return length;
 	}
+
+	public void move(float xa, float ya) 
+	{
+		x += xa;
+		y += ya;
+	}
 }

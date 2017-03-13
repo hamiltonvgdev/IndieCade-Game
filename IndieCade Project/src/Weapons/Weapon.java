@@ -133,12 +133,12 @@ public abstract class Weapon extends Item implements Serializable
 		flip = player.getBody().getJoint("Wrist 2").getBone2().getFlip();
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		for(int i = 0; i < Sprites.size(); i ++)
 		{
 			Sprites.get(i).setFlip(flip);
-			Sprites.get(i).render(x, y, width, height, rot, g);
+			Sprites.get(i).render(x + xOffset, y + yOffset, width, height, rot, g);
 		}
 	}
 	

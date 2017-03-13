@@ -133,25 +133,25 @@ public class BasicNPC implements Serializable
 		}
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		if(active && Active != null)
 		{
-			Active.render(x, y, width, height, rot, g);
+			Active.render(x + xOffset, y + yOffset, width, height, rot, g);
 		}else if(near && Near != null)
 		{
-			Near.render(x, y, width, height, rot, g);
+			Near.render(x + xOffset, y + yOffset, width, height, rot, g);
 		}else if(idle && Idle != null)
 		{
-			Idle.render(x, y, width, height, rot, g);
+			Idle.render(x + xOffset, y + yOffset, width, height, rot, g);
 		}
 		
 		if(near)
 		{
-			speak(g);
+			speak(g, xOffset, yOffset);
 		}
 		
-		g.drawString(name, x - name.length() * 4, y + height / 3 * 2);
+		g.drawString(name, x - name.length() * 4 + xOffset, y + height / 3 * 2 + yOffset);
 	}
 	public void Physics()
 	{	
@@ -189,17 +189,17 @@ public class BasicNPC implements Serializable
 		
 	}
 	
-	public void speak(Graphics g) throws SlickException
+	public void speak(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		if(phrase != null)
 		{
-			speak(phrase, g);
+			speak(phrase, xOffset, yOffset, g);
 		}
 	}
 	
-	public void speak(String phrase, Graphics g) throws SlickException
+	public void speak(String phrase, float xOffset, float yOffset, Graphics g) throws SlickException
 	{
-		g.drawString(phrase, x - phrase.length() * 4, y - height);
+		g.drawString(phrase, x - phrase.length() * 4 + xOffset, y - height + yOffset);
 	}
 	
 	public boolean distanceSense(Player protag)

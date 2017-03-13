@@ -2,13 +2,15 @@ package Tiles;
 
 import org.newdawn.slick.Color;
 
+import Enemy.Enemy;
+import Enemy.RushEnemy;
+import Enemy.ShootEnemy;
 import GameBasics.Entity;
 
 public class SpawnTile extends Tile
 {
 	Entity mob;
 	String spawnRef;
-	Entity goblin;
 	
 	long CD;
 	long tick;
@@ -17,15 +19,29 @@ public class SpawnTile extends Tile
 	{
 		super(name, Id);
 		
-		
-		this.mob = new Entity(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
-				setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-				setDimensions(mob.getWidth(), mob.getHeight()).
-				setAtkValues(mob.getDamage(), mob.getAtkSpeed());
-		
-		this.goblin = new Entity(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
-				setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-				setDimensions(mob.getWidth(), mob.getHeight());
+		if(mob.getID() == 0)
+		{
+			this.mob = new Entity(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
+					setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+					setDimensions(mob.getWidth(), mob.getHeight()).
+					setAtkSpeed(mob.getAtkSpeed());
+		}else if(mob.getID() == 1)
+		{
+			this.mob = ((RushEnemy) new RushEnemy(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
+					setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+					setDimensions(mob.getWidth(), mob.getHeight()).
+					setAtkSpeed(mob.getAtkSpeed())).setRange(((Enemy) mob).getRange()).
+					setTriggeredAnimation(((Enemy) mob).getTriggeredSprite().getFolder(), ((Enemy) mob).getTriggeredSprite().getDelay());
+		}else if(mob.getID() == 2)
+		{
+			//Set Projectile
+			this.mob = ((ShootEnemy) ((Enemy) new ShootEnemy(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
+					setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
+					setDimensions(mob.getWidth(), mob.getHeight()).
+					setAtkSpeed(mob.getAtkSpeed())).setRange(((Enemy) mob).getRange()).
+					setTriggeredAnimation(((Enemy) mob).getTriggeredSprite().getFolder(), ((Enemy) mob).getTriggeredSprite().getDelay())).
+					setProjectile(((ShootEnemy) mob).getProjectile(), ((ShootEnemy) mob).getXa());
+		}
 		
 		this.CD = CD;
 		
@@ -79,9 +95,6 @@ public class SpawnTile extends Tile
 		mob.setPosition(x, y - mob.getHeight() / 2 - 32);
 		mob.reset();
 		map.getLevel().addEntity(mob);
-		
-		goblin.setPosition(x, y - mob.getHeight() / 2 - 32);
-		map.getLevel().addEntity(goblin);
 		
 		if(spawnRef != null)
 		{

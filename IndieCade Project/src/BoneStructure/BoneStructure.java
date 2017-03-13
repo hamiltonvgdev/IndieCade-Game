@@ -333,4 +333,12 @@ public class BoneStructure implements Serializable
 			flip = true;
 		}
 	}
+
+	public void move(float xa, float ya) 
+	{
+		for(Bone bone : getBones())
+		{
+			bone.move(xa, ya);
+		}
+	}
 }

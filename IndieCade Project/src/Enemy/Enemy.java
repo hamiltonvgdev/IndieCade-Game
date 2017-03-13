@@ -6,49 +6,87 @@ import org.newdawn.slick.SlickException;
 import GameBasics.Entity;
 import Map.Map;
 import Player.Player;
+import Render.AnimationSet;
 
 public class Enemy extends Entity
 {
-
+	
 	Player player;
+	AnimationSet triggered;
+	
+	float range;
+	
+	boolean near;
 	
 	public Enemy(Player player, float health, float damage, float speed)
 	{
 		super(player, health, damage, speed);
 		
 		this.player = player;
+		
+		range = 100;
+		
+		near = false;
+	}
+	
+	public Enemy setRange(float range)
+	{
+		this.range = range;
+		return this;
+	}
+	
+	public Enemy setTriggeredAnimation(String res, long delay)
+	{
+		triggered = new AnimationSet(res, delay);
+		return this;
 	}
 	
 	public void update()
 	{
 		super.update();
 		
-		if(distanceSense(400, player))
+		if(distanceSense(range, player))
 		{
 			action();
 			
-			if(!sprite.getFolder().equals("res/Entities/goblin/Images/SideL"))
-			{
-				setAnimationSet("res/Entities/goblin/Images/SideL", 200);
-			}
+			near = true;
 		}else
 		{
+			deaction();
 			
-			if(!sprite.getFolder().equals("res/Entities/goblin/Images/Stale"))
-			{
-				setAnimationSet("res/Entities/goblin/Images/Stale", 800);
-				System.out.println("derp");
-			}
+			near = false;
 		}
 	}
 	
-	private void action() 
+	protected void action() 
 	{
-		follow(player);
+		
 	}
 
-	public void render(Graphics g) throws SlickException
+	protected void deaction()
 	{
-		super.render(g);
+		
+	}
+	
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
+	{
+		if(near)
+		{
+			triggered.render(x + xOffset, y + yOffset, width, height, 0, g);
+		}else
+		{
+			super.render(g, xOffset, yOffset);
+		}
+		
+	}
+	
+	public float getRange()
+	{
+		return range;
+	}
+	
+	public AnimationSet getTriggeredSprite()
+	{
+		return triggered;
 	}
 }

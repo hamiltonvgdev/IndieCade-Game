@@ -31,14 +31,10 @@ public class BasicProjectile
 	
 	Quad hitbox;
 	
-	public BasicProjectile(Player player, Entity ent, RangedWeapon weapon, int type)
+	public BasicProjectile(Player player, int type)
 	{
 		this.player = player;
-		this.weapon = weapon;
-		entity = ent;
 		
-		x = weapon.getX();
-		y = weapon.getY();
 		rot = 0;
 		
 		Ax = 0;
@@ -63,6 +59,22 @@ public class BasicProjectile
 		return this;
 	}
 	
+	public void setShooter(Entity ent, RangedWeapon weapon)
+	{
+		this.weapon = weapon;
+		entity = ent;
+		
+		if(type == 0)
+		{
+			x = ent.getX();
+			y = ent.getY();
+		}else if(type == 1)
+		{
+			x = weapon.getX();
+			y = weapon.getY();
+		}
+	}
+	
 	public void update()
 	{
 		hitbox.changeDimensions(x, y, width, height);
@@ -80,7 +92,6 @@ public class BasicProjectile
 				if(hitbox.checkQuad(this.hitbox))
 				{
 					player.damage((int) entity.getDamage());
-					weapon.affect();
 					end();
 					
 					break;
@@ -100,9 +111,9 @@ public class BasicProjectile
 		}
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
-		sprite.render(x, y, width, height, rot, g);
+		sprite.render(x + xOffset, y + yOffset, width, height, rot, g);
 	}
 	
 	public void end()
@@ -120,6 +131,51 @@ public class BasicProjectile
 	{
 		Vx = xa;
 		player.getMap().getLevel().addProjectile(this);
+	}
+	
+	public float getX()
+	{
+		return x;
+	}
+	
+	public float getY()
+	{
+		return y;
+	}
+	
+	public float getVx()
+	{
+		return Vx;
+	}
+	
+	public float getVy()
+	{
+		return Vy;
+	}
+	
+	public float getAx()
+	{
+		return Ax;
+	}
+	
+	public float getAy()
+	{
+		return Ay;
+	}
+	
+	public float getHeight() 
+	{
+		return height;
+	}
+	
+	public float getWidth()
+	{
+		return width;
+	}
+	
+	public float getRot()
+	{
+		return rot;
 	}
 	
 	public AnimationSet getSprite()

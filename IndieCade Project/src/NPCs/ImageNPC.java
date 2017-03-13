@@ -31,22 +31,22 @@ public class ImageNPC extends BasicNPC
 		}
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		if(active && Active != null)
 		{
-			Active.render(x, y, width, height, rot, g);
+			Active.render(x + xOffset, y + yOffset, width, height, rot, g);
 		}else if(near && Near != null)
 		{
-			Near.render(x, y, width, height, rot, g);
+			Near.render(x + xOffset, y + yOffset, width, height, rot, g);
 		}else if(idle && Idle != null)
 		{
-			Idle.render(x, y, width, height, rot, g);
+			Idle.render(x + xOffset, y + yOffset, width, height, rot, g);
 		}
 		
 		if(near && !active)
 		{
-			speak(g);
+			speak(g, xOffset, yOffset);
 		}
 		
 		if(active)

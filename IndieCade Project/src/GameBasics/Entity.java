@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import BoneStructure.BoneStructure;
@@ -27,10 +28,10 @@ public class Entity implements Serializable
 	
 	//Horizontal movement
 	protected float x;
-	float Vx;
-	float Vy;
-	float Ax;
-	float Ay;
+	protected float Vx;
+	protected float Vy;
+	protected float Ax;
+	protected float Ay;
 	float acceleration;
 	
 	//Vertical movement
@@ -51,15 +52,16 @@ public class Entity implements Serializable
 	//Combat values
 	float Stun;
 	float Speed;
-	long atkSpeed;
+	protected long atkSpeed;
 	long atkTick;
 	
 	//World
-	Map map;
+	protected Map map;
 	
 	//Renders
-	float width;
-	float height;
+	protected float width;
+	protected float height;
+	protected float rot;
 	public Quad Hitbox;
 	Level level;
 	
@@ -67,6 +69,9 @@ public class Entity implements Serializable
 	protected AnimationSet sprite;
 	
 	Random gen = new Random();
+	protected int id;
+	
+	Geo.Hitbox hit;
 	
 	public Entity(Player player, float health, float damage, float speed)
 	{
@@ -75,25 +80,28 @@ public class Entity implements Serializable
 		paused = false;
 		stun = false;
 		
-		jumpV = -10F;
+		jumpV = -15F;
 		jump = 0;
 		maxjump = 2;
 		jumpTick = System.currentTimeMillis();
 		jumping = false;
 		
-		Vx = -1;
+		Vx = 0;
 		Vy = 0;
 		
 		Ax = 0F;
-		Ay = 0.5F;
+		Ay = 1.5F;
 		acceleration = 0.5F;
 		
 		Hitbox = new Quad(x, y, width, height);
+		rot = 0;
 		
 		maxHealth = health;
 		this.health = maxHealth;
 		this.damage = damage;
 		this.speed = speed;
+		
+		id = 0;
 
 	}
 	public void setMap(Map map)
@@ -111,6 +119,7 @@ public class Entity implements Serializable
 	public Entity setAnimationSet(String ref, long delay)
 	{
 		sprite = new AnimationSet(ref, delay);
+		hit = new Geo.Hitbox(sprite.getCurrentFrame());
 		return this;
 	}
 	
@@ -121,9 +130,9 @@ public class Entity implements Serializable
 		return this;
 	}
 	
-	public Entity setAtkValues(float damage, long atkSpeed)
+
+	public Entity setAtkSpeed(long atkSpeed) 
 	{
-		this.damage = damage;
 		this.atkSpeed = atkSpeed;
 		atkSpeed = System.currentTimeMillis();
 		return this;
@@ -133,27 +142,25 @@ public class Entity implements Serializable
 	{
 		Vx += Ax;
 		Vy += Ay;
-		for(int i = -1; i < 2; i += 2)
+		
+		for(int i = -1; i <= 1; i ++)
 		{
-			if(map.getTile(x + i * (width / 2 + Vx + Ax), y).getCollidable())
+			if(map.getTile(x + i * (width / 2+ Vx + Ax), y + height / 4).getCollidable())
 			{
-				if(map.getTile(x + i * (width / 2 + Vx + Ax), y).getHitbox().checkQuad(Hitbox))
+				if(map.getTile(x + i * (width / 2 + Vx + Ax), y + height / 4).getHitbox().checkQuad(Hitbox))
 				{
-					if(Vx * i > 0)
+					if(Vx * i >= 0)
 					{
 						Vx = 0;
 					}
 				}
 			}
-		}
-		
-		for(int i = -1; i < 2; i += 2)
-		{
+			
 			if(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getCollidable())
 			{
 				if(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getHitbox().checkQuad(Hitbox))
 				{
-					if(Vy * i > 0)
+					if(Vy * i >= 0)
 					{
 						Vy = 0;
 					}
@@ -161,10 +168,10 @@ public class Entity implements Serializable
 			}
 		}
 		
-		
 		move(Vx, 0);
 		move(0, Vy);
 	}
+	
 	
 	public void update()
 	{		
@@ -172,7 +179,11 @@ public class Entity implements Serializable
 		{
 			setMap(player.getMap());
 			sprite.resetAnimate();
-			Physics();
+			
+			if(player.getInput().isKeyPressed(Input.KEY_E))
+			{
+				jump();
+			}
 			
 			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
 			{
@@ -198,9 +209,7 @@ public class Entity implements Serializable
 				{
 					if(hitbox.checkQuad(Hitbox))
 					{
-						player.damage((int) damage);
-						player.Jump();
-						player.setVx(5 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+						atk();
 						atkTick = System.currentTimeMillis();
 						break;
 					}
@@ -208,16 +217,31 @@ public class Entity implements Serializable
 			}
 		}
 		
-		move(-Vx, 0);
-		move(0, -Vy);
+	/*	rot += 0.1;
 		
-		Hitbox.changeDimensions(x, y, width, height);
+		if(rot >= 360)
+		{
+			rot = 0;
+		}*/
 		
+		Hitbox.changeDimensions(x , y , width, height);
+		hit.update(sprite.getCurrentFrame());
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
-		sprite.render(x, y, width, height, 0, g);
+		//sprite.render(x + xOffset, y + yOffset, width, height, rot, g);
+		sprite.render(x , y, width, height, rot, g);
+		Hitbox.render(g);
+		hit.render(g);
+	}
+	
+	protected void atk()
+	{
+		player.damage((int) damage);
+		player.Jump();
+		player.setVx(10 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+		atkTick = System.currentTimeMillis();
 	}
 	
 	public void jump()
@@ -237,6 +261,11 @@ public class Entity implements Serializable
 	public void unpause()
 	{
 		paused = false;
+	}
+	
+	public int getID()
+	{
+		return id;
 	}
 	
 	public float getX()
@@ -327,36 +356,20 @@ public class Entity implements Serializable
 	public void follow(Player player)
 	{
 		float distX = player.getX() - x;
-		float distY = player.getY() - y;
-		
-		if(distY != 0)
-		{
-			try
-			{
-				move(0, (distY) / (Math.abs(distY)));
-			}
-			catch(Exception e)
-			{
-				move(0, 0);
-			}
-		}else
-		{
-			move(0, 0);
-		}
 		
 		if(distX != 0)
 		{
 			try
 			{
-				move((distX) / (Math.abs(distX)) , 0);
+				Vx = (distX) / (Math.abs(distX));
 			}
 			catch(Exception e)
 			{
-				move(0, 0);
+				Vx = 0;
 			}
 		}else
 		{
-			move(0, 0);
+			Vx = 0;
 		}
 	}
 	

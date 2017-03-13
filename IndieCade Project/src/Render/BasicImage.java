@@ -16,6 +16,12 @@ public class BasicImage implements Serializable
 	transient Image sprite;
 	boolean flip;
 	
+	public float x;
+	public float y;
+	public float width;
+	public float height;
+	public float rot;
+	
 	public BasicImage(String ref)
 	{
 		flip = false;
@@ -31,6 +37,12 @@ public class BasicImage implements Serializable
 				setError();
 			}
 		}
+		
+		x = 0;
+		y = 0;
+		width = 0;
+		height = 0;
+		rot = 0;
 	}
 
 	public String getPath()
@@ -81,12 +93,17 @@ public class BasicImage implements Serializable
 	       	afterImage.render(g);
 	    }
 	    
+	    this.x = x;
+	    this.y = y;
+	    this.width = width;
+	    this.height = height;
+	    this.rot = rot;
+	    
 		Image image = sprite.copy();
 	    image = sprite.getFlippedCopy(this.flip, false);
 	    image.setFilter(2);
 	    image.setRotation(rot);
 	    image.setCenterOfRotation(width / 2.0F, height / 2.0F);
 	    image.draw(x - width / 2.0F, y - height / 2.0F , width, height);
-	    
 	}
 }

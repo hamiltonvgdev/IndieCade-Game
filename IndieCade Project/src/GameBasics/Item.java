@@ -116,11 +116,12 @@ public abstract class Item implements Serializable
 		}
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
+		System.out.println(Bones.size());
 		for(int i = 0; i < Sprites.size(); i ++)
 		{
-			Sprites.get(i).render(Bones.get(i).getX(), Bones.get(i).getY(), 
+			Sprites.get(i).render(Bones.get(i).getX() + xOffset, Bones.get(i).getY() + yOffset, 
 					width, height, Bones.get(i).getRot(), g);
 		}
 	}

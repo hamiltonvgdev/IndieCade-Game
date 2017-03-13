@@ -52,7 +52,7 @@ public class Stance implements Serializable
 				ActionLists.get(i).get(Index[i]).reset();
 			}
 			
-			if(System.currentTimeMillis() - Tick[i] > ActionLists.get(i).get(Index[i]).time)
+			if(System.currentTimeMillis() - Tick[i] >= ActionLists.get(i).get(Index[i]).time)
 			{
 				if(Index[i] < ActionLists.get(i).size())
 				{
@@ -79,7 +79,7 @@ public class Stance implements Serializable
 			{
 				if(Index[i] < ActionLists.get(i).size())
 				{
-					if(System.currentTimeMillis() - Tick[i] > ActionLists.get(i).get(Index[i]).time)
+					if(System.currentTimeMillis() - Tick[i] >= ActionLists.get(i).get(Index[i]).time)
 					{
 						if(Index[i] < ActionLists.get(i).size())
 						{

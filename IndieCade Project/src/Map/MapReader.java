@@ -23,6 +23,4 @@ public class MapReader
 		}
 		return tileId;
 	}
-	
-	
 }

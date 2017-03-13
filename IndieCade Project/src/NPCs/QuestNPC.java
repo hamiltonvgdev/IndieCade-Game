@@ -49,19 +49,19 @@ public class QuestNPC extends BasicNPC
 		}
 	}
 	
-	public void render(Graphics g) throws SlickException
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
-		super.render(g);
+		super.render(g, xOffset, yOffset);
 	}
 	
-	public void speak(Graphics g) throws SlickException
+	public void speak(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		if(accepted)
 		{
-			super.speak(g);
+			super.speak(g, xOffset, yOffset);
 		}else
 		{
-			speak(question, g);
+			speak(question, xOffset, yOffset, g);
 			
 			yes.update();
 			
