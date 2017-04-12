@@ -16,8 +16,8 @@ import GameBasics.Level;
 import Geo.Quad;
 import Main.Config;
 import Player.Player;
+import Sound.Sound;
 import Tiles.Tile;
-import Tiles.Ladder;
 import Tiles.InteractTile;
 import Tiles.PortalTile;
 import Tiles.SpawnTile;
@@ -31,7 +31,6 @@ public class Map implements Serializable
 	private static final long serialVersionUID = -7167480686083434369L;
 	Level level;
 	ArrayList<Tile> TileMap;
-	ArrayList<Tile> Stairs;
 	transient Image tilemap;
 	float height;
 	float width;
@@ -55,7 +54,6 @@ public class Map implements Serializable
 		
 		this.tilemap = tilemap;
 		TileMap = Converter.convertTile(MapReader.readTileMap(tilemap), TileList.getTiles());
-		Stairs = new ArrayList<Tile>();
 		width = tilemap.getWidth();
 		height = tilemap.getHeight();
 		
@@ -65,15 +63,7 @@ public class Map implements Serializable
 					i / tilemap.getWidth() * 64 + 64 / 2);
 			TileMap.get(i).setMap(this);
 			
-			if(TileMap.get(i).getType() == 4)
-			{
-				Stairs.add(TileMap.get(i));
-			}
-		}
-		
-		for(int i = 0; i < Stairs.size(); i ++)
-		{
-			((Tiles.Stairs) Stairs.get(i)).directionalize();
+			TileMap.get(i).postSetAction();
 		}
 
 		x = 0; 
@@ -83,12 +73,6 @@ public class Map implements Serializable
 		Hitbox = new Quad(x, y, width * 64, height * 64);
 		
 		themeMusic = null;
-	}
-	
-	public Map spawnNPC(BasicNPC npc)
-	{
-		level.addNPC(npc);
-		return this;
 	}
 	
 	public Map setBackGroundMusic(String ref)
@@ -106,16 +90,17 @@ public class Map implements Serializable
 			TileMap.get(i).update();
 		}
 		
-		for(int i = 0; i < level.getNPCs().size(); i ++)
+		for(int i = 0; i < level.getThings().size(); i ++)
 		{
-			level.getNPCs().get(i).update();
+			level.getThings().get(i).update();
 		}
 		
 		Hitbox.changeDimensions(x, y,  width * 64, height * 64);
 		
 		if(themeMusic != null)
 		{
-			Sound.Sound.infiniteLoopSound(themeMusic);
+			Sound.infiniteLoopSound(themeMusic);
+			//Sound.playSound(themeMusic);
 		}
 	}
 

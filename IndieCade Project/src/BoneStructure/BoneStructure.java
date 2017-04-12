@@ -9,6 +9,8 @@ import Player.Player;
 
 public class BoneStructure implements Serializable
 {
+	//The reconstruction of a human skeleton in digital form
+	
 	/**
 	 * 
 	 */
@@ -64,6 +66,7 @@ public class BoneStructure implements Serializable
 	
 	public BoneStructure(Player player, Float size)
 	{
+		//Size determine show bigthe skeleton is, but it is still kept to same ratios based on constants
 		Bones = new ArrayList<Bone>();
 		
 		this.player = player;
@@ -134,7 +137,8 @@ public class BoneStructure implements Serializable
 		Knee2 = new Joint(ULeg2, LLeg2);
 		Ankle2 = new Joint(LLeg2, Foot2);
 		
-
+		//Ag, hard code!!, don't look at this
+		//Sets bone structure from T Pose to a somewhat acceptable standing pose
 		
 		Bones.add(Pelvic1);
 		Bones.add(Pelvic2);
@@ -244,6 +248,8 @@ public class BoneStructure implements Serializable
 	
 	public Joint getJoint(String name)
 	{
+		//Ag, hard code!!, don't look at this
+		
 		if(name.equals("Neck"))
 		{
 			return neck;

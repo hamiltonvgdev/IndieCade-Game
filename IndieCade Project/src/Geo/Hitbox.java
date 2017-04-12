@@ -10,6 +10,9 @@ import Render.BasicImage;
 
 public class Hitbox
 {
+	//Image analysis that assigns every pixel in the ORIGINAL image a 1x1 quad, then stretches and shifts it to 
+	//Accommodate for width, height, and rotational differences
+	
 	ArrayList<Quad> Quads;
 	float factorHeight;
 	float factorWidth;
@@ -18,26 +21,46 @@ public class Hitbox
 	{
 		Quads = new ArrayList<Quad>();
 		
+		//The ratio between the original image's dimensions and the actual rendered version's dimensions
 		factorWidth = sprite.width / sprite.getImage().getWidth();
 		factorHeight = sprite.height / sprite.getImage().getHeight();
 		
+		//The factor that adjusts for image flip
+		float factor = 1;
+		
+		if(sprite.flip)
+		{
+			factor = -1;
+		}
+		
+		//Adjusts for dimensional differences
 		for(int x = 0; x < sprite.getImage().getWidth(); x ++)
 		{
 			for(int y = 0; y < sprite.getImage().getHeight(); y ++)
 			{
 				if(sprite.getImage().getColor(x, y).a > 0)
 				{
-					Quads.add(new Quad(x * factorWidth  - sprite.getImage().getWidth() / 2 * factorWidth + sprite.x, 
-							y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight
-							+ sprite.y, factorWidth, factorHeight));
+					Quads.add(new Quad(factor * (x * factorWidth  - sprite.getImage().getWidth() / 2 * factorWidth), 
+							y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight,
+							factorWidth, factorHeight));
 				}else
 				{
-					Quads.add(new Quad(x * factorWidth - sprite.getImage().getWidth() / 2 * factorWidth + sprite.x, 
-							y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight
-							+ sprite.y, factorWidth, factorHeight).
+					Quads.add(new Quad(factor * (x * factorWidth - sprite.getImage().getWidth() / 2 * factorWidth), 
+							y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight,
+							factorWidth, factorHeight).
 							setPhased(true));
 				}
 			}
+		}
+		
+		//Adjusts for rotational and positional differences
+		for(int i = 0; i < Quads.size(); i ++)
+		{
+			Quads.get(i).changeDimensions((float) (Quads.get(i).x * Math.cos(Math.toRadians(sprite.rot)) - 
+					Quads.get(i).y * Math.sin(Math.toRadians(sprite.rot))) + sprite.x, 
+					(float) (Quads.get(i).y * Math.cos(Math.toRadians(sprite.rot)) + 
+							Quads.get(i).x * Math.sin(Math.toRadians(sprite.rot))) + sprite.y, 
+					Quads.get(i).width, Quads.get(i).height);
 		}
 	}
 	
@@ -47,6 +70,13 @@ public class Hitbox
 		
 		factorWidth = sprite.width / sprite.getImage().getWidth();
 		factorHeight = sprite.height / sprite.getImage().getHeight();
+
+		float factor = 1;
+		
+		if(sprite.flip)
+		{
+			factor = -1;
+		}
 		
 		for(int x = 0; x < sprite.getImage().getWidth(); x ++)
 		{
@@ -54,17 +84,26 @@ public class Hitbox
 			{
 				if(sprite.getImage().getColor(x, y).a > 0)
 				{
-					Quads.add(new Quad(x * factorWidth  - sprite.getImage().getWidth() / 2 * factorWidth + sprite.x, 
-							y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight
-							+ sprite.y, factorWidth, factorHeight));
+					Quads.add(new Quad(factor * (x * factorWidth  - sprite.getImage().getWidth() / 2 * factorWidth), 
+							(y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight), 
+							factorWidth, factorHeight));
 				}else
 				{
-					Quads.add(new Quad(x * factorWidth - sprite.getImage().getWidth() / 2 * factorWidth + sprite.x, 
-							y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight
-							+ sprite.y, factorWidth, factorHeight).
+					Quads.add(new Quad(factor * (x * factorWidth - sprite.getImage().getWidth() / 2 * factorWidth), 
+							(y * factorHeight - sprite.getImage().getHeight() / 2 * factorHeight), 
+							factorWidth, factorHeight).
 							setPhased(true));
 				}
 			}
+		}
+		
+		for(int i = 0; i < Quads.size(); i ++)
+		{
+			Quads.get(i).changeDimensions((float) (Quads.get(i).x * Math.cos(Math.toRadians(sprite.rot)) - 
+					Quads.get(i).y * Math.sin(Math.toRadians(sprite.rot))) + sprite.x, 
+					(float) (Quads.get(i).y * Math.cos(Math.toRadians(sprite.rot)) 
+							+ Quads.get(i).x * Math.sin(Math.toRadians(sprite.rot))) + sprite.y, 
+					Quads.get(i).width, Quads.get(i).height);
 		}
 	}
 	
@@ -91,6 +130,22 @@ public class Hitbox
 		for(int i = 0; i < Quads.size(); i ++)
 		{
 			if(Quads.get(i).checkQuad(quad))
+			{
+				derp = true;
+				break;
+			}
+		}
+		
+		return derp;
+	}
+	
+	public boolean check(QuadR quadr)
+	{
+		boolean derp = false;
+		
+		for(int i = 0; i < Quads.size(); i ++)
+		{
+			if(quadr.check(Quads.get(i)))
 			{
 				derp = true;
 				break;

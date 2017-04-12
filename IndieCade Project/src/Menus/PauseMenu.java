@@ -26,7 +26,6 @@ public class PauseMenu extends BasicMenu
 	Button save3;
 	Button back;
 	
-	InventoryMenu Invent;
 	Button InvBack;
 	
 	public PauseMenu()
@@ -52,7 +51,6 @@ public class PauseMenu extends BasicMenu
 		back = new Button("Back", Config.WIDTH / 2, Config.HEIGHT / 4 * 3, 1).setDimensions(150, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
-		Invent = new InventoryMenu();
 		InvBack = new Button("Back", Config.WIDTH - 75, 167, 1).setDimensions(150, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 	}

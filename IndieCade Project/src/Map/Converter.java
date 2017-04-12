@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 
 import Tiles.InteractTile;
-import Tiles.ItemTile;
-import Tiles.Ladder;
 import Tiles.PortalTile;
 import Tiles.SpawnTile;
-import Tiles.Stairs;
 import Tiles.Tile;
 
 public class Converter 
@@ -20,6 +17,11 @@ public class Converter
 		for(int i = 0; i < Id.size(); i ++)
 		{
 			Color ID = Id.get(i);
+			
+			if(ID.a > 0 && ID.a < 1)
+			{
+				
+			}
 			for(int j = 0; j < PossibleTiles.size(); j ++) 
 			{	
 				if(Math.abs(PossibleTiles.get(j).getID().a - ID.a) <= 0.04)
@@ -30,14 +32,14 @@ public class Converter
 						{
 							if(Math.abs(PossibleTiles.get(j).getID().b - ID.b) <= 0.04)
 							{
-								
 								if(PossibleTiles.get(j).getType() == 0)
 								{
 									Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).
 											setFriction(PossibleTiles.get(j).getFriction()).
-											setSound(PossibleTiles.get(j).getSoundRef()));
+											setSound(PossibleTiles.get(j).getSoundRef()).
+											addThings(PossibleTiles.get(j).getThings()));
 								}else if(PossibleTiles.get(j).getType() == 1)
 								{
 									Tiles.add(new PortalTile(PossibleTiles.get(j).getName(), ((PortalTile) PossibleTiles.get(j)).getWorld(),
@@ -45,7 +47,8 @@ public class Converter
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).
 											setFriction(PossibleTiles.get(j).getFriction()).
-											setSound(PossibleTiles.get(j).getSoundRef()));
+											setSound(PossibleTiles.get(j).getSoundRef()).
+											addThings(PossibleTiles.get(j).getThings()));
 								}else if(PossibleTiles.get(j).getType() == 2)
 								{
 									Tiles.add(new SpawnTile(PossibleTiles.get(j).getName(), ((SpawnTile) PossibleTiles.get(j)).getEnt(), 
@@ -53,31 +56,8 @@ public class Converter
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).
 											setFriction(PossibleTiles.get(j).getFriction()).
-											setSound(PossibleTiles.get(j).getSoundRef()));
-								}else if(PossibleTiles.get(j).getType() == 3)
-								{
-									Tiles.add(new Ladder(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
-											PossibleTiles.get(j).getID()).
-											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
-											setColidable(PossibleTiles.get(j).getCollidable()).
-											setFriction(PossibleTiles.get(j).getFriction()).
-											setSound(PossibleTiles.get(j).getSoundRef()));
-								}else if(PossibleTiles.get(j).getType() == 4)
-								{
-									Tiles.add(new Stairs(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
-											PossibleTiles.get(j).getID()).
-											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
-											setColidable(PossibleTiles.get(j).getCollidable()).
-											setFriction(PossibleTiles.get(j).getFriction()).
-											setSound(PossibleTiles.get(j).getSoundRef()));
-								}else if(PossibleTiles.get(j).getType() == 5)
-								{
-									Tiles.add(new ItemTile(PossibleTiles.get(j).getName(), ((InteractTile) PossibleTiles.get(j)).getPlayer(), 
-											PossibleTiles.get(j).getID()).setItem(((ItemTile) PossibleTiles.get(j)).getItem()).
-											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
-											setColidable(PossibleTiles.get(j).getCollidable()).
-											setFriction(PossibleTiles.get(j).getFriction()).
-											setSound(PossibleTiles.get(j).getSoundRef()));
+											setSound(PossibleTiles.get(j).getSoundRef()).
+											addThings(PossibleTiles.get(j).getThings()));
 								}
 								break;
 							}
@@ -96,11 +76,12 @@ public class Converter
 		for(int i = 0; i < Id.size(); i ++)
 		{
 			Color ID = Id.get(i);
-			
+
 			for(int j = 0; j < PossibleMaps.size(); j ++)
 			{
 				if(Math.abs(ID.g - PossibleMaps.get(j).getID().g) < 0.001 &&
-						Math.abs(ID.r - PossibleMaps.get(j).getID().r) < 0.001)
+						Math.abs(ID.r - PossibleMaps.get(j).getID().r) < 0.001 && 
+						Math.abs(ID.b - PossibleMaps.get(j).getID().b) < 0.001)
 				{
 					Maps.add(PossibleMaps.get(j));
 					break;

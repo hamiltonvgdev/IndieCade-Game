@@ -19,29 +19,7 @@ public class SpawnTile extends Tile
 	{
 		super(name, Id);
 		
-		if(mob.getID() == 0)
-		{
-			this.mob = new Entity(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
-					setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-					setDimensions(mob.getWidth(), mob.getHeight()).
-					setAtkSpeed(mob.getAtkSpeed());
-		}else if(mob.getID() == 1)
-		{
-			this.mob = ((RushEnemy) new RushEnemy(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
-					setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-					setDimensions(mob.getWidth(), mob.getHeight()).
-					setAtkSpeed(mob.getAtkSpeed())).setRange(((Enemy) mob).getRange()).
-					setTriggeredAnimation(((Enemy) mob).getTriggeredSprite().getFolder(), ((Enemy) mob).getTriggeredSprite().getDelay());
-		}else if(mob.getID() == 2)
-		{
-			//Set Projectile
-			this.mob = ((ShootEnemy) ((Enemy) new ShootEnemy(mob.getPlayer(), mob.getMaxHealth(), mob.getDamage(), mob.getSpeed()).
-					setAnimationSet(mob.getSprite().getFolder(), mob.getSprite().getDelay()).
-					setDimensions(mob.getWidth(), mob.getHeight()).
-					setAtkSpeed(mob.getAtkSpeed())).setRange(((Enemy) mob).getRange()).
-					setTriggeredAnimation(((Enemy) mob).getTriggeredSprite().getFolder(), ((Enemy) mob).getTriggeredSprite().getDelay())).
-					setProjectile(((ShootEnemy) mob).getProjectile(), ((ShootEnemy) mob).getXa());
-		}
+		this.mob = mob.clone();
 		
 		this.CD = CD;
 		

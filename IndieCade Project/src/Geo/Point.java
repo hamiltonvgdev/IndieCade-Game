@@ -2,6 +2,8 @@ package Geo;
 
 public class Point 
 {
+	//An X/Y coordinate point. Thats literally it
+	
 	public float x, y;
 
 	public Point(float x, float y) 

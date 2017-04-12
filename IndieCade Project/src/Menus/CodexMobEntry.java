@@ -67,7 +67,7 @@ public class CodexMobEntry
 	
 	public void update()
 	{
-		if(codex.index < codex.Items.size() - 1)
+		if(codex.index < codex.Mobs.size() - 1)
 		{
 			nxt.update();
 		}
@@ -94,36 +94,36 @@ public class CodexMobEntry
 		g.fill(background);
 		g.draw(background);
 		
-		Icon.render(Config.WIDTH / 2, 300 / 2, 300, 300, 0, g);
-		Race.render(Config.WIDTH / 2 + 400, -25 + 300 / 2, 150, 150, 0, g);
-		Environment.render(Config.WIDTH / 2 - 400, -25 + 300 / 2, 150, 150, 0, g);
+		Icon.render(Config.WIDTH / 2, 0, 300 / 2, 0, 300, 300, 0, g);
+		Race.render(Config.WIDTH / 2 + 400, 0, -25 + 300 / 2, 0, 150, 150, 0, g);
+		Environment.render(Config.WIDTH / 2 - 400, 0, -25 + 300 / 2, 150, 0, 150, 0, g);
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 0, 350, 0, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 40, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 0, 350 + 40, 0, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 80, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 0, 350 + 80, 0, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 120, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 0, 350 + 120, 0, 30, 25, 0, g);
 		}
 		
 		for(int i = 3; i < 13; i ++)
 		{
-			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 350 + 160, 30, 25, 0, g);
+			Bar.render(Config.WIDTH / 2 - 230 + 30 * i, 0, 350 + 160, 0, 30, 25, 0, g);
 		}
 		
-		if(codex.index < codex.Items.size() - 1)
+		if(codex.index < codex.Mobs.size() - 1)
 		{
 			nxt.render(g);
 		}

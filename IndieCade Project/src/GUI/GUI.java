@@ -6,7 +6,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import Main.Config;
 import Map.World;
-import Menus.InventoryMenu;
 import Menus.PauseMenu;
 import Player.Player;
 import Render.AnimationSet;
@@ -14,11 +13,11 @@ import Util.Button;
 
 public class GUI 
 {
+	//Graphical User Interface. It handles all the buttons displayed when the player is actually in the game, 
+	//but not the associated menus
+	
 	PauseMenu Pause;
-	InventoryMenu Inventory;
 	Button pause;
-	Button Inv;
-	Button Quest;
 	
 	public GUI()
 	{
@@ -26,48 +25,28 @@ public class GUI
 				setImage(new AnimationSet("res/Buttons/GUI/Pause/Idle", 100), 
 						new AnimationSet("res/Buttons/GUI/Pause/Select", 100));
 		
-		Inv = new Button("", Config.WIDTH - 56, 16, 0).setDimensions(32, 32).
-				setImage(new AnimationSet("res/Buttons/GUI/Inventory/Idle", 100), 
-						new AnimationSet("res/Buttons/GUI/Inventory/Select", 100));
-		
-		Quest = new Button("", Config.WIDTH - 96, 16, 0).setDimensions(32, 32).
-				setImage(new AnimationSet("res/Buttons/GUI/Quests/Idle", 100), 
-						new AnimationSet("res/Buttons/GUI/Quests/Select", 100));
-		
 		Pause = new PauseMenu();
-		Inventory = new InventoryMenu();
 	}
 	
 	public void update(StateBasedGame sbg, World world, Player player)
 	{
 		Pause.update(sbg, world, player);
-		Inventory.update(world, player);
 		
-		if(!Pause.pausing && !Inventory.active)
+		if(!Pause.pausing)
 		{
 			pause.update();
-			Inv.update();
-			Quest.update();
 		}
 		
 		if(pause.clicked)
 		{
 			Pause.pause(world, player);
 		}
-		
-		if(Inv.clicked)
-		{
-			Inventory.activate(world, player);
-		}
 	}
 	
 	public void render(Graphics g, Player player) throws SlickException
 	{
 		Pause.render(g, player);
-		Inventory.render(g, player);
 		
 		pause.render(g);
-		Inv.render(g);
-		Quest.render(g);
 	}
 }

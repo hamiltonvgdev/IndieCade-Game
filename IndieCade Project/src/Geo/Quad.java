@@ -7,11 +7,14 @@ import org.newdawn.slick.SlickException;
 
 public class Quad implements Serializable
 {
+	//A Rectangular space that has methods that allows it to interact with other rectangular spaces.
+	//Cannot respond to rotations tho
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6083904781356000620L;
-	public float width, height, x, y, rot;
+	public float width, height, x, y;
 	
 	public boolean phased;
 
@@ -21,7 +24,6 @@ public class Quad implements Serializable
 		this.width = width;
 		this.height = height;
 		
-		rot = 0;
 		
 		phased = false;
 	}
@@ -78,6 +80,11 @@ public class Quad implements Serializable
 			
 			return intersect;
 		}
+	}
+	
+	public boolean checkQuadR(QuadR quadr)
+	{
+		return quadr.check(this);
 	}
 	
 	public boolean checkWithin(Quad quad)

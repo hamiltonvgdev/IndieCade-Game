@@ -11,17 +11,19 @@ import Geo.Quad;
 import Main.Config;
 import Player.Player;
 import Projectiles.BasicProjectile;
+import Thing.Thing;
 
 public class Level implements Serializable
 {
+	//The level class that handles the management of a map's entities, projectiles, and Things
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6513983764060293943L;
 	ArrayList<Entity> Entities;
-	ArrayList<Item> Items;
 	ArrayList<BasicProjectile> Projectiles;
-	ArrayList<BasicNPC> NPCs;
+	ArrayList<Thing> Things;
 	
 	Player player;
 	Quad Screen;
@@ -32,8 +34,7 @@ public class Level implements Serializable
 	public Level(Player player)
 	{
 		Entities = new ArrayList<Entity>();
-		Items = new ArrayList<Item>();
-		NPCs = new ArrayList<BasicNPC>();
+		Things = new ArrayList<Thing>();
 		Projectiles = new ArrayList<BasicProjectile>();
 		
 		this.player = player;
@@ -57,19 +58,19 @@ public class Level implements Serializable
 		Entities.remove(e);
 	}
 
-	public ArrayList<BasicNPC> getNPCs()
+	public ArrayList<Thing> getThings()
 	{
-		return NPCs;
+		return Things;
 	}
 	
-	public void addNPC(BasicNPC npc)
+	public void removeThing(Thing th)
 	{
-		NPCs.add(npc);
+		Things.remove(th);
 	}
 	
-	public void removeNPC(BasicNPC npc)
+	public void addThing(Thing th)
 	{
-		NPCs.remove(npc);
+		Things.add(th);
 	}
 	
 	public ArrayList<BasicProjectile> getProjectiles()
@@ -91,17 +92,20 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			Entities.get(i).render(g, xOffset, yOffset);
-		}
-		
-		for(BasicNPC n : NPCs)
-		{
-			n.render(g, xOffset, yOffset);
+			if(Math.abs(Entities.get(i).getX() - player.getX()) < Config.WIDTH / 2)
+			{
+				Entities.get(i).render(g, xOffset, yOffset);
+			}
 		}
 		
 		for(int i = 0; i < Projectiles.size(); i ++)
 		{
 			Projectiles.get(i).render(g, xOffset, yOffset);
+		}
+		
+		for(Thing thing : Things)
+		{
+			thing.render(g, xOffset, yOffset);
 		}
 	}
 	
@@ -109,19 +113,23 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			Entities.get(i).update();
-			Entities.get(i).Physics();
+			if(Math.abs(Entities.get(i).getX() - player.getX()) < Config.WIDTH / 2)
+			{
+				Entities.get(i).update();
+				Entities.get(i).Physics();
+			}
 		}
 		
-		for(int i = 0; i < NPCs.size(); i ++)
+		for(int i = 0; i < Things.size(); i ++)
 		{
-			NPCs.get(i).update();
+			Things.get(i).update();
 		}
 		
 		for(int i = 0; i < Projectiles.size(); i ++)
 		{
 			Projectiles.get(i).update();
 		}
+		
 		Screen.changeDimensions(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
 	}
 

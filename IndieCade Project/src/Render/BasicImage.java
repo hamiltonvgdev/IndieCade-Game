@@ -14,7 +14,7 @@ public class BasicImage implements Serializable
 	private static final long serialVersionUID = -8601732697410596805L;
 	public AfterImage afterImage;
 	transient Image sprite;
-	boolean flip;
+	public boolean flip;
 	
 	public float x;
 	public float y;
@@ -84,12 +84,13 @@ public class BasicImage implements Serializable
 		return sprite;
 	}
 	
-	public void render(float x, float y, float width, float height, float rot, Graphics g) throws SlickException 
+	public void render(float x, float xOffset, 
+			float y, float yOffset, float width, float height, float rot, Graphics g) throws SlickException 
 	{ 
 	    if(afterImage != null && afterImage.present)
 	    {
 	    	afterImage.setDimensions(width, height);
-	    	afterImage.update(x, y, rot);
+	    	afterImage.update(x + xOffset, y + yOffset, rot);
 	       	afterImage.render(g);
 	    }
 	    
@@ -104,6 +105,6 @@ public class BasicImage implements Serializable
 	    image.setFilter(2);
 	    image.setRotation(rot);
 	    image.setCenterOfRotation(width / 2.0F, height / 2.0F);
-	    image.draw(x - width / 2.0F, y - height / 2.0F , width, height);
+	    image.draw(x - width / 2.0F + xOffset, y - height / 2.0F + yOffset, width, height);
 	}
 }

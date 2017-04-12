@@ -15,7 +15,6 @@ public class CodexMenu extends BasicMenu
 {
 	MainMenu menu;
 	
-	ArrayList<CodexItemEntry> Items;
 	ArrayList<CodexMobEntry> Mobs;
 	int index;
 	
@@ -33,22 +32,12 @@ public class CodexMenu extends BasicMenu
 		index = 0;
 		state = 0;
 		
-		Item = new Button("Item", Config.WIDTH / 2 - 100, Config.HEIGHT / 2, 0);
-		Item = Item.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		
 		Mob = new Button("Enemies",Config.WIDTH / 2 + 100, Config.HEIGHT / 2, 0);
 		Mob = Mob.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		Exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT - 25, 0);
 		Exit = Exit.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));	
 		
-		Items = new ArrayList<CodexItemEntry>();
-		CodexItemEntry ItemDef = new CodexItemEntry(this);
-		Items.add(ItemDef);
-		for(int i = 0; i < Items.size(); i ++)
-		{
-			Items.get(i).setID(i);
-		}
 		
 		Mobs = new ArrayList<CodexMobEntry>();
 		CodexMobEntry MobDef = new CodexMobEntry(this);
@@ -82,9 +71,6 @@ public class CodexMenu extends BasicMenu
 			{
 				menu.setIndex(0);
 			}
-		}else if(state == 1)
-		{
-			Items.get(index).update();
 		}else if(state == 2)
 		{
 			Mobs.get(index).update();
@@ -111,9 +97,6 @@ public class CodexMenu extends BasicMenu
 		{
 			Item.render(g);
 			Mob.render(g);
-		}else if(state == 1)
-		{
-			Items.get(index).render(g);
 		}else if(state == 2)
 		{
 			Mobs.get(index).render(g);
@@ -125,11 +108,6 @@ public class CodexMenu extends BasicMenu
 	public void addMobEntry(CodexMobEntry mob)
 	{
 		Mobs.add(mob);
-	}
-	
-	public void addItemEntry(CodexItemEntry item)
-	{
-		Items.add(item);
 	}
 	
 	public void changeIndex(int index)

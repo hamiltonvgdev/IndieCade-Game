@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 
 import BoneStructure.BoneStructure;
 import Geo.Quad;
+import Geo.QuadR;
 import Main.Config;
 import Map.Map;
 import Player.Player;
@@ -18,13 +19,17 @@ import Tiles.Tile;
 
 public class Entity implements Serializable
 {
+	//An enemy of the player that interacts with the player in a hostile way
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1335939607570570293L;
 	
-	Player player;
-	boolean paused;
+	protected String name;
+	
+	protected Player player;
+	protected boolean paused;
 	
 	//Horizontal movement
 	protected float x;
@@ -32,28 +37,28 @@ public class Entity implements Serializable
 	protected float Vy;
 	protected float Ax;
 	protected float Ay;
-	float acceleration;
+	protected float acceleration;
 	
 	//Vertical movement
 	protected float y;
-	float jumpV;
-	int jump;
-	int maxjump;
-	long jumpTick;
-	boolean jumping;
+	protected float jumpV;
+	protected int jump;
+	protected int maxjump;
+	protected long jumpTick;
+	protected boolean jumping;
 	
 	//Combat statistics
-	float maxHealth;
-	float health;
-	float damage;
-	float speed;
-	boolean stun;
+	protected float maxHealth;
+	protected float health;
+	protected 	float damage;
+	protected float speed;
+	protected boolean stun;
 	
 	//Combat values
-	float Stun;
-	float Speed;
+	protected float Stun;
+	protected float Speed;
 	protected long atkSpeed;
-	long atkTick;
+	protected long atkTick;
 	
 	//World
 	protected Map map;
@@ -63,18 +68,18 @@ public class Entity implements Serializable
 	protected float height;
 	protected float rot;
 	public Quad Hitbox;
-	Level level;
+	protected Level level;
 	
 	//animation
 	protected AnimationSet sprite;
 	
-	Random gen = new Random();
+	protected Random gen = new Random();
 	protected int id;
 	
-	Geo.Hitbox hit;
-	
-	public Entity(Player player, float health, float damage, float speed)
+	public Entity(String name, Player player, float health, float damage, float speed)
 	{
+		this.name = name;
+		
 		this.player = player;
 		
 		paused = false;
@@ -90,11 +95,11 @@ public class Entity implements Serializable
 		Vy = 0;
 		
 		Ax = 0F;
-		Ay = 1.5F;
+		Ay = 0F;
 		acceleration = 0.5F;
-		
-		Hitbox = new Quad(x, y, width, height);
+
 		rot = 0;
+		Hitbox = new Quad(x, y, width, height);
 		
 		maxHealth = health;
 		this.health = maxHealth;
@@ -119,7 +124,6 @@ public class Entity implements Serializable
 	public Entity setAnimationSet(String ref, long delay)
 	{
 		sprite = new AnimationSet(ref, delay);
-		hit = new Geo.Hitbox(sprite.getCurrentFrame());
 		return this;
 	}
 	
@@ -139,7 +143,14 @@ public class Entity implements Serializable
 	}
 	
 	public void Physics()
-	{
+	{	
+		//The physics engine that handles gravity and collisions
+		
+		if(health <= 0)
+		{
+			die();
+		}
+		
 		Vx += Ax;
 		Vy += Ay;
 		
@@ -147,7 +158,7 @@ public class Entity implements Serializable
 		{
 			if(map.getTile(x + i * (width / 2+ Vx + Ax), y + height / 4).getCollidable())
 			{
-				if(map.getTile(x + i * (width / 2 + Vx + Ax), y + height / 4).getHitbox().checkQuad(Hitbox))
+				if(Hitbox.checkQuad(map.getTile(x + i * (width / 2 + Vx + Ax), y + height / 4).getHitbox()))
 				{
 					if(Vx * i >= 0)
 					{
@@ -158,7 +169,7 @@ public class Entity implements Serializable
 			
 			if(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getCollidable())
 			{
-				if(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getHitbox().checkQuad(Hitbox))
+				if(Hitbox.checkQuad(map.getTile(x, y + i * (height / 2 + Vy + Ay)).getHitbox()))
 				{
 					if(Vy * i >= 0)
 					{
@@ -190,11 +201,6 @@ public class Entity implements Serializable
 				Vx = 0;
 			}
 			
-			if(health <= 0)
-			{
-				die();
-			}
-			
 			if(player.getX() > x)
 			{
 				sprite.setFlip(true);
@@ -205,42 +211,34 @@ public class Entity implements Serializable
 			
 			if(System.currentTimeMillis() - atkTick >= atkSpeed)
 			{
-				for(Quad hitbox: player.getHitboxes())
+				if(player.getHitbox().check(Hitbox))
 				{
-					if(hitbox.checkQuad(Hitbox))
-					{
-						atk();
-						atkTick = System.currentTimeMillis();
-						break;
-					}
+					atk();
+					atkTick = System.currentTimeMillis();
 				}
 			}
 		}
 		
-	/*	rot += 0.1;
-		
 		if(rot >= 360)
 		{
 			rot = 0;
-		}*/
+		}
 		
-		Hitbox.changeDimensions(x , y , width, height);
-		hit.update(sprite.getCurrentFrame());
+		Hitbox.changeDimensions(x, y, width, height);
 	}
 	
 	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
-		//sprite.render(x + xOffset, y + yOffset, width, height, rot, g);
-		sprite.render(x , y, width, height, rot, g);
-		Hitbox.render(g);
-		hit.render(g);
+		sprite.render(x, xOffset, y, yOffset, width, height, rot, g);
 	}
 	
 	protected void atk()
 	{
+		//Self defense. If player touches entity, player gets damaged
+		//Revision, send the player hurling back
 		player.damage((int) damage);
-		player.Jump();
-		player.setVx(10 * (player.getX() - x) / (Math.abs(player.getX() - x)));
+		player.setVx(damage * (player.getX() - x) / (Math.abs(player.getX() - x)));
+		player.setVy(damage * (player.getY() - y) / (Math.abs(player.getY() - y)));
 		atkTick = System.currentTimeMillis();
 	}
 	
@@ -339,14 +337,9 @@ public class Entity implements Serializable
 	
 	public void die()
 	{
-		for(int i = 0; i < level.getEntities().size(); i ++)
-		{
-			if(level.getEntities().get(i) == this)
-			{
-				level.getEntities().remove(i);
-				break;
-			}
-		}
+		level.getEntities().remove(this);
+		
+		player.getKilled().add(this);
 	}
 	public Quad getHitbox() 
 	{
@@ -356,6 +349,22 @@ public class Entity implements Serializable
 	public void follow(Player player)
 	{
 		float distX = player.getX() - x;
+		float distY = player.getY() - y;
+		
+		if(distY != 0)
+		{
+			try
+			{
+				Vy = (distY) / (Math.abs(distY));
+			}
+			catch(Exception e)
+			{
+				Vy = 0;
+			}
+		}else 
+		{
+			Vy = 0;
+		}
 		
 		if(distX != 0)
 		{
@@ -504,6 +513,19 @@ public class Entity implements Serializable
 		health = maxHealth;
 		jump = 0;
 		stun = false;
+	}
+	
+	public Entity clone()
+	{
+		return new Entity(name, player, health, damage, speed).
+				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
+				setAtkSpeed(atkSpeed);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return name;
 	}
 	
 }

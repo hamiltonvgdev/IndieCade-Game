@@ -10,17 +10,18 @@ import Render.AnimationSet;
 
 public class Enemy extends Entity
 {
+	//An entity with AI programming, so it will react to out side stimulus instead of standing around
 	
-	Player player;
-	AnimationSet triggered;
+	protected Player player;
+	protected AnimationSet triggered;
 	
-	float range;
+	protected float range;
 	
-	boolean near;
+	protected boolean near;
 	
-	public Enemy(Player player, float health, float damage, float speed)
+	public Enemy(String name, Player player, float health, float damage, float speed)
 	{
-		super(player, health, damage, speed);
+		super(name, player, health, damage, speed);
 		
 		this.player = player;
 		
@@ -58,26 +59,28 @@ public class Enemy extends Entity
 		}
 	}
 	
+	//The next two methods are left blank so they can be programmed in later extensions of Enemy
 	protected void action() 
 	{
-		
+		//The thing that the AI will do if player is near it
 	}
 
 	protected void deaction()
 	{
-		
+		//The reversion of action that returns the Enemy to its idle state
 	}
 	
 	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		if(near)
 		{
-			triggered.render(x + xOffset, y + yOffset, width, height, 0, g);
+			triggered.render(x, xOffset, y, yOffset, width, height, 0, g);
 		}else
 		{
 			super.render(g, xOffset, yOffset);
 		}
-		
+
+		//Hitbox.render(g);
 	}
 	
 	public float getRange()
@@ -88,5 +91,13 @@ public class Enemy extends Entity
 	public AnimationSet getTriggeredSprite()
 	{
 		return triggered;
+	}
+	
+	public Enemy clone()
+	{
+		return (Enemy) new Enemy(name, player, health, damage, speed).
+				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
+				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
+				setAtkSpeed(atkSpeed);
 	}
 }

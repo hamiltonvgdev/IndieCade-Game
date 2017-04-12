@@ -1,6 +1,7 @@
 package Tiles;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -9,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import Geo.Quad;
 import Map.Map;
 import Render.AnimationSet;
+import Thing.Thing;
 
 public class Tile implements Serializable
 {
@@ -46,6 +48,8 @@ public class Tile implements Serializable
 	float yOffset;
 	float xOffset;
 	
+	ArrayList<Thing> Things;
+	
 	public Tile(String name, Color Id)
 	{
 		this.name = name;
@@ -68,6 +72,8 @@ public class Tile implements Serializable
 		
 		xOffset = 0;
 		yOffset = 0;
+		
+		Things = new ArrayList<Thing>();
 	}
 	
 	public void changeCoordinates(float xa, float ya)
@@ -79,6 +85,16 @@ public class Tile implements Serializable
 	public void setMap(Map map)
 	{
 		this.map = map;
+		
+		for(Thing thing: Things)
+		{
+			map.getLevel().addThing(thing.setTile(this));
+		}
+	}
+	
+	public void postSetAction()
+	{
+		
 	}
 	
 	public Tile setSound(String ref)
@@ -102,6 +118,21 @@ public class Tile implements Serializable
 	public Tile setFriction(float friction)
 	{
 		this.friction = friction;
+		return this;
+	}
+	
+	public Tile addThing(Thing thing)
+	{
+		Things.add(thing);
+		return this;
+	}
+	
+	public Tile addThings(ArrayList<Thing> things)
+	{
+		for(Thing thing: things)
+		{
+			Things.add(thing);
+		}
 		return this;
 	}
 	
@@ -133,15 +164,20 @@ public class Tile implements Serializable
 		{
 			sounded = false;
 		}
+		
+		for(Thing th: Things)
+		{
+			th.update();
+		}
 	}
 
 	public void render(Graphics g) throws SlickException
 	{
-		sprite.render(x + xOffset, y + yOffset, width, height, rot, g);
+		sprite.render(x, xOffset, y, yOffset, width, height, rot, g);
 		
-		if(collidable)
+		for(Thing th: Things)
 		{
-			hitbox.render(g);
+			th.render(g, xOffset, yOffset);
 		}
 	}
 	
@@ -203,5 +239,10 @@ public class Tile implements Serializable
 	public int getType() 
 	{
 		return Type;
+	}
+	
+	public ArrayList<Thing> getThings()
+	{
+		return Things;
 	}
 }

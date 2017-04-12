@@ -22,28 +22,12 @@ public class MapList
 		Maps = new ArrayList<Map>();
 		
 		try {
-			Map TrainingHall = new Map(player, new Image("res/Maps/Training Hall/Training Hall.png"),
-					new Image("res/Maps/Training Hall/Training Hall Back.png"), 
-					new Color(8 / 255F, 10 / 255F, 0 / 255F)).
-					setBackGroundMusic("res/Maps/Training Hall/beat man 1.wav").
-					spawnNPC(
-							new AudioNPC("res/NPC/Test/Sound/Asian Voice File.wav", player, "derp", 100).
-							setIdleImage("res/NPC/Test/Image", 100).setDimensions(50, 100, 0).
-							setCoordinates(300, 300).
-							setPhrase("Please listen to my music!!"));
-
-			Maps.add(TrainingHall);
+			Map Void = new Map(player, new Image("res/Maps/Void.png"), 
+					null, new Color(0, 0, 0, 0));
+			Maps.add(Void);
 			
-			Map TrainingHallDoor = new Map(player, new Image("res/Maps/Training Hall/Training Hall Door.png"),
-					null, new Color(9 / 255F, 10 / 255F, 0 / 255F));
-			Maps.add(TrainingHallDoor);
-			
-			Map OutsideMeadow = new Map(player, new Image("res/Maps/Meadow.png"),
-					null, new Color(10 / 255F, 10 / 255F, 0 / 255F));
-			Maps.add(OutsideMeadow);
-			
-			Map Room = new Map(player, new Image("res/Maps/Room.png"),
-					null, new Color(11 / 255F, 10 / 255F, 0 / 255F));
+			Map Room = new Map(player, new Image("res/Maps/Center Room.png"),
+					null, new Color(255 / 255F, 255 / 255F, 255 / 255F));
 			Maps.add(Room);
 		} catch (SlickException e) 
 		{
@@ -56,13 +40,8 @@ public class MapList
 		return Maps;
 	}
 
-	public static void directSpawn(Player player) 
+	public static void directSpawn(Entity Enemy, int index) 
 	{
-		Entity Enemy = new Enemy.Enemy(player, 100, 15, 1).
-				setAnimationSet("res/Entities/goblin/Images/Stale", 800).
-				setDimensions(19 * 5, 23 * 5);
-		Enemy.setMap(player.getMap());
-		Enemy.setPosition(100, 1250);
-		Maps.get(1).directSpawn(Enemy);
+		Maps.get(index).directSpawn(Enemy);
 	}
 }

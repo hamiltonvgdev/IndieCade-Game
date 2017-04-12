@@ -171,15 +171,16 @@ public class AnimationSet implements Serializable
 		}
 	}
 	
-	public void render(float x, float y, float width, float height, float rot, Graphics g) throws SlickException 
+	public void render(float x, float xOffset, 
+			float y, float yOffset, float width, float height, float rot, Graphics g) throws SlickException 
 	{
-		Animation.get(frame).render(x, y, width, height, rot, g);
+		Animation.get(frame).render(x, xOffset, y, yOffset, width, height, rot, g);
 		
 		if(afterImage)
 		{
 			for(int i = 0; i < Animation.size(); i ++)
 			{
-				Animation.get(i).afterImage.update(x, y, rot);
+				Animation.get(i).afterImage.update(x + xOffset, y + yOffset, rot);
 			}
 		}
 	}

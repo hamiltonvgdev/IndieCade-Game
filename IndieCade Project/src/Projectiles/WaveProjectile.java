@@ -5,7 +5,6 @@ import org.newdawn.slick.SlickException;
 
 import GameBasics.Entity;
 import Player.Player;
-import Weapons.RangedWeapon;
 
 public class WaveProjectile extends BasicProjectile
 {
@@ -41,7 +40,7 @@ public class WaveProjectile extends BasicProjectile
 	@Override
 	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
-		sprite.render(x + xOffset, y + yOffset + (float)(amplitude * Math.sin(ang)), width, height, rot, g);
+		sprite.render(x, xOffset, y, yOffset + (float)(amplitude * Math.sin(ang)), width, height, rot, g);
 	}
 	
 	public float getAmp()
@@ -52,5 +51,12 @@ public class WaveProjectile extends BasicProjectile
 	public float getWaveSpeed()
 	{
 		return waveSpeed;
+	}
+	
+	public WaveProjectile clone()
+	{
+		return (WaveProjectile) new WaveProjectile(player, 1).setWave(amplitude, waveSpeed).
+				setDimensions(width, height, oRot).setSprite(sprite.getFolder(), sprite.getDelay()).
+				setGravity(Ay).setLimit(limit);
 	}
 }

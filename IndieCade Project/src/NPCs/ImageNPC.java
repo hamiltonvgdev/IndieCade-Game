@@ -35,13 +35,13 @@ public class ImageNPC extends BasicNPC
 	{
 		if(active && Active != null)
 		{
-			Active.render(x + xOffset, y + yOffset, width, height, rot, g);
+			Active.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else if(near && Near != null)
 		{
-			Near.render(x + xOffset, y + yOffset, width, height, rot, g);
+			Near.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else if(idle && Idle != null)
 		{
-			Idle.render(x + xOffset, y + yOffset, width, height, rot, g);
+			Idle.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}
 		
 		if(near && !active)
@@ -51,7 +51,7 @@ public class ImageNPC extends BasicNPC
 		
 		if(active)
 		{
-			show.render(x, y - 100, show.getSet().get(0).getImage().getWidth(),
+			show.render(x, xOffset, y - 100, yOffset, show.getSet().get(0).getImage().getWidth(),
 					 show.getSet().get(0).getImage().getHeight(), rot, g);
 		}
 		

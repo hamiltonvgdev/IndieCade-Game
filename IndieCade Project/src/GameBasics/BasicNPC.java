@@ -14,6 +14,8 @@ import Tiles.Tile;
 
 public class BasicNPC implements Serializable
 {
+	//An NPC that interacts with the player. This is the basic framework for further extensions
+	
 	/**
 	 * 
 	 */
@@ -121,8 +123,11 @@ public class BasicNPC implements Serializable
 		{
 			near = false;
 		}
-		
-		if(hitbox.checkPoint(Mouse.getX(), Config.HEIGHT - Mouse.getY()) && 
+	}
+	
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
+	{
+		if(hitbox.checkPoint(Mouse.getX() - xOffset, Config.HEIGHT - Mouse.getY() - yOffset) && 
 				Mouse.isButtonDown(player.getInput().MOUSE_LEFT_BUTTON) && !active && near)
 		{
 			active = true;
@@ -131,19 +136,16 @@ public class BasicNPC implements Serializable
 		{
 			active = false;
 		}
-	}
-	
-	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
-	{
+		
 		if(active && Active != null)
 		{
-			Active.render(x + xOffset, y + yOffset, width, height, rot, g);
+			Active.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else if(near && Near != null)
 		{
-			Near.render(x + xOffset, y + yOffset, width, height, rot, g);
+			Near.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else if(idle && Idle != null)
 		{
-			Idle.render(x + xOffset, y + yOffset, width, height, rot, g);
+			Idle.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}
 		
 		if(near)
@@ -220,7 +222,7 @@ public class BasicNPC implements Serializable
 
 	public void action()
 	{
-		
+		//What the npc does when the player selects it. Left blank so it can be programmed in further extensions
 	}
 
 	public void shift(float xa, float ya) 
