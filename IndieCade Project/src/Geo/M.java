@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Input;
 
 import Main.Config;
 
@@ -108,4 +109,30 @@ public class M {
 
 	}
 
+	public static int getNumKey(int key)
+	{
+		switch(key)
+		{
+			default: return 0;
+		
+			case 1: return Input.KEY_1;
+			
+			case 2: return Input.KEY_2;
+			
+			case 3: return Input.KEY_3;
+			
+			case 4: return Input.KEY_4;
+			
+			case 5: return Input.KEY_5;
+			
+			case 6: return Input.KEY_6;
+			
+			case 7: return Input.KEY_7;
+			
+			case 8: return Input.KEY_8;
+			
+			case 9: return Input.KEY_9;
+		
+		}
+	}
 }

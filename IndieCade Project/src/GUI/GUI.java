@@ -18,6 +18,8 @@ public class GUI
 	
 	PauseMenu Pause;
 	Button pause;
+	//HealthBar health;
+	Abilities abilities;
 	
 	public GUI()
 	{
@@ -26,6 +28,12 @@ public class GUI
 						new AnimationSet("res/Buttons/GUI/Pause/Select", 100));
 		
 		Pause = new PauseMenu();
+	}
+	
+	public void init(Player player, World world)
+	{
+		//health = new HealthBar(player);
+		abilities = new Abilities(player);
 	}
 	
 	public void update(StateBasedGame sbg, World world, Player player)
@@ -48,5 +56,9 @@ public class GUI
 		Pause.render(g, player);
 		
 		pause.render(g);
+		
+		//health.render(g);
+		
+		abilities.render(g);
 	}
 }

@@ -5,10 +5,13 @@ import org.newdawn.slick.Color;
 import Enemy.Enemy;
 import Enemy.RushEnemy;
 import Enemy.ShootEnemy;
+import Enemy.SpawnEnemy;
 import GameBasics.Entity;
+import Map.Map;
 
 public class SpawnTile extends Tile
 {
+	Entity shrine;
 	Entity mob;
 	String spawnRef;
 	
@@ -21,6 +24,14 @@ public class SpawnTile extends Tile
 		
 		this.mob = mob.clone();
 		
+		shrine = new Entity(mob.toString() + " Shrine", mob.getPlayer(),
+				mob.getMaxHealth() * 5, 0, 0).setAtkSpeed(10000).
+				setDimensions(width, height).
+				setAnimationSet("res/Entities/Shrines/" + name, 100);
+		shrine.setPosition(x, y - height / 2);
+		shrine.passive = true;
+		
+		
 		this.CD = CD;
 		
 		tick = 0;
@@ -28,10 +39,31 @@ public class SpawnTile extends Tile
 		Type = 2;
 	}
 	
-	public Tile setSpawnSound(String ref)
+	@Override
+	public void postSetAction()
+	{
+		setAnimation(map.getTiles().get(map.getTiles().indexOf(this) - 1).getRef(),
+				map.getTiles().get(map.getTiles().indexOf(this) - 1).getDelay());
+	}
+	
+	@Override
+	public void setMap(Map map)
+	{
+		super.setMap(map);
+		this.map.getLevel().addEntity(shrine);
+	}
+	
+	public SpawnTile setSpawnSound(String ref)
 	{
 		this.spawnRef = ref;
 		return this;
+	}
+	
+	public void changeCoordinates(float xa, float ya)
+	{
+		super.changeCoordinates(xa, ya);
+		
+		shrine.setPosition(xa, ya - height / 2);
 	}
 	
 	public void update()
@@ -70,15 +102,18 @@ public class SpawnTile extends Tile
 	
 	public void spawn()
 	{
-		mob.setPosition(x, y - mob.getHeight() / 2 - 32);
-		mob.reset();
-		map.getLevel().addEntity(mob);
-		
-		if(spawnRef != null)
+		if(!shrine.dead)
 		{
-			Sound.Sound.playSound(spawnRef);
+			mob.setPosition(shrine.getX(), shrine.getY());
+			mob.reset();
+			map.getLevel().addEntity(mob);
+			
+			if(spawnRef != null)
+			{
+				Sound.Sound.playSound(spawnRef);
+			}
+			
 		}
-		
 	}
 	
 	public Entity getEnt()

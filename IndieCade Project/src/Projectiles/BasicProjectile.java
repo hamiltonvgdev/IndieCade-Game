@@ -5,6 +5,7 @@ import org.newdawn.slick.SlickException;
 
 import GameBasics.Entity;
 import Geo.Hitbox;
+import Geo.Point;
 import Geo.Quad;
 import Geo.QuadR;
 import Main.Config;
@@ -15,7 +16,7 @@ public class BasicProjectile
 {
 	Player player;
 	Entity entity;
-	int type;
+	public int type;
 	
 	float x;
 	float y;
@@ -240,5 +241,10 @@ public class BasicProjectile
 		return new BasicProjectile(player, 1).
 				setDimensions(width, height, oRot).setSprite(sprite.getFolder(), sprite.getDelay()).
 				setGravity(Ay).setLimit(limit);
+	}
+
+	public QuadR getHitbox() 
+	{
+		return hitbox;
 	}
 }

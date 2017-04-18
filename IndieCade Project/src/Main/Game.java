@@ -55,6 +55,7 @@ public class Game extends BasicGameState implements Serializable
 		player.update();
 		
 		world.update();
+		
 		gui.update(sbg, world, player);
 	}
 
@@ -72,8 +73,12 @@ public class Game extends BasicGameState implements Serializable
 		world = (World) Load.Load.load(ref + "/World.wrl");
 		
 		TileList.initPortals(world);
+		
 		TileList.initInteractTiles(player);
+		
 		MapList.init(player);
+		
+		gui.init(player, world);
 	}
 	
 	public void newGame()
@@ -89,6 +94,8 @@ public class Game extends BasicGameState implements Serializable
 		MapList.init(player);
 		
 		world.initMaps(1);
+		
+		gui.init(player, world);
 	}
 	
 	public GameContainer getGc()

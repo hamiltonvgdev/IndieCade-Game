@@ -10,6 +10,7 @@ import Player.Player;
 import Projectiles.BasicProjectile;
 import Projectiles.SpinShot;
 import Render.AnimationSet;
+import Render.BasicImage;
 
 public class Form 
 {
@@ -26,19 +27,22 @@ public class Form
 	public float rot;
 	
 	//Ability 1
-	float lastTick1;
+	long lastTick1;
 	long cd1;
 	boolean available1;
+	BasicImage Icon1;
 	
 	//Ability 2
-	float lastTick2;
+	long lastTick2;
 	long cd2;
 	boolean available2;
+	BasicImage Icon2;
 	
 	//Ability 3
-	float lastTick3;
+	long lastTick3;
 	long cd3;
 	boolean available3;
+	BasicImage Icon3;
 	
 	public Form(Player player)
 	{
@@ -50,13 +54,13 @@ public class Form
 		width = 70;
 		height = 70;
 		
-		lastTick1 = System.currentTimeMillis();
+		lastTick1 = 0;
 		available1 = false;
 
-		lastTick2 = System.currentTimeMillis();
+		lastTick2 = 0;
 		available2 = false;
 
-		lastTick3 = System.currentTimeMillis();
+		lastTick3 = 0;
 		available3 = false;
 		
 		attacking = false;
@@ -68,17 +72,17 @@ public class Form
 	{
 		idle();
 		
-		if(player.getInput().isKeyDown(player.getInput().KEY_LSHIFT))
+		if(player.getInput().isKeyPressed(player.getInput().KEY_LSHIFT) && available1)
 		{
 			ability1();
 		}
 		
-		if(player.getInput().isKeyDown(player.getInput().KEY_Z))
+		if(player.getInput().isKeyPressed(player.getInput().KEY_Z) && available2)
 		{
 			ability2();
 		}
 		
-		if(player.getInput().isKeyDown(player.getInput().KEY_X))
+		if(player.getInput().isKeyPressed(player.getInput().KEY_X) && available3)
 		{
 			ability3();
 		}
@@ -157,6 +161,36 @@ public class Form
 		lastTick3 = System.currentTimeMillis();
 	}
 	
+	public long getCD1()
+	{
+		return cd1;
+	}
+	
+	public long getCD2()
+	{
+		return cd2;
+	}
+	
+	public long getCD3()
+	{
+		return cd3;
+	}
+	
+	public long getTick1()
+	{
+		return lastTick1;
+	}
+	
+	public long getTick2()
+	{
+		return lastTick2;
+	}
+	
+	public long getTick3()
+	{
+		return lastTick3;
+	}
+	
 	public AnimationSet getCurrentSprite()
 	{
 		if(attacking)
@@ -166,5 +200,20 @@ public class Form
 		{
 			return idle;
 		}
+	}
+	
+	public BasicImage getIcon1()
+	{
+		return Icon1;
+	}
+
+	public BasicImage getIcon2()
+	{
+		return Icon2;
+	}
+
+	public BasicImage getIcon3()
+	{
+		return Icon3;
 	}
 }

@@ -1,5 +1,6 @@
-/BoneStructure
-/GameBasics
-/Tiles
-/Map
-/Thing
+/Enemy
+/Projectiles
+/GUI
+/Main
+/Player
+/Form

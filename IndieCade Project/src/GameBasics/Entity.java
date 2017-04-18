@@ -30,6 +30,8 @@ public class Entity implements Serializable
 	
 	protected Player player;
 	protected boolean paused;
+	public boolean dead;
+	public boolean passive;
 	
 	//Horizontal movement
 	protected float x;
@@ -81,6 +83,9 @@ public class Entity implements Serializable
 		this.name = name;
 		
 		this.player = player;
+		
+		dead = false;
+		passive = false;
 		
 		paused = false;
 		stun = false;
@@ -234,12 +239,13 @@ public class Entity implements Serializable
 	
 	protected void atk()
 	{
-		//Self defense. If player touches entity, player gets damaged
-		//Revision, send the player hurling back
-		player.damage((int) damage);
-		player.setVx(damage * (player.getX() - x) / (Math.abs(player.getX() - x)));
-		player.setVy(damage * (player.getY() - y) / (Math.abs(player.getY() - y)));
-		atkTick = System.currentTimeMillis();
+		if(!passive)
+		{
+			player.damage((int) damage);
+			player.setVx(damage * (player.getX() - x) / (Math.abs(player.getX() - x)));
+			player.setVy(damage * (player.getY() - y) / (Math.abs(player.getY() - y)));
+			atkTick = System.currentTimeMillis();
+		}
 	}
 	
 	public void jump()
@@ -340,6 +346,8 @@ public class Entity implements Serializable
 		level.getEntities().remove(this);
 		
 		player.getKilled().add(this);
+		
+		dead = true;
 	}
 	public Quad getHitbox() 
 	{

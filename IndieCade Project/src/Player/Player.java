@@ -12,8 +12,10 @@ import com.sun.xml.internal.ws.client.sei.ResponseBuilder.Body;
 
 import BoneStructure.BoneStructure;
 import Form.Form;
+import Form.Triangle;
 import GameBasics.Entity;
 import Geo.Hitbox;
+import Geo.M;
 import Geo.Quad;
 import Geo.QuadR;
 import Main.Config;
@@ -83,6 +85,7 @@ public class Player implements Serializable
 	//Combat Values
 	float Stun;
 	float Speed;
+	public boolean damaged;
 	
 	Hitbox hitbox;
 	
@@ -93,7 +96,7 @@ public class Player implements Serializable
 		
 		Inventory = new ArrayList<Form>();
 		Killed = new ArrayList<Entity>();
-		Equiped = new Form(this);
+		Equiped = new Triangle(this);
 		
 		paused = false;
 		
@@ -136,6 +139,7 @@ public class Player implements Serializable
 		xOffset = 0;
 		yOffset = 0;
 		
+		damaged = false;
 	}
 	
 	public void setMap(Map map)
@@ -405,7 +409,15 @@ public class Player implements Serializable
 			
 			Equiped.update();
 			
+			for(int i = 1; i <= 6; i ++)
+			{
+				if(input.isKeyDown(M.getNumKey(i)))
+				{
+					equip(i);
+				}
+			}
 			
+			damaged = false;
 		}
 	}	
 	
@@ -413,8 +425,8 @@ public class Player implements Serializable
 	{
 		x -= xa;
 		y -= ya;
-		map.shift(-Vx, 0);
-		map.shift(0, -Vy);
+		map.shift(xa, 0);
+		map.shift(0, ya);
 		
 		xOffset += xa;
 		yOffset += ya;
@@ -430,6 +442,11 @@ public class Player implements Serializable
 	{
 		xOffset = xa;
 		yOffset = ya;
+	}
+	
+	public void setSpeed(float speed)
+	{
+		this.speed = speed;
 	}
 	
 	public void render(Graphics g) throws SlickException
@@ -457,15 +474,17 @@ public class Player implements Serializable
 		JumpTick = System.currentTimeMillis();
 	}
 	
-	public void giveItem(Form item)
+	public void giveForm(Form item)
 	{
 		Inventory.add(item);
-		
 	}
 	
 	public void equip(int index)
 	{
-		Equiped = Inventory.get(index);
+		if(index + 1 < Inventory.size())
+		{
+			Equiped = Inventory.get(index);
+		}
 	}
 	
 	public void pause()
@@ -481,11 +500,14 @@ public class Player implements Serializable
 	public void damage(int dmg)
 	{
 		health -= dmg / (1 + armor);
+		damaged = true;
 	}
 	
 	public void Damage(int dmg)
 	{
 		health -= dmg;
+		
+		damaged = true;
 	}
 	
 	public void stun(float Stun)
@@ -536,6 +558,11 @@ public class Player implements Serializable
 	public float getSpeed()
 	{
 		return Speed;
+	}
+	
+	public float getspeed()
+	{
+		return speed;
 	}
 	
 	public float getHealth() 
