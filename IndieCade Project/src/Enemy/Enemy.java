@@ -72,7 +72,7 @@ public class Enemy extends Entity
 	
 	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
-		if(near)
+		if(near && triggered != null)
 		{
 			triggered.render(x, xOffset, y, yOffset, width, height, 0, g);
 		}else

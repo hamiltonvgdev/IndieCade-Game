@@ -18,7 +18,7 @@ public class GUI
 	
 	PauseMenu Pause;
 	Button pause;
-	//HealthBar health;
+	HealthBar health;
 	Abilities abilities;
 	
 	public GUI()
@@ -32,7 +32,7 @@ public class GUI
 	
 	public void init(Player player, World world)
 	{
-		//health = new HealthBar(player);
+		health = new HealthBar(player);
 		abilities = new Abilities(player);
 	}
 	
@@ -57,7 +57,7 @@ public class GUI
 		
 		pause.render(g);
 		
-		//health.render(g);
+		health.render(g);
 		
 		abilities.render(g);
 	}

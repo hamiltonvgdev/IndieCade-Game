@@ -48,9 +48,9 @@ public class Form
 	{
 		this.player = player;
 		
-		atkSpeed = 100;
+		atkSpeed = 200;
 		idle = new AnimationSet("res/Forms/Point/Idle", 100);
-		atk = new AnimationSet("res/Forms/Point/Attacking", (long) atkSpeed);
+		atk = new AnimationSet("res/Forms/Point/Attacking", (long) atkSpeed / 4);
 		width = 70;
 		height = 70;
 		

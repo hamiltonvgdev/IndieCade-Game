@@ -5,6 +5,7 @@ import org.newdawn.slick.SlickException;
 
 import Geo.M;
 import Player.Player;
+import Projectiles.BasicProjectile;
 import Render.AnimationSet;
 
 public class ShieldEnemy extends Enemy
@@ -70,11 +71,22 @@ public class ShieldEnemy extends Enemy
 	{
 		super.update();
 		
-		Sdrot = Srot - M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY());
+		Srot = Srot % 360;
 		
-		Srot = Sdrot / Math.abs(Sdrot) * Sspeed;
+		Sdrot = (M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY()) - Srot) % 360;
+		
+		if(Math.abs(Sdrot) > 180 && Sdrot > 0)
+		{
+			Sdrot = -Sdrot;
+		}
+		
+		if(Math.abs(Sdrot) >= Sspeed)
+		{
+			Srot += Sdrot / Math.abs(Sdrot) * Sspeed;
+		}
 		
 		ShieldSprite.reset();
+		
 		shield.update(ShieldSprite.getCurrentFrame());
 		
 		if(!broken)
@@ -86,13 +98,13 @@ public class ShieldEnemy extends Enemy
 					if(shield.check(map.getLevel().getProjectiles().get(i).getHitbox()))
 					{
 						Shealth -= player.getDamage();
-						map.getLevel().getProjectiles().get(i).end();
+						shield(map.getLevel().getProjectiles().get(i));
 					}
 				}
 			}
 		}
 		
-		if(Shealth <= 0 )
+		if(Shealth <= 0)
 		{
 			broken = true;
 		}
@@ -104,7 +116,13 @@ public class ShieldEnemy extends Enemy
 		
 		if(!broken)
 		{
-			ShieldSprite.render(x, xOffset, y, yOffset, Swidth, Sheight, Srot, g);
+			ShieldSprite.render((float) (x + Sradius * M.cos(Srot)), xOffset, 
+					(float) (y + Sradius * M.sin(Srot)), yOffset, Swidth, Sheight, Srot, g);
 		}
+	}
+	
+	public void shield(BasicProjectile blocked)
+	{
+		blocked.end();
 	}
 }

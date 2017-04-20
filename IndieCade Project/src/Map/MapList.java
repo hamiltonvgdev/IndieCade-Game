@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import Enemy.ShieldEnemy;
 import GameBasics.BasicNPC;
 import GameBasics.Entity;
 import NPCs.AudioNPC;

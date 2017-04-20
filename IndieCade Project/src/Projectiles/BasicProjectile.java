@@ -122,7 +122,7 @@ public class BasicProjectile
 		
 		if(type == 0)
 		{
-			if(this.hitbox.check(hitbox))
+			if(player.getHitbox().check(hitbox))
 			{
 				player.damage((int) entity.getDamage());
 				ended = true;
@@ -174,6 +174,17 @@ public class BasicProjectile
 		Vx = xa;
 		Vy = ya;
 		player.getMap().getLevel().addProjectile(this);
+	}
+	
+	public void setType(int type)
+	{
+		this.type = type;	
+	}
+	
+	public void setVelocity(float xa, float ya)
+	{
+		Vx = xa;
+		Vy = ya;
 	}
 	
 	public float getX()

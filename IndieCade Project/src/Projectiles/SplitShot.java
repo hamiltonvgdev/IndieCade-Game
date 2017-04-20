@@ -7,11 +7,13 @@ public class SplitShot extends BasicProjectile
 	int split;
 	float Vsplit;
 	BasicProjectile Split;
+	float arc;
 	
 	public SplitShot(Player player, int type) 
 	{
 		super(player, type);
 		limit = 0;
+		arc = 360;
 	}
 	
 	public SplitShot setSplit(BasicProjectile Split, int split, float Vsplit)
@@ -25,12 +27,13 @@ public class SplitShot extends BasicProjectile
 	public void update()
 	{
 		super.update();
+		
 		if(ended)
 		{	
 			for(int i = 0; i < split; i ++)
 			{	
 				BasicProjectile shot;
-				if(360 / split * i >= 180)
+				if(arc / split * i >= 180)
 				{
 					shot = new BasicProjectile(player, type).
 							setSprite(sprite.getFolder(), sprite.getDelay()).setDimensions(width, height, oRot);
@@ -46,8 +49,8 @@ public class SplitShot extends BasicProjectile
 					shot.getSprite().setFlip(false);
 				}
 				
-				shot.shoot((float) (Vsplit * Math.cos(Math.toRadians(360 / split * i))),
-						(float) (Vsplit * Math.sin(Math.toRadians(360 / split * i))));
+				shot.shoot((float) (Vsplit * Math.cos(Math.toRadians(arc / split * i))),
+						(float) (Vsplit * Math.sin(Math.toRadians(arc / split * i))));
 			}
 		}
 	}
