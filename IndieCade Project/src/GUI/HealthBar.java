@@ -42,7 +42,7 @@ public class HealthBar
 		height = 22;
 		
 		x = maxHealth * (factor * 0.536F);
-		y = height * factor / 2;
+		y = Config.HEIGHT - height * factor / 2;
 	}
 	
 	public void render(Graphics g) throws SlickException

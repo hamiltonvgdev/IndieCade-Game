@@ -9,8 +9,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import Menus.BasicMenu;
-import Menus.CodexMenu;
-import Menus.PlayMenu;
 import Menus.StartMenu;
 
 public class MainMenu extends BasicGameState
@@ -22,9 +20,7 @@ public class MainMenu extends BasicGameState
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException 
 	{
 		Menus = new ArrayList<BasicMenu>();
-		Menus.add(new StartMenu(gc, this));
-		Menus.add(new PlayMenu(this, (Game) sbg.getState(2), sbg));
-		Menus.add(new CodexMenu(this));
+		Menus.add(new StartMenu(gc,(Game) sbg.getState(2), sbg, this));
 		
 		index = 0;
 	}

@@ -10,10 +10,9 @@ public class SpawnEnemy extends Enemy
 	long tick;
 	String spawnRef;
 	
-	public SpawnEnemy(String name, Player player, float health, float damage,
-			float speed) 
+	public SpawnEnemy(String name, Player player, float health, float damage) 
 	{
-		super(name, player, health, damage, speed);
+		super(name, player, health, damage);
 		tick = System.currentTimeMillis();
 	}
 	
@@ -51,10 +50,10 @@ public class SpawnEnemy extends Enemy
 	
 	public SpawnEnemy clone()
 	{
-		return (SpawnEnemy) new SpawnEnemy(name, player, health, damage, Speed).
+		return (SpawnEnemy) new SpawnEnemy(name, player, health, damage).
 				setEntity(minion, cd).setSpawnSound(spawnRef).
 				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
 				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
-				setAtkSpeed(atkSpeed);
+				setAtkSpeed(atkSpeed).setMove(speed, acceleration);
 	}
 }

@@ -11,7 +11,12 @@ import org.newdawn.slick.SlickException;
 import com.sun.xml.internal.ws.client.sei.ResponseBuilder.Body;
 
 import BoneStructure.BoneStructure;
+import Enemy.RushEnemy;
+import Enemy.ShootEnemy;
 import Form.Form;
+import Form.Hexagon;
+import Form.Pentagon;
+import Form.Square;
 import Form.Triangle;
 import GameBasics.Entity;
 import Geo.Hitbox;
@@ -22,7 +27,7 @@ import Main.Config;
 import Main.Game;
 import Main.MainMenu;
 import Map.Map;
-import Menus.CodexMenu;
+import Projectiles.BasicProjectile;
 import Render.AnimationSet;
 import Render.BasicImage;
 import Tiles.Tile;
@@ -96,7 +101,15 @@ public class Player implements Serializable
 		
 		Inventory = new ArrayList<Form>();
 		Killed = new ArrayList<Entity>();
-		Equiped = new Triangle(this);
+		
+		giveForm(new Triangle(this));
+		giveForm(new Square(this));
+		giveForm(new Pentagon(this));
+		giveForm(new Hexagon(this));
+		
+		//Equiped = new Triangle(this);
+		//Equiped = new Square(this);
+		Equiped = new Form(this);
 		
 		paused = false;
 		
@@ -126,7 +139,7 @@ public class Player implements Serializable
 		maxHealth = 100;
 		health = maxHealth;
 		armor = 0;
-		damage = 5;
+		damage = 10;
 		this.baseSpeed = 10;
 		speed = 1;
 		Speed = baseSpeed * speed;
@@ -227,7 +240,6 @@ public class Player implements Serializable
 	{	
 		if(!paused)
 		{
-			//hitbox.update(sprites.get(spriteindex).getCurrentFrame());
 			hitbox.update(Equiped.getCurrentSprite().getCurrentFrame());
 			
 			if(health <= 0)
@@ -409,6 +421,12 @@ public class Player implements Serializable
 			
 			Equiped.update();
 			
+			for(int i = 0; i < Inventory.size(); i ++)
+			{
+				Inventory.get(i).idle();
+			}
+			
+			
 			for(int i = 1; i <= 6; i ++)
 			{
 				if(input.isKeyDown(M.getNumKey(i)))
@@ -418,18 +436,26 @@ public class Player implements Serializable
 			}
 			
 			damaged = false;
+			
+			if(input.isKeyPressed(input.KEY_0))
+			{
+				godpowerz101();
+			}
 		}
 	}	
 	
 	public void move(float xa, float ya) 
 	{
-		x -= xa;
-		y -= ya;
-		map.shift(xa, 0);
-		map.shift(0, ya);
-		
-		xOffset += xa;
-		yOffset += ya;
+		if(!map.getTile(x - xa, y - ya).getCollidable())
+		{
+			x -= xa;
+			y -= ya;
+			map.shift(xa, 0);
+			map.shift(0, ya);
+			
+			xOffset += xa;
+			yOffset += ya;
+		}
 	}
 	
 	public void Move(float xa, float ya)
@@ -449,9 +475,32 @@ public class Player implements Serializable
 		this.speed = speed;
 	}
 	
+	public void setArmor(float armor)
+	{
+		this.armor = armor;
+	}
+	
+	public void setDamage(float damage)
+	{
+		this.damage = damage;
+	}
+	
 	public void render(Graphics g) throws SlickException
 	{
+		for(int i = 0; i < Inventory.size(); i ++)
+		{
+			Inventory.get(i).brender(xOffset, yOffset, g);
+			
+		}
+		
 		Equiped.render(x, xOffset, y, yOffset, g);
+		
+		for(int i = 0; i < Inventory.size(); i ++)
+		{
+			Inventory.get(i).arender(xOffset, yOffset, g);
+			
+		}
+		
 		//hitbox.render(g);
 	}
 	
@@ -481,9 +530,9 @@ public class Player implements Serializable
 	
 	public void equip(int index)
 	{
-		if(index + 1 < Inventory.size())
+		if(index <= Inventory.size())
 		{
-			Equiped = Inventory.get(index);
+			Equiped = Inventory.get(index - 1);
 		}
 	}
 	
@@ -497,17 +546,24 @@ public class Player implements Serializable
 		paused = false;
 	}
 	
-	public void damage(int dmg)
+	public void damage(float dmg)
 	{
-		health -= dmg / (1 + armor);
-		damaged = true;
+		health -= dmg * (1 - armor / 100.0);
+		
+		if(dmg > 0)
+		{
+			damaged = true;
+		}
 	}
 	
-	public void Damage(int dmg)
+	public void Damage(float dmg)
 	{
 		health -= dmg;
 		
-		damaged = true;
+		if(dmg > 0)
+		{
+			damaged = true;
+		}
 	}
 	
 	public void stun(float Stun)
@@ -570,9 +626,19 @@ public class Player implements Serializable
 		return health;
 	}
 
+	public float getMaxHealth()
+	{
+		return maxHealth;
+	}
+	
 	public float getDamage() 
 	{
 		return damage;
+	}
+	
+	public float getArmor()
+	{
+		return armor;
 	}
 	
 	public Map getMap()
@@ -603,5 +669,29 @@ public class Player implements Serializable
 	public Hitbox getHitbox()
 	{
 		return hitbox;
+	}
+	
+	public Game getGame()
+	{
+		return game;
+	}
+	
+	public void godpowerz101()
+	{
+		RushEnemy derp = (RushEnemy) new RushEnemy("derp", this, 100, 10).
+				setRange(500).setAtkSpeed(100).setDimensions(64, 64).setMove(10, 2).
+				setAnimationSet("res/Forms/Point/Idle", 100);
+		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);
+		
+	/*	ShootEnemy derp = (ShootEnemy) new ShootEnemy("derp", this, 100, 10).
+				setProjectile(new BasicProjectile(this, 0).setDimensions(32, 32, 0).
+						setSprite("res/Forms/Point/Idle", 100), 10).
+				setRange(500).setAtkSpeed(100).setDimensions(64, 64).setMove(10, 2).
+				setAnimationSet("res/Forms/Point/Idle", 100).setMove(10, 2).setAtkSpeed(1000);
+		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);
+		*/
+		
+		
+		map.getLevel().addEntity(derp);
 	}
 }

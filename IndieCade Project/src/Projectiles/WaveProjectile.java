@@ -12,9 +12,9 @@ public class WaveProjectile extends BasicProjectile
 	float waveSpeed;
 	float ang;
 	
-	public WaveProjectile(Player player, int type) 
+	public WaveProjectile(Player player, float damage, int type) 
 	{
-		super(player, type);
+		super(player, damage, type);
 		ang = 0;
 	}
 	
@@ -55,7 +55,7 @@ public class WaveProjectile extends BasicProjectile
 	
 	public WaveProjectile clone()
 	{
-		return (WaveProjectile) new WaveProjectile(player, 1).setWave(amplitude, waveSpeed).
+		return (WaveProjectile) new WaveProjectile(player, damage, 1).setWave(amplitude, waveSpeed).
 				setDimensions(width, height, oRot).setSprite(sprite.getFolder(), sprite.getDelay()).
 				setGravity(Ay).setLimit(limit);
 	}

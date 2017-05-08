@@ -1,5 +1,6 @@
 package Enemy;
 
+import Geo.M;
 import Player.Player;
 import Projectiles.BasicProjectile;
 import Render.AnimationSet;
@@ -13,9 +14,9 @@ public class ShootEnemy extends Enemy
 	int factor;
 	long shootTick;
 	
-	public ShootEnemy(String name, Player player, float health, float damage, float speed)
+	public ShootEnemy(String name, Player player, float health, float damage)
 	{
-		super(name, player, health, damage, speed);
+		super(name, player, health, damage);
 		
 		factor = 1;
 		
@@ -64,7 +65,8 @@ public class ShootEnemy extends Enemy
 				proj.setDimensions(proj.getWidth(), proj.getHeight(), proj.getORot());
 			}
 			proj.setShooter(this);
-			proj.shoot(factor * xa, 0);
+			proj.shoot((float) (xa * M.cos(M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY()))),
+					(float) (xa * M.sin(M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY()))));
 			
 			shootTick = System.currentTimeMillis();
 		}
@@ -87,9 +89,9 @@ public class ShootEnemy extends Enemy
 	
 	public ShootEnemy clone()
 	{
-		return (ShootEnemy) new ShootEnemy(name, player, health, damage, speed).setProjectile(proj, xa).
+		return (ShootEnemy) new ShootEnemy(name, player, health, damage).setProjectile(proj, xa).
 				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
 				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
-				setAtkSpeed(atkSpeed);
+				setAtkSpeed(atkSpeed).setMove(speed, acceleration);
 	}
 }

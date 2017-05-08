@@ -17,6 +17,7 @@ public class BasicProjectile
 	Player player;
 	Entity entity;
 	public int type;
+	float damage;
 	
 	float x;
 	float y;
@@ -37,7 +38,7 @@ public class BasicProjectile
 	long age;
 	long limit;
 	
-	public BasicProjectile(Player player, int type)
+	public BasicProjectile(Player player, float damage, int type)
 	{
 		this.player = player;
 		
@@ -53,7 +54,7 @@ public class BasicProjectile
 		
 		this.type = type;
 		
-		setShooter(null);
+		this.damage = damage;
 	}
 	
 	public BasicProjectile setPosition(float xa, float ya)
@@ -124,7 +125,7 @@ public class BasicProjectile
 		{
 			if(player.getHitbox().check(hitbox))
 			{
-				player.damage((int) entity.getDamage());
+				player.damage((int) entity.getDamage() * damage);
 				ended = true;
 			}
 		}else if(type == 1)
@@ -133,7 +134,7 @@ public class BasicProjectile
 			{
 				if(hitbox.check(player.getMap().getLevel().getEntities().get(i).getHitbox()))
 				{
-					player.getMap().getLevel().getEntities().get(i).damage(player.getDamage());
+					player.getMap().getLevel().getEntities().get(i).damage(player.getDamage() * damage);
 					ended = true;
 				}
 			}
@@ -148,7 +149,18 @@ public class BasicProjectile
 		{
 			end();
 		}
+		
 		rot = (float) Math.toDegrees(Math.atan(Vy / Vx));
+		
+		if(Vx < 0)
+		{
+			getSprite().setFlip(true);
+		}else
+		{
+			getSprite().setFlip(false);
+		}
+		
+		sprite.loopAnimate();
 	}
 	
 	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
@@ -249,7 +261,7 @@ public class BasicProjectile
 	
 	public BasicProjectile clone()
 	{
-		return new BasicProjectile(player, 1).
+		return new BasicProjectile(player, damage, type).
 				setDimensions(width, height, oRot).setSprite(sprite.getFolder(), sprite.getDelay()).
 				setGravity(Ay).setLimit(limit);
 	}

@@ -34,6 +34,8 @@ public class GUI
 	{
 		health = new HealthBar(player);
 		abilities = new Abilities(player);
+		
+		Pause.reset(world, player);
 	}
 	
 	public void update(StateBasedGame sbg, World world, Player player)

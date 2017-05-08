@@ -10,8 +10,12 @@ import Enemy.ShieldEnemy;
 import Geo.M;
 import Player.Player;
 import Projectiles.BasicProjectile;
+import Projectiles.HomingProjectile;
 import Projectiles.SpinShot;
+import Projectiles.SplitShot;
+import Projectiles.WaveProjectile;
 import Render.AnimationSet;
+import Render.BasicImage;
 
 public class Triangle extends Form
 {
@@ -21,6 +25,9 @@ public class Triangle extends Form
 	float xOffset;
 	float yOffset;
 
+	//Ability 1
+	AnimationSet blink;
+	
 	//Ability 2
 	boolean boost;
 	float oSpeed;
@@ -35,30 +42,55 @@ public class Triangle extends Form
 		super(player);
 		
 		atkSpeed = 100;
+		speed = 50;
 		
-		cd1 = 3000;
-		cd2 = 10000;
-		cd3 = 20000;
+		cd1 = 1000;
+		cd2 = 7000;
+		cd3 = 10000;
 		
 		width = 35 * 3;
 		height = 24 * 3;
-		
+
+		blink = new AnimationSet("res/Forms/Triangle/Blink", 0);
 		boost = false;
 		shadowed = false;
 		oSpeed = 1;
 		
 		idle = new AnimationSet("res/Forms/Triangle/Idle", 100);
 		atk = new AnimationSet("res/Forms/Triangle/Attacking", (long) atkSpeed / 7);
+		
+		idle.setAfterImage(5, 5);
+		idle.afterImageQuality(1, 0, 0, 0, 0, 0);
+		
+		atk.setAfterImage(5, 5);
+		atk.afterImageQuality(1, 0, 0, 0, 0, 0);
+		
+		Icon1 = new BasicImage("res/Forms/Triangle/ability 1.png");
+		Icon2 = new BasicImage("res/Forms/Triangle/ability 2.png");
+		Icon3 = new BasicImage("res/Forms/Triangle/ability 3.png");
+		
 	}
 	
 	public void update()
 	{
+		if(!available1)
+		{
+			blink.endAnimate();
+		}else
+		{
+			blink.reset();
+		}
+		
 		if(boost)
 		{
 			player.setSpeed(3);
+			idle.toggleAfterImage(true);
+			atk.toggleAfterImage(true);
 		}else
 		{
 			player.setSpeed(oSpeed);
+			idle.toggleAfterImage(false);
+			atk.toggleAfterImage(false);
 		}
 		
 		if(System.currentTimeMillis() - lastTick2 >= 1000)
@@ -73,11 +105,6 @@ public class Triangle extends Form
 			Rot = M.GetAngleOfLineBetweenTwoPoints
 					(shadowX + player.getXOffset(), shadowY + player.getYOffset()
 							, Mouse.getX(), M.toRightHandY(Mouse.getY()));
-			
-			if(player.getInput().isMouseButtonDown(player.getInput().MOUSE_RIGHT_BUTTON))
-			{
-				subAtk();
-			}
 			
 			if(player.getInput().isKeyPressed(player.getInput().KEY_X))
 			{
@@ -106,6 +133,15 @@ public class Triangle extends Form
 		}
 	}
 	
+	@Override 
+	public void arender(float xOffset, float yOffset, Graphics g) throws SlickException
+	{
+		if(!available1)
+		{
+			blink.render(player.getX(), xOffset, player.getY(), yOffset, width, height, rot, g);
+		}
+	}
+	
 	@Override
 	public void render(float x, float xOffset, float y, float yOffset, Graphics g) throws SlickException
 	{
@@ -125,17 +161,20 @@ public class Triangle extends Form
 	{
 		super.ability1();
 		
-		ReflectEnemy derp = (ReflectEnemy) new ReflectEnemy("derp", player, 100, 10, 0).
-				setShieldDimensions(32, 128).setShieldSprite("res/Forms/Point/Idle", 100).
-				setShieldStats(100, 200, 3).setRange(1000).
-				setAnimationSet("res/Forms/Point/Idle", 100).setDimensions(64, 64).
-				setAtkSpeed(100);
-		
-		derp.setPosition(player.getX(), player.getY());
-		
-		player.getMap().getLevel().addEntity(derp);
-		
-		player.move((float) (-200 * M.cos(rot)), (float) (-200 * M.sin(rot)));
+		if(player.getVx() != 0 && player.getVy() != 0)
+		{
+			player.move((float) (-200 * player.getVx() / Math.abs(player.getVx())), 
+					(float) (-200 * player.getVy() / Math.abs(player.getVy())));
+		}else if(player.getVx() == 0 && player.getVy() != 0)
+		{
+			player.move(0, (float) (-200 * player.getVy() / Math.abs(player.getVy())));
+		}else if(player.getVy() == 0 && player.getVx() != 0)
+		{
+			player.move((float) (-200 * player.getVx() / Math.abs(player.getVx())),0);
+		}else
+		{
+			player.move(0, 0);
+		}
 	}
 	
 	@Override
@@ -166,35 +205,38 @@ public class Triangle extends Form
 	
 	public void subAtk()
 	{
-		if(atk.getCurrentIndex() == atk.getSet().size() - 1)
+		if(atk.getCurrentIndex() == atk.getSet().size() - 1 && shadowed)
 		{
-			BasicProjectile shot = new BasicProjectile(player, 1).setSprite("res/Forms/Triangle/Projectile", 100).
+			BasicProjectile shot = new BasicProjectile(player, 0.75F, 1).
+					setSprite("res/Forms/Triangle/Projectile", 100).
 					setDimensions(40, 40, 0).setLimit(1000);
 			
 			shot.setPosition(shadowX, shadowY);
 			
-			if(Math.abs(Rot) > 90)
-			{
-				shot.getSprite().setFlip(true);
-			}
-			
 			shot.shoot((float) (M.cos(Rot) * speed), (float) (M.sin(Rot) * speed));
-			atk.reset();
 		}
 	}
 	
 	@Override
 	public void attack()
 	{
+		subAtk();
+		
+		float factor = 1;
+		
+		if(shadowed)
+		{
+			factor = 0.75F;
+		}
+		
 		if(atk.getCurrentIndex() == atk.getSet().size() - 1)
 		{
-			BasicProjectile shot = new BasicProjectile(player, 1).setSprite("res/Forms/Triangle/Projectile", 100).
+			BasicProjectile shot = new BasicProjectile(player, factor, 1).
+					setSprite("res/Forms/Triangle/Projectile", 100).
 					setDimensions(40, 40, 0).setLimit(1000);
+					
+			shot.setShooter(null);
 			
-			if(Math.abs(rot) > 90)
-			{
-				shot.getSprite().setFlip(true);
-			}
 			
 			shot.shoot((float) (M.cos(rot) * speed), (float) (M.sin(rot) * speed));
 			atk.reset();

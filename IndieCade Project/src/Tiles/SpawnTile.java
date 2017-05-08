@@ -25,11 +25,12 @@ public class SpawnTile extends Tile
 		this.mob = mob.clone();
 		
 		shrine = new Entity(mob.toString() + " Shrine", mob.getPlayer(),
-				mob.getMaxHealth() * 5, 0, 0).setAtkSpeed(10000).
+				mob.getMaxHealth() * 5, 0).setAtkSpeed(10000).
 				setDimensions(width, height).
 				setAnimationSet("res/Entities/Shrines/" + name, 100);
 		shrine.setPosition(x, y - height / 2);
 		shrine.passive = true;
+		shrine.permanent = true;
 		
 		
 		this.CD = CD;

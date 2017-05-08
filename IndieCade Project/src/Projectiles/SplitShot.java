@@ -1,5 +1,8 @@
 package Projectiles;
 
+import org.lwjgl.input.Mouse;
+
+import Geo.M;
 import Player.Player;
 
 public class SplitShot extends BasicProjectile
@@ -7,13 +10,15 @@ public class SplitShot extends BasicProjectile
 	int split;
 	float Vsplit;
 	BasicProjectile Split;
-	float arc;
+	boolean splitted;
 	
-	public SplitShot(Player player, int type) 
+	float offset;
+	
+	public SplitShot(Player player, float damage, int type) 
 	{
-		super(player, type);
+		super(player, damage, type);
 		limit = 0;
-		arc = 360;
+		splitted = false;
 	}
 	
 	public SplitShot setSplit(BasicProjectile Split, int split, float Vsplit)
@@ -24,40 +29,49 @@ public class SplitShot extends BasicProjectile
 		return this;
 	}
 	
+	public SplitShot setOffset(float offset)
+	{
+		this.offset = offset;
+		return this;
+	}
+	
 	public void update()
 	{
 		super.update();
 		
-		if(ended)
+		if(ended && !splitted)
 		{	
-			for(int i = 0; i < split; i ++)
-			{	
-				BasicProjectile shot;
-				if(arc / split * i >= 180)
-				{
-					shot = new BasicProjectile(player, type).
-							setSprite(sprite.getFolder(), sprite.getDelay()).setDimensions(width, height, oRot);
-					shot.setShooter(entity);
-					shot.setPosition(x, y);
-					shot.getSprite().setFlip(true);
-				}else
-				{
-					shot = new BasicProjectile(player, type).
-							setSprite(sprite.getFolder(), sprite.getDelay()).setDimensions(width, height, -oRot);
-					shot.setShooter(entity);
-					shot.setPosition(x, y);
-					shot.getSprite().setFlip(false);
-				}
-				
-				shot.shoot((float) (Vsplit * Math.cos(Math.toRadians(arc / split * i))),
-						(float) (Vsplit * Math.sin(Math.toRadians(arc / split * i))));
+			split();
+			splitted = true;
+		}
+	}
+	
+	public void split()
+	{
+		for(int i =0; i < split; i ++)
+		{		
+			BasicProjectile shot = Split.clone();
+			
+			if(360 / split * i >= 180)
+			{
+				shot.setShooter(entity);
+				shot.setPosition(x, y);
+				shot.getSprite().setFlip(true);
+			}else
+			{
+				shot.setShooter(entity);
+				shot.setPosition(x, y);
+				shot.getSprite().setFlip(false);
 			}
+			
+			shot.shoot((float) (Vsplit * Math.cos(Math.toRadians((360) / split * i + offset))),
+					(float) (Vsplit * Math.sin(Math.toRadians((360) / split * i + offset))));
 		}
 	}
 	
 	public SplitShot clone()
 	{
-		return (SplitShot) new SplitShot(player, type).setSplit(Split, split, Vsplit).
+		return (SplitShot) new SplitShot(player, damage, type).setOffset(offset).setSplit(Split, split, Vsplit).
 				setGravity(Ay).setLimit(limit).setDimensions(width, height, oRot).
 				setSprite(sprite.getFolder(), sprite.getDelay());
 	}

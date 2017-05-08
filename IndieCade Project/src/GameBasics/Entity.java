@@ -26,28 +26,23 @@ public class Entity implements Serializable
 	 */
 	private static final long serialVersionUID = -1335939607570570293L;
 	
-	protected String name;
-	
 	protected Player player;
 	protected boolean paused;
 	public boolean dead;
 	public boolean passive;
+	public boolean permanent;
 	
-	//Horizontal movement
+	protected String name;
+	
+	// Movement
 	protected float x;
+	protected float y;
 	protected float Vx;
 	protected float Vy;
 	protected float Ax;
 	protected float Ay;
 	protected float acceleration;
-	
-	//Vertical movement
-	protected float y;
-	protected float jumpV;
-	protected int jump;
-	protected int maxjump;
-	protected long jumpTick;
-	protected boolean jumping;
+	protected boolean moving;
 	
 	//Combat statistics
 	protected float maxHealth;
@@ -58,7 +53,6 @@ public class Entity implements Serializable
 	
 	//Combat values
 	protected float Stun;
-	protected float Speed;
 	protected long atkSpeed;
 	protected long atkTick;
 	
@@ -78,7 +72,7 @@ public class Entity implements Serializable
 	protected Random gen = new Random();
 	protected int id;
 	
-	public Entity(String name, Player player, float health, float damage, float speed)
+	public Entity(String name, Player player, float health, float damage)
 	{
 		this.name = name;
 		
@@ -89,12 +83,8 @@ public class Entity implements Serializable
 		
 		paused = false;
 		stun = false;
+		moving = false;
 		
-		jumpV = -15F;
-		jump = 0;
-		maxjump = 2;
-		jumpTick = System.currentTimeMillis();
-		jumping = false;
 		
 		Vx = 0;
 		Vy = 0;
@@ -109,10 +99,10 @@ public class Entity implements Serializable
 		maxHealth = health;
 		this.health = maxHealth;
 		this.damage = damage;
-		this.speed = speed;
 		
 		id = 0;
 
+		permanent = false;
 	}
 	public void setMap(Map map)
 	{
@@ -124,6 +114,18 @@ public class Entity implements Serializable
 	{
 		this.x = x;
 		this.y = y;
+	}
+	
+	public void setVelocity(float xa, float ya)
+	{
+		Vx = xa;
+		Vy = ya;
+	}
+	
+	public void setAcceleration(float xa, float ya)
+	{
+		Ax = xa;
+		Ay = ya;
 	}
 	
 	public Entity setAnimationSet(String ref, long delay)
@@ -147,6 +149,13 @@ public class Entity implements Serializable
 		return this;
 	}
 	
+	public Entity setMove(float speed, float accel)
+	{
+		this.speed = speed;
+		acceleration = accel;
+		return this;
+	}
+	
 	public void Physics()
 	{	
 		//The physics engine that handles gravity and collisions
@@ -161,7 +170,7 @@ public class Entity implements Serializable
 		
 		for(int i = -1; i <= 1; i ++)
 		{
-			if(map.getTile(x + i * (width / 2+ Vx + Ax), y + height / 4).getCollidable())
+			if(map.getTile(x + i * (width / 2 + Vx + Ax), y).getCollidable())
 			{
 				if(Hitbox.checkQuad(map.getTile(x + i * (width / 2 + Vx + Ax), y + height / 4).getHitbox()))
 				{
@@ -184,8 +193,8 @@ public class Entity implements Serializable
 			}
 		}
 		
-		move(Vx, 0);
-		move(0, Vy);
+		
+		Move(Vx, Vy);
 	}
 	
 	
@@ -196,14 +205,15 @@ public class Entity implements Serializable
 			setMap(player.getMap());
 			sprite.resetAnimate();
 			
-			if(player.getInput().isKeyPressed(Input.KEY_E))
-			{
-				jump();
-			}
 			
-			if(Math.abs(Vx) < map.getTile(x, y + 50).getFriction())
+			if(Math.abs(Vx) < acceleration)
 			{
 				Vx = 0;
+			}
+			
+			if(Math.abs(Vy) < acceleration)
+			{
+				Vy = 0;
 			}
 			
 			if(player.getX() > x)
@@ -229,6 +239,31 @@ public class Entity implements Serializable
 			rot = 0;
 		}
 		
+		if(!moving)
+		{
+			if(Vx != 0)
+			{
+				Ax = map.getTile(x, y).getFriction() * Vx / Math.abs(Vx) * -1;
+			}
+			
+			if(Vy != 0)
+			{
+				Ay = map.getTile(x, y).getFriction() * Vy / Math.abs(Vy) * -1;
+			}
+		}
+		
+		if(Math.abs(Vx) < map.getTile(x, y).getFriction())
+		{
+			Vx = 0;
+			Ax = 0;
+		}
+		
+		if(Math.abs(Vy) < map.getTile(x, y).getFriction() )
+		{
+			Vy = 0;
+			Ay = 0;
+		}
+		
 		Hitbox.changeDimensions(x, y, width, height);
 	}
 	
@@ -242,19 +277,19 @@ public class Entity implements Serializable
 		if(!passive)
 		{
 			player.damage((int) damage);
-			player.setVx(damage * (player.getX() - x) / (Math.abs(player.getX() - x)));
-			player.setVy(damage * (player.getY() - y) / (Math.abs(player.getY() - y)));
+			
+			if(player.getX() != x)
+			{
+				player.setVx(damage * (player.getX() - x) / (Math.abs(player.getX() - x)));
+			}
+			
+			if(player.getY() != y)
+			{
+				player.setVy(damage * (player.getY() - y) / (Math.abs(player.getY() - y)));
+			}
+			
 			atkTick = System.currentTimeMillis();
 		}
-	}
-	
-	public void jump()
-	{
-		Vy = jumpV;
-		jump --;
-		jumping = true;
-		
-		jumpTick = System.currentTimeMillis();
 	}
 	
 	public void pause()
@@ -311,7 +346,12 @@ public class Entity implements Serializable
 	{
 		return height;
 	}
-	
+
+	public float getAcceleration() 
+	{
+		return acceleration;
+	}
+
 	public float getWidth()
 	{
 		return width;
@@ -359,50 +399,95 @@ public class Entity implements Serializable
 		float distX = player.getX() - x;
 		float distY = player.getY() - y;
 		
-		if(distY != 0)
+		if(distY != 0 && distX != 0)
 		{
 			try
 			{
-				Vy = (distY) / (Math.abs(distY));
+				move((distX) / (Math.abs(distX)) , (distY) / (Math.abs(distY)));
 			}
 			catch(Exception e)
 			{
-				Vy = 0;
+				Ax = 0;
+				Ay = 0;
 			}
-		}else 
-		{
-			Vy = 0;
-		}
-		
-		if(distX != 0)
+		}else if(distY != 0)
 		{
 			try
 			{
-				Vx = (distX) / (Math.abs(distX));
+				move(0, (distY) / (Math.abs(distY)));
 			}
 			catch(Exception e)
 			{
-				Vx = 0;
+				Ay = 0;
+			}
+		}else if(distX != 0)
+		{
+			try
+			{
+				move((distX) / (Math.abs(distX)) , 0);
+			}
+			catch(Exception e)
+			{
+				Ax = 0;
 			}
 		}else
 		{
-			Vx = 0;
+			Ax = 0;
+			Ay = 0;
 		}
 	}
 	
-	public void move(float Xa, float Ya)
+	public void move(float xa, float ya)
 	{
 		if(!stun)
 		{
-			x += Xa * speed;
-			y += Ya * speed;
+			if((xa != 0 || ya != 0) && speed > 0)
+			{
+				moving = true;
+			}else
+			{
+				moving = false;
+			}
+			
+			if(xa * Vx >= 0)
+			{
+				if(xa != 0 && Math.abs(Vx + Ax) < Math.abs(xa) * speed)
+				{
+					Ax = xa * acceleration;
+				}else
+				{
+					Ax = 0;
+				}
+			}else
+			{
+				Ax = xa * acceleration;
+			}
+			
+			if(ya * Vy >= 0 )
+			{
+				if(ya != 0 && Math.abs(Vy + Ay) < Math.abs(ya) * speed)
+				{
+					Ay = ya * acceleration;
+				}else
+				{
+					Ay = 0;
+				}
+			}else
+			{
+				Ay = ya * acceleration;
+			}
 		}
 	}
 	
-	public void Move(float Xa, float Ya)
+	public void Move(float xa, float ya)
 	{
-		x += Xa;
-		y += Ya;
+		x += xa;
+		y += ya;
+		
+		if((Ay == 0 && Ax == 0) || speed <= 0)
+		{
+			moving = false;
+		}
 	}
 	
 	public void follow(Entity patient)
@@ -410,7 +495,18 @@ public class Entity implements Serializable
 		float distX = patient.getX() - x;
 		float distY = patient.getY() - y;
 		
-		if(distY != 0)
+		
+		if(distY != 0 && distX != 0)
+		{
+			try
+			{
+				move((distX) / (Math.abs(distX)) , (distY) / (Math.abs(distY)));
+			}
+			catch(Exception e)
+			{
+				move(0, 0);
+			}
+		}else if(distY != 0)
 		{
 			try
 			{
@@ -420,12 +516,7 @@ public class Entity implements Serializable
 			{
 				move(0, 0);
 			}
-		}else
-		{
-			move(0, 0);
-		}
-		
-		if(distX != 0)
+		}else if(distX != 0)
 		{
 			try
 			{
@@ -485,32 +576,50 @@ public class Entity implements Serializable
 			
 			case 1:
 			{
-				move(speed, 0);
+				move(1, 0);
 				break;
 			}
 			
 			case 2:
 			{
-				move(0, jump);
+				move(0, 1);
 				break;
 			}
 			
 			case 3:
 			{
-				move(-speed, 0);
+				move(-1, 0);
 				break;
 			}
 			
 			
 			case 4:
 			{
-				move(speed, jump);
+				move(1, 1);
 				break;
 			}
 			
 			case 5:
 			{
-				move(-speed, jump);
+				move(-1, 1);
+				break;
+			}
+			
+			case 6:
+			{
+				move(-1, -1);
+				break;
+			}
+			
+			case 7:
+			{
+				move(0, -1);
+				break;
+			}
+			
+			case 8:
+			{
+				move(1, -1);
 				break;
 			}
 		}
@@ -519,13 +628,12 @@ public class Entity implements Serializable
 	public void reset() 
 	{
 		health = maxHealth;
-		jump = 0;
 		stun = false;
 	}
 	
 	public Entity clone()
 	{
-		return new Entity(name, player, health, damage, speed).
+		return new Entity(name, player, health, damage).setMove(speed, acceleration).
 				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
 				setAtkSpeed(atkSpeed);
 	}
@@ -535,5 +643,4 @@ public class Entity implements Serializable
 	{
 		return name;
 	}
-	
 }

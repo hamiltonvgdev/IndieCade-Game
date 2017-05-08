@@ -112,16 +112,14 @@ public class AfterImage
 	}
 	
 	public void update(float x, float y, float rot)
-	{
+	{	
 		if(System.currentTimeMillis() - lastTick >= delay)
 		{	
-			
 			for(int i =  sprite.length - 1; i >  0; i --)
 			{
 				values[i][0] = values[i - 1][0]; 
 				values[i][1] = values[i - 1][1]; 
-				values[i][2] = values[i - 1][2]; 
-				
+				values[i][2] = values[i - 1][2];
 			}
 			
 			values[0][0] = x;

@@ -5,9 +5,9 @@ import Player.Player;
 public class SpinShot extends BasicProjectile
 {
 
-	public SpinShot(Player player, int type) 
+	public SpinShot(Player player, float damage, int type) 
 	{
-		super(player, type);
+		super(player, damage, type);
 	}
 	
 	public void update()

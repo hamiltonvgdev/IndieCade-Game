@@ -24,6 +24,7 @@ public class Tile implements Serializable
 	transient Color Id;
 	
 	boolean collidable;
+	boolean collidableO;
 	Quad hitbox;
 	public boolean on;
 	public boolean nextTo;
@@ -92,6 +93,12 @@ public class Tile implements Serializable
 		}
 	}
 	
+
+	public void setCollide(boolean collide)
+	{
+		collidable = collide;
+	}
+	
 	public void postSetAction()
 	{
 		
@@ -112,6 +119,7 @@ public class Tile implements Serializable
 	public Tile setColidable(boolean collide)
 	{
 		collidable = collide;
+		collidableO = collide;
 		return this;
 	}
 	
@@ -219,6 +227,11 @@ public class Tile implements Serializable
 	public boolean getCollidable()
 	{
 		return collidable;
+	}
+	
+	public boolean getOriginalCollidable()
+	{
+		return collidableO;
 	}
 	
 	public Quad getHitbox()

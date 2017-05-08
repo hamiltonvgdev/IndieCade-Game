@@ -175,14 +175,6 @@ public class AnimationSet implements Serializable
 			float y, float yOffset, float width, float height, float rot, Graphics g) throws SlickException 
 	{
 		Animation.get(frame).render(x, xOffset, y, yOffset, width, height, rot, g);
-		
-		if(afterImage)
-		{
-			for(int i = 0; i < Animation.size(); i ++)
-			{
-				Animation.get(i).afterImage.update(x + xOffset, y + yOffset, rot);
-			}
-		}
 	}
 	
 	public void setFlip(boolean Flip)

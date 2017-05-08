@@ -19,9 +19,9 @@ public class Enemy extends Entity
 	
 	protected boolean near;
 	
-	public Enemy(String name, Player player, float health, float damage, float speed)
+	public Enemy(String name, Player player, float health, float damage)
 	{
-		super(name, player, health, damage, speed);
+		super(name, player, health, damage);
 		
 		this.player = player;
 		
@@ -95,9 +95,9 @@ public class Enemy extends Entity
 	
 	public Enemy clone()
 	{
-		return (Enemy) new Enemy(name, player, health, damage, speed).
+		return (Enemy) new Enemy(name, player, health, damage).
 				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
 				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
-				setAtkSpeed(atkSpeed);
+				setAtkSpeed(atkSpeed).setMove(speed, acceleration);
 	}
 }

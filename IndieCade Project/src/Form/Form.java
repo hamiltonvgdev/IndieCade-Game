@@ -65,12 +65,16 @@ public class Form
 		
 		attacking = false;
 		
-		speed = 50;
+		speed = 40;
 	}
 	
 	public void update()
 	{
-		idle();
+		if(player.getHealth() < player.getMaxHealth())
+		{
+			player.Damage(-0.2F);
+		}
+		
 		
 		if(player.getInput().isKeyPressed(player.getInput().KEY_LSHIFT) && available1)
 		{
@@ -126,17 +130,38 @@ public class Form
 		}
 	}
 	
+	public void arender(float xOffset, float yOffset, Graphics g) throws SlickException
+	{
+		
+	}
+	
 	public void render(float x, float xOffset, float y, float yOffset, Graphics g) throws SlickException
 	{
+		if(idle.afterImage)
+		{
+			idle.moveAfterImage(-player.getVx(), -player.getVy());
+		}
+		
+		if(atk.afterImage)
+		{
+			atk.moveAfterImage(-player.getVx(), -player.getVy());
+		}
+		
 		getCurrentSprite().render(x, xOffset, y, yOffset, width, height, rot, g);
+	}
+	
+	public void brender(float xOffset, float yOffset, Graphics g) throws SlickException
+	{
+		
 	}
 	
 	public void attack()
 	{
 		if(atk.getCurrentIndex() == atk.getSet().size() - 1)
 		{
-			BasicProjectile shot = new SpinShot(player, 1).setSprite("res/Forms/Point/Projectile", 100).
+			BasicProjectile shot = new SpinShot(player, 1, 1).setSprite("res/Forms/Point/Projectile", 100).
 					setDimensions(40, 40, -rot).setLimit(1000);
+			shot.setShooter(null);
 			
 			shot.shoot((float) (M.cos(rot) * speed), (float) (M.sin(rot) * speed));
 			atk.reset();

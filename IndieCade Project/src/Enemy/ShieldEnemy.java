@@ -25,23 +25,14 @@ public class ShieldEnemy extends Enemy
 	float Swidth;
 	float Sheight;
 	
-	public ShieldEnemy(String name, Player player, float health, float damage,
-			float speed) 
+	public ShieldEnemy(String name, Player player, float health, float damage) 
 	{
-		super(name, player, health, damage, speed);
+		super(name, player, health, damage);
 		
 		Srot = 0;
 		Sdrot = 0;
 		
 		broken = false;
-	}
-	
-	public ShieldEnemy setShieldSprite(String ref, long delay)
-	{
-		ShieldSprite = new AnimationSet(ref, delay);
-		shield = new Geo.Hitbox(ShieldSprite.getCurrentFrame());
-		
-		return this;
 	}
 	
 	@Override
@@ -50,6 +41,14 @@ public class ShieldEnemy extends Enemy
 		super.setPosition(x, y);
 		
 		Srot = M.GetAngleOfLineBetweenTwoPoints(this.x, this.y, player.getX(), player.getY());
+	}
+	
+	public ShieldEnemy setShieldSprite(String ref, long delay)
+	{
+		ShieldSprite = new AnimationSet(ref, delay);
+		shield = new Geo.Hitbox(ShieldSprite.getCurrentFrame());
+		
+		return this;
 	}
 	
 	public ShieldEnemy setShieldStats(float health, float radius, float speed)
@@ -124,5 +123,17 @@ public class ShieldEnemy extends Enemy
 	public void shield(BasicProjectile blocked)
 	{
 		blocked.end();
+	}
+	
+	public ShieldEnemy clone()
+	{
+		
+		return (ShieldEnemy) new ShieldEnemy(name, player, health, damage).
+				setShieldDimensions(Swidth, Sheight).setShieldStats(Shealth, Sradius, Sspeed).
+				setShieldSprite(ShieldSprite.getFolder(), ShieldSprite.getDelay()).
+				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
+				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
+				setAtkSpeed(atkSpeed).setMove(speed, acceleration).setMove(speed, acceleration);
+		
 	}
 }

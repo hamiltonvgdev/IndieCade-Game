@@ -71,6 +71,7 @@ public class Level implements Serializable
 	public void addThing(Thing th)
 	{
 		Things.add(th);
+		
 	}
 	
 	public ArrayList<BasicProjectile> getProjectiles()
@@ -89,13 +90,10 @@ public class Level implements Serializable
 	}
 	
 	public void render(Graphics g) throws SlickException
-	{
-		for(int i = 0; i < Entities.size(); i ++)
+	{	
+		for(Thing thing : Things)
 		{
-			if(Math.abs(Entities.get(i).getX() - player.getX()) < Config.WIDTH / 2)
-			{
-				Entities.get(i).render(g, xOffset, yOffset);
-			}
+			thing.render(g, xOffset, yOffset);
 		}
 		
 		for(int i = 0; i < Projectiles.size(); i ++)
@@ -103,9 +101,12 @@ public class Level implements Serializable
 			Projectiles.get(i).render(g, xOffset, yOffset);
 		}
 		
-		for(Thing thing : Things)
+		for(int i = 0; i < Entities.size(); i ++)
 		{
-			thing.render(g, xOffset, yOffset);
+			if(Math.abs(Entities.get(i).getX() - player.getX()) < Config.WIDTH / 2)
+			{
+				Entities.get(i).render(g, xOffset, yOffset);
+			}
 		}
 	}
 	
@@ -113,10 +114,14 @@ public class Level implements Serializable
 	{
 		for(int i = 0; i < Entities.size(); i ++)
 		{
-			if(Math.abs(Entities.get(i).getX() - player.getX()) < Config.WIDTH / 2)
+			if(Math.abs(Entities.get(i).getX() - player.getX()) < Config.WIDTH / 2 && 
+					Math.abs(Entities.get(i).getY() - player.getY()) < Config.HEIGHT / 2)
 			{
 				Entities.get(i).update();
 				Entities.get(i).Physics();
+			}else if(!Entities.get(i).permanent)
+			{
+				Entities.remove(i);
 			}
 		}
 		
@@ -128,6 +133,12 @@ public class Level implements Serializable
 		for(int i = 0; i < Projectiles.size(); i ++)
 		{
 			Projectiles.get(i).update();
+			if(Projectiles.size() > 0 && i < Projectiles.size() &&
+					(Math.abs(Projectiles.get(i).getX() - player.getX()) < Config.WIDTH / 2 || 
+					Math.abs(Projectiles.get(i).getY() - player.getY()) < Config.HEIGHT / 2))
+			{
+				Projectiles.indexOf(i);
+			}
 		}
 		
 		Screen.changeDimensions(player.getX(), player.getY(), Config.WIDTH, Config.HEIGHT);
