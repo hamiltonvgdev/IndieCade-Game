@@ -45,6 +45,8 @@ public class SpawnTile extends Tile
 	{
 		setAnimation(map.getTiles().get(map.getTiles().indexOf(this) - 1).getRef(),
 				map.getTiles().get(map.getTiles().indexOf(this) - 1).getDelay());
+		setSound(map.getTiles().get(map.getTiles().indexOf(this) - 1).getSoundRef());
+		setFriction(map.getTiles().get(map.getTiles().indexOf(this) - 1).getFriction());
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package Tiles;
 
 import org.newdawn.slick.Color;
 
+import Form.Form;
 import Geo.M;
 import Main.Config;
 import Map.World;
@@ -33,6 +34,7 @@ public class PortalTile extends InteractTile
 	{
 		setAnimation(map.getTiles().get(map.getTiles().indexOf(this) + 1).getRef(),
 				map.getTiles().get(map.getTiles().indexOf(this) + 1).getDelay());
+		setSound(map.getTiles().get(map.getTiles().indexOf(this) - 1).getSoundRef());
 	}
 	
 	public PortalTile setDirection(int xa, int ya)
@@ -74,6 +76,11 @@ public class PortalTile extends InteractTile
 					Config.HEIGHT / 2 - 
 					world.getCurrentMap().getTile(new Color(1 - Id.r, 1 - Id.g, 1 - Id.b, Id.a)).y + 
 					1);
+			
+			for(Form f: player.getInventory())
+			{
+				f.reset();
+			}
 		}
 	}
 	

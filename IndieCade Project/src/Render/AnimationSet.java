@@ -127,6 +127,11 @@ public class AnimationSet implements Serializable
 		}
 	}
 	
+	public void setFrame(int frame)
+	{
+		this.frame = frame;
+	}
+	
 	public void toggleAfterImage(boolean toggle)
 	{
 		for(int i = 0; i < Animation.size(); i ++)

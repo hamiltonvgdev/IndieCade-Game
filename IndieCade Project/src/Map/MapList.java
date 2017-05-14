@@ -30,6 +30,10 @@ public class MapList
 			Map Room = new Map(player, new Image("res/Maps/Center Room.png"),
 					null, new Color(255 / 255F, 255 / 255F, 255 / 255F));
 			Maps.add(Room);
+			
+			Map IceField = new Map(player, new Image("res/Maps/Ice 1.png"),
+					null, new Color(0 / 255F, 255 / 255F, 255 / 255F));
+			Maps.add(IceField);
 		} catch (SlickException e) 
 		{
 			e.printStackTrace();

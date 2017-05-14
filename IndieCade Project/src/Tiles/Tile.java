@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import Geo.Quad;
 import Map.Map;
 import Render.AnimationSet;
+import Render.BasicImage;
 import Thing.Thing;
 
 public class Tile implements Serializable
@@ -32,7 +33,7 @@ public class Tile implements Serializable
 	float x;
 	float y;
 	
-	AnimationSet sprite;
+	AnimationSet Sprite;
 	final float width = 64;
 	final float height = 64;
 	float rot;
@@ -75,6 +76,7 @@ public class Tile implements Serializable
 		yOffset = 0;
 		
 		Things = new ArrayList<Thing>();
+		
 	}
 	
 	public void changeCoordinates(float xa, float ya)
@@ -112,7 +114,7 @@ public class Tile implements Serializable
 	
 	public Tile setAnimation(String ref, long delay)
 	{
-		sprite = new AnimationSet(ref, delay);
+		Sprite = new AnimationSet(ref, delay);
 		return this;
 	}
 	
@@ -150,6 +152,12 @@ public class Tile implements Serializable
 		yOffset += ya;
 	}
 	
+	public void move(float xa, float ya)
+	{
+		x += xa;
+		y += ya;
+	}
+	
 	public void reset()
 	{
 		on = false;
@@ -162,7 +170,8 @@ public class Tile implements Serializable
 	{
 		hitbox.changeDimensions(x, y, width, height);
 		
-		sprite.resetAnimate();
+		Sprite.resetAnimate();
+		
 		
 		if(on && !sounded && ref != null)
 		{
@@ -181,12 +190,18 @@ public class Tile implements Serializable
 
 	public void render(Graphics g) throws SlickException
 	{
-		sprite.render(x, xOffset, y, yOffset, width, height, rot, g);
+		Sprite.render(x, xOffset, y, yOffset, width, height, rot, g);
+		
 		
 		for(Thing th: Things)
 		{
 			th.render(g, xOffset, yOffset);
 		}
+		
+		/*if(collidableO)
+		{
+			hitbox.render(g);
+		}*/
 	}
 	
 	public String getName()
@@ -196,12 +211,12 @@ public class Tile implements Serializable
 	
 	public String getRef()
 	{
-		return sprite.getFolder();
+		return Sprite.getFolder();
 	}
 	
 	public long getDelay()
 	{
-		return sprite.getDelay();
+		return Sprite.getDelay();
 	}
 	
 	public String getSoundRef()
@@ -217,6 +232,16 @@ public class Tile implements Serializable
 	public float getY()
 	{
 		return y;
+	}
+	
+	public float getXOffset()
+	{
+		return xOffset;
+	}
+	
+	public float getYOffset()
+	{
+		return yOffset;
 	}
 	
 	public float getFriction()

@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import Form.Form;
 import GameBasics.BasicNPC;
 import GameBasics.Entity;
 import GameBasics.Level;
@@ -30,6 +31,7 @@ public class Map implements Serializable
 	 */
 	private static final long serialVersionUID = -7167480686083434369L;
 	Level level;
+	Player player;
 	ArrayList<Tile> TileMap;
 	transient Image tilemap;
 	float height;
@@ -46,10 +48,16 @@ public class Map implements Serializable
 	
 	transient Color ID;
 	
+	Tile Respawn;
+	float resx;
+	float resy;
+	
 	public Map(Player player, Image tilemap, Image BackGround, Color ID)
 	{	
 		this.ID = ID;
 		level = new Level(player);
+		this.player = player;
+		player.setMap(this);
 		this.BackGround = BackGround;
 		
 		this.tilemap = tilemap;
@@ -64,6 +72,11 @@ public class Map implements Serializable
 			TileMap.get(i).setMap(this);
 			
 			TileMap.get(i).postSetAction();
+			
+			if(TileMap.get(i).getName().equals("Respawn"))
+			{
+				Respawn = TileMap.get(i);
+			}
 		}
 
 		x = 0; 
@@ -71,6 +84,8 @@ public class Map implements Serializable
 		xOffset = 0;
 		yOffset = 0;
 		Hitbox = new Quad(x, y, width * 64, height * 64);
+		resx = Respawn.getX() + Respawn.getXOffset();
+		resy = Respawn.getY() + Respawn.getYOffset();
 		
 		themeMusic = null;
 	}
@@ -87,7 +102,11 @@ public class Map implements Serializable
 		
 		for(int i = 0; i < TileMap.size(); i ++ )
 		{
-			TileMap.get(i).update();
+			if(Math.abs(TileMap.get(i).getX() + TileMap.get(i).getXOffset()) <= Config.WIDTH + 64 &&
+					Math.abs(TileMap.get(i).getY() + TileMap.get(i).getYOffset()) <= Config.HEIGHT + 64)
+			{
+				TileMap.get(i).update();
+			}
 		}
 		
 		for(int i = 0; i < level.getThings().size(); i ++)
@@ -113,7 +132,11 @@ public class Map implements Serializable
 		
 		for(Tile T: TileMap)
 		{
-			T.render(g);
+			if(Math.abs(T.getX() + T.getXOffset()) <= Config.WIDTH + 64 &&
+					Math.abs(T.getY() + T.getYOffset()) <= Config.HEIGHT + 64)
+			{
+				T.render(g);
+			}
 		}
 		
 		level.render(g);
@@ -134,20 +157,27 @@ public class Map implements Serializable
 	
 	public void reset()
 	{
+		if(player.getMap() != null)
+		{
+			shift((player.getX() + player.getXOffset()) - resx, (player.getY() + player.getYOffset()) - resy);
+		}
+		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
 			TileMap.get(i).reset();
+			
+			TileMap.get(i).move((player.getX() + player.getXOffset()) - resx, 
+					(player.getY() + player.getYOffset()) - resy);
 		}
 		
 		level.reset();
-
-		x = 0; 
-		y = 0;
 		
-		xOffset = 0;
-		yOffset = 0;
+		for(Form f: player.getInventory())
+		{
+			f.reset();
+		}
 	}
 	
 	public Color getID()

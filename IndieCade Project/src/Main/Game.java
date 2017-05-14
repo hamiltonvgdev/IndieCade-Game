@@ -30,6 +30,7 @@ public class Game extends BasicGameState implements Serializable
 	
 	transient GameContainer gc;
 	transient StateBasedGame sbg;
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{

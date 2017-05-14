@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 
 import Tiles.InteractTile;
 import Tiles.PortalTile;
+import Tiles.Respawn;
 import Tiles.SpawnTile;
 import Tiles.Tile;
 
@@ -58,6 +59,9 @@ public class Converter
 											setFriction(PossibleTiles.get(j).getFriction()).
 											setSound(PossibleTiles.get(j).getSoundRef()).
 											addThings(PossibleTiles.get(j).getThings()));
+								}else if(PossibleTiles.get(j).getType() == 100)
+								{
+									Tiles.add(new Respawn());
 								}
 								break;
 							}

@@ -19,8 +19,6 @@ import Render.BasicImage;
 
 public class Triangle extends Form
 {
-	
-
 	float Rot;
 	float xOffset;
 	float yOffset;
@@ -46,10 +44,10 @@ public class Triangle extends Form
 		
 		cd1 = 1000;
 		cd2 = 7000;
-		cd3 = 10000;
+		cd3 = 9999;
 		
-		width = 35 * 3;
-		height = 24 * 3;
+		width = 35 * 3 * 0.75F;
+		height = 24 * 3 * 0.75F;
 
 		blink = new AnimationSet("res/Forms/Triangle/Blink", 0);
 		boost = false;
@@ -113,6 +111,11 @@ public class Triangle extends Form
 		}
 		
 		super.update();
+		
+		if(player.getHealth() < player.getMaxHealth())
+		{
+			player.Damage(0.1F);
+		}
 	}
 	
 	public void idle()
@@ -133,6 +136,12 @@ public class Triangle extends Form
 		}
 	}
 	
+	@Override
+	public void reset()
+	{
+		shadowed = false;
+	}
+	
 	@Override 
 	public void arender(float xOffset, float yOffset, Graphics g) throws SlickException
 	{
@@ -145,12 +154,16 @@ public class Triangle extends Form
 	@Override
 	public void render(float x, float xOffset, float y, float yOffset, Graphics g) throws SlickException
 	{
+		super.render(x, xOffset, y, yOffset, g);
+		
 		if(shadowed)
 		{
-			getCurrentSprite().render(shadowX, xOffset, shadowY, yOffset, width, height, Rot, g);
+			AnimationSet shade = new AnimationSet(getCurrentSprite().getFolder(), getCurrentSprite().getDelay());
+			
+			shade.setFrame(getCurrentSprite().getCurrentIndex());
+			
+			shade.render(shadowX, xOffset, shadowY, yOffset, width, height, Rot, g);
 		}
-		
-		super.render(x, xOffset, y, yOffset, g);
 		
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
@@ -209,7 +222,7 @@ public class Triangle extends Form
 		{
 			BasicProjectile shot = new BasicProjectile(player, 0.75F, 1).
 					setSprite("res/Forms/Triangle/Projectile", 100).
-					setDimensions(40, 40, 0).setLimit(1000);
+					setDimensions(40 * 0.75F, 40 * 0.75F, 0).setLimit(750);
 			
 			shot.setPosition(shadowX, shadowY);
 			
@@ -233,7 +246,7 @@ public class Triangle extends Form
 		{
 			BasicProjectile shot = new BasicProjectile(player, factor, 1).
 					setSprite("res/Forms/Triangle/Projectile", 100).
-					setDimensions(40, 40, 0).setLimit(1000);
+					setDimensions(40 * 0.75F, 40 * 0.75F, 0).setLimit(750);
 					
 			shot.setShooter(null);
 			

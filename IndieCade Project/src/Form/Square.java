@@ -33,10 +33,10 @@ public class Square extends Form
 		cd3 = 2000;
 		range = 200;
 		
-		atkSpeed = 1000;
+		atkSpeed = 1250;
 		
-		height = 70  * 1.5F;
-		width = 70  * 1.5F;
+		height = 70  * 1.5F * 0.75F;
+		width = 70  * 1.5F * 0.75F;
 		
 		factor1 = 0;
 		deflect = new BasicImage("res/Forms/Square/Proj Deflect.png");
@@ -73,6 +73,11 @@ public class Square extends Form
 		if(System.currentTimeMillis() - lastTick2 >= 2000)
 		{
 			immortal = false;
+		}
+		
+		if(player.getHealth() < player.getMaxHealth())
+		{
+			player.Damage(-0.2F);
 		}
 	}
 	
@@ -190,9 +195,9 @@ public class Square extends Form
 				BasicProjectile shot = new SpreadShot(player, 2, 1).setSpread(90).
 						setSplit(new BasicProjectile(player, 0.5F, 1).
 								setSprite("res/Forms/Square/Projectile", 100).
-								setDimensions(40 * 1.5F, 40 * 1.5F, -rot).setLimit(1000), 4, 10).
+								setDimensions(40 * 1.5F * 0.75F, 40 * 1.5F * 0.75F, -rot).setLimit(1000 / 2), 4, 10).
 						setSprite("res/Forms/Square/Projectile", 100).
-						setDimensions(40 * 1.5F, 40 * 1.5F, -rot).setLimit(250);
+						setDimensions(40 * 1.5F * 0.75F, 40 * 1.5F * 0.75F, -rot).setLimit(250 / 2);
 				shot.setShooter(null);
 				
 				

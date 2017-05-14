@@ -11,7 +11,9 @@ import org.newdawn.slick.SlickException;
 import com.sun.xml.internal.ws.client.sei.ResponseBuilder.Body;
 
 import BoneStructure.BoneStructure;
+import Enemy.ReflectEnemy;
 import Enemy.RushEnemy;
+import Enemy.ShieldEnemy;
 import Enemy.ShootEnemy;
 import Form.Form;
 import Form.Hexagon;
@@ -245,6 +247,7 @@ public class Player implements Serializable
 			if(health <= 0)
 			{
 				die();
+				map.reset();
 			}
 			
 			Physics();
@@ -470,6 +473,11 @@ public class Player implements Serializable
 		yOffset = ya;
 	}
 	
+	public void setPosition(float xa, float ya)
+	{
+		move(xa - x, ya - y);
+	}
+	
 	public void setSpeed(float speed)
 	{
 		this.speed = speed;
@@ -512,6 +520,10 @@ public class Player implements Serializable
 		y += yOffset;
 		xOffset = 0;
 		yOffset = 0;
+		Vx = 0;
+		Vy = 0;
+		Ax = 0;
+		Ay = 0;
 	}
 	
 	public void Jump()
@@ -688,9 +700,19 @@ public class Player implements Serializable
 						setSprite("res/Forms/Point/Idle", 100), 10).
 				setRange(500).setAtkSpeed(100).setDimensions(64, 64).setMove(10, 2).
 				setAnimationSet("res/Forms/Point/Idle", 100).setMove(10, 2).setAtkSpeed(1000);
-		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);
-		*/
+		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);*/
 		
+	/*	ShieldEnemy derp = (ShieldEnemy) new ShieldEnemy("derp", this, 100, 10).setShieldDimensions(32, 128).
+				setShieldSprite("res/Forms/Point/Idle", 100).setShieldStats(100, 50, 2).
+				setRange(500).setAtkSpeed(100).setDimensions(64, 64).setMove(10, 2).
+				setAnimationSet("res/Forms/Point/Idle", 100);
+		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);*/
+		
+	/*	ReflectEnemy derp = (ReflectEnemy) new ReflectEnemy("derp", this, 100, 10).setShieldDimensions(32, 128).
+				setShieldSprite("res/Forms/Point/Idle", 100).setShieldStats(100, 50, 2).
+				setRange(500).setAtkSpeed(100).setDimensions(64, 64).setMove(10, 2).
+				setAnimationSet("res/Forms/Point/Idle", 100);
+		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);*/
 		
 		map.getLevel().addEntity(derp);
 	}

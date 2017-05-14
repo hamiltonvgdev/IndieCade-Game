@@ -49,11 +49,12 @@ public class Pentagon extends Form
 		walls = new ArrayList<Wall>();
 		wallTick = System.currentTimeMillis();
 		
-		atkSpeed = 750;
+		atkSpeed = 700;
 		
 		cd1 = 500;
 		cd2 = 20000;
 		cd3 = 3000;
+		//range = 500;
 		
 		desecrate = false;
 		speed = 20;
@@ -67,14 +68,12 @@ public class Pentagon extends Form
 		idle = new AnimationSet("res/Forms/Pentagon/Idle", 100);
 		atk = new AnimationSet("res/Forms/Pentagon/Attacking", (long) atkSpeed / 10);
 		
-		width = 31 * 4;
-		height = 31 * 4;
+		width = 31 * 4 * 0.75F;
+		height = 31 * 4 * 0.75F;
 		
 		Icon1 = new BasicImage("res/Forms/Pentagon/ability 1.png");
 		Icon2 = new BasicImage("res/Forms/Pentagon/ability 2.png");
 		Icon3 = new BasicImage("res/Forms/Pentagon/ability 3.png");
-		
-		range = 500;
 	}
 	
 	public void update()
@@ -186,8 +185,17 @@ public class Pentagon extends Form
 				player.setDamage(damageo);
 			}
 		}
-		
-		
+	}
+	
+	@Override
+	public void reset()
+	{
+		desecrate = false;
+		for(int i = walls.size() - 1; i >= 0 ; i --)
+		{
+			player.getMap().getLevel().removeThing(walls.get(i));
+			walls.remove(i);
+		}
 	}
 	
 	@Override
@@ -275,19 +283,16 @@ public class Pentagon extends Form
 	{
 		if(atk.getCurrentIndex() == atk.getSet().size() - 1)
 		{
-			/*HomingProjectile shot = (HomingProjectile) new HomingProjectile(player, 1, 1).setAcceleration(10).
-					setSprite("res/Forms/Pentagon/Projectile", 10).
-					setDimensions(13 * 4, 11 * 4, 90).setLimit(1000);*/
 			
 			ThingShot shot = (ThingShot) new ThingShot(player, 0, 1).
 					setThing(new Sentry("res/Forms/Pentagon/Projectile/Sentry", 100, player, 1).
-							setProjectile(new BasicProjectile(player, 0.25F, 1).
+							setProjectile(new BasicProjectile(player, 0.2F, 1).
 									setSprite("res/Forms/Pentagon/Projectile/Sentry Atk", 100).
 									setDimensions(3 * 4, 3 * 4, 0).setLimit(1000), 60, 1000).
 							setDimension(11 * 4, 13 * 4, 90).setAge(5000).setCollidable(false, true)
 					, 0.6F).
 					setSprite("res/Forms/Pentagon/Projectile/Base", 10).
-					setDimensions(10 * 4, 10 * 4, 0).setLimit(1000);
+					setDimensions(10 * 4 * 0.75F, 10 * 4 * 0.75F, 0).setLimit(750);
 					
 			shot.setShooter(null);
 			

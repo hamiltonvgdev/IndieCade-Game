@@ -1,4 +1,7 @@
-/Thing
-/Tiles
+/BoneStructure
+/Enemy
 /Form
-/Projectiles
+/GUI
+/GameBasics
+/Geo
+/Thing

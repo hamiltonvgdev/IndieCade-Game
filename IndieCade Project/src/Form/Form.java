@@ -130,6 +130,11 @@ public class Form
 		}
 	}
 	
+	public void reset()
+	{
+		
+	}
+	
 	public void arender(float xOffset, float yOffset, Graphics g) throws SlickException
 	{
 		
