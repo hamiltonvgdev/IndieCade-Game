@@ -127,6 +127,11 @@ public class AnimationSet implements Serializable
 		}
 	}
 	
+	public void setFrame(int frame)
+	{
+		this.frame = frame;
+	}
+	
 	public void toggleAfterImage(boolean toggle)
 	{
 		for(int i = 0; i < Animation.size(); i ++)
@@ -171,17 +176,10 @@ public class AnimationSet implements Serializable
 		}
 	}
 	
-	public void render(float x, float y, float width, float height, float rot, Graphics g) throws SlickException 
+	public void render(float x, float xOffset, 
+			float y, float yOffset, float width, float height, float rot, Graphics g) throws SlickException 
 	{
-		Animation.get(frame).render(x, y, width, height, rot, g);
-		
-		if(afterImage)
-		{
-			for(int i = 0; i < Animation.size(); i ++)
-			{
-				Animation.get(i).afterImage.update(x, y, rot);
-			}
-		}
+		Animation.get(frame).render(x, xOffset, y, yOffset, width, height, rot, g);
 	}
 	
 	public void setFlip(boolean Flip)
@@ -228,7 +226,7 @@ public class AnimationSet implements Serializable
 		return Animation;
 	}
 	
-	public int getCurrentFrame()
+	public int getCurrentIndex()
 	{
 		return frame;
 	}
@@ -241,5 +239,10 @@ public class AnimationSet implements Serializable
 	public boolean getFlip()
 	{
 		return flip;
+	}
+	
+	public BasicImage getCurrentFrame()
+	{
+		return Animation.get(getCurrentIndex());
 	}
 }

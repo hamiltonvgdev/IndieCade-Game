@@ -10,14 +10,15 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import Form.Form;
 import GameBasics.BasicNPC;
 import GameBasics.Entity;
 import GameBasics.Level;
 import Geo.Quad;
 import Main.Config;
 import Player.Player;
+import Sound.Sound;
 import Tiles.Tile;
-import Tiles.Ladder;
 import Tiles.InteractTile;
 import Tiles.PortalTile;
 import Tiles.SpawnTile;
@@ -30,8 +31,8 @@ public class Map implements Serializable
 	 */
 	private static final long serialVersionUID = -7167480686083434369L;
 	Level level;
+	Player player;
 	ArrayList<Tile> TileMap;
-	ArrayList<Tile> Stairs;
 	transient Image tilemap;
 	float height;
 	float width;
@@ -42,18 +43,25 @@ public class Map implements Serializable
 	public Quad Hitbox;
 	float x;
 	float y;
+	float xOffset;
+	float yOffset;
 	
 	transient Color ID;
+	
+	Tile Respawn;
+	float resx;
+	float resy;
 	
 	public Map(Player player, Image tilemap, Image BackGround, Color ID)
 	{	
 		this.ID = ID;
 		level = new Level(player);
+		this.player = player;
+		player.setMap(this);
 		this.BackGround = BackGround;
 		
 		this.tilemap = tilemap;
 		TileMap = Converter.convertTile(MapReader.readTileMap(tilemap), TileList.getTiles());
-		Stairs = new ArrayList<Tile>();
 		width = tilemap.getWidth();
 		height = tilemap.getHeight();
 		
@@ -63,28 +71,23 @@ public class Map implements Serializable
 					i / tilemap.getWidth() * 64 + 64 / 2);
 			TileMap.get(i).setMap(this);
 			
-			if(TileMap.get(i).getType() == 4)
+			TileMap.get(i).postSetAction();
+			
+			if(TileMap.get(i).getName().equals("Respawn"))
 			{
-				Stairs.add(TileMap.get(i));
+				Respawn = TileMap.get(i);
 			}
-		}
-		
-		for(int i = 0; i < Stairs.size(); i ++)
-		{
-			((Tiles.Stairs) Stairs.get(i)).directionalize();
 		}
 
 		x = 0; 
 		y = 0;
+		xOffset = 0;
+		yOffset = 0;
 		Hitbox = new Quad(x, y, width * 64, height * 64);
+		resx = Respawn.getX() + Respawn.getXOffset();
+		resy = Respawn.getY() + Respawn.getYOffset();
 		
 		themeMusic = null;
-	}
-	
-	public Map spawnNPC(BasicNPC npc)
-	{
-		level.addNPC(npc);
-		return this;
 	}
 	
 	public Map setBackGroundMusic(String ref)
@@ -99,19 +102,24 @@ public class Map implements Serializable
 		
 		for(int i = 0; i < TileMap.size(); i ++ )
 		{
-			TileMap.get(i).update();
+			if(Math.abs(TileMap.get(i).getX() + TileMap.get(i).getXOffset()) <= Config.WIDTH + 64 &&
+					Math.abs(TileMap.get(i).getY() + TileMap.get(i).getYOffset()) <= Config.HEIGHT + 64)
+			{
+				TileMap.get(i).update();
+			}
 		}
 		
-		for(int i = 0; i < level.getNPCs().size(); i ++)
+		for(int i = 0; i < level.getThings().size(); i ++)
 		{
-			level.getNPCs().get(i).update();
+			level.getThings().get(i).update();
 		}
 		
 		Hitbox.changeDimensions(x, y,  width * 64, height * 64);
 		
 		if(themeMusic != null)
 		{
-			Sound.Sound.infiniteLoopSound(themeMusic);
+			Sound.infiniteLoopSound(themeMusic);
+			//Sound.playSound(themeMusic);
 		}
 	}
 
@@ -119,12 +127,16 @@ public class Map implements Serializable
 	{
 		if(BackGround != null)
 		{
-			g.drawImage(BackGround, x, y );
+			g.drawImage(BackGround, x + xOffset, y + yOffset);
 		}
 		
 		for(Tile T: TileMap)
 		{
-			T.render(g);
+			if(Math.abs(T.getX() + T.getXOffset()) <= Config.WIDTH + 64 &&
+					Math.abs(T.getY() + T.getYOffset()) <= Config.HEIGHT + 64)
+			{
+				T.render(g);
+			}
 		}
 		
 		level.render(g);
@@ -132,30 +144,40 @@ public class Map implements Serializable
 	
 	public void shift(float xa, float ya)
 	{
+		level.shift(xa, ya);
+		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).shift(xa, ya);
 		}
-		x += xa;
-		y += ya;
 		
-		level.shift(xa, ya);
+		xOffset += xa;
+		yOffset += ya;
 	}
 	
 	public void reset()
 	{
+		if(player.getMap() != null)
+		{
+			shift((player.getX() + player.getXOffset()) - resx, (player.getY() + player.getYOffset()) - resy);
+		}
+		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
 			TileMap.get(i).reset();
+			
+			TileMap.get(i).move((player.getX() + player.getXOffset()) - resx, 
+					(player.getY() + player.getYOffset()) - resy);
 		}
 		
-		level.getEntities().clear();
-		level.getProjectiles().clear();
-
-		x = 0; 
-		y = 0;
+		level.reset();
+		
+		for(Form f: player.getInventory())
+		{
+			f.reset();
+		}
 	}
 	
 	public Color getID()

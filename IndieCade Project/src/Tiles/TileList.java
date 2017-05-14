@@ -4,10 +4,16 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 
+import Enemy.Enemy;
+import Enemy.RushEnemy;
+import Enemy.ShootEnemy;
 import GameBasics.Entity;
 import Map.World;
 import Player.Player;
-import Weapons.RangedWeapon;
+import Projectiles.BasicProjectile;
+import Projectiles.SplitShot;
+import Projectiles.WaveProjectile;
+import Thing.Thing;
 
 public class TileList
 {
@@ -15,40 +21,82 @@ public class TileList
 	
 	public static void init()
 	{
-		//MAKE SURE THE COLOR ID HAS A F FOR FLOAT BEHIND IT
+		//MAKE SURE THE COLOR ID HAS A F FOR FLOAT BEHIND ITr
 		
 		Tiles = new ArrayList<Tile>();
 		
-		Tile Air = new Tile("Air", new Color(255, 255, 255)).
+		Tiles.add(new Respawn());
+		
+		Tile AirBlock = new Tile("Air Block", new Color(0, 0, 0)).
 				setAnimation("res/Tiles/Air", 100).
-				setColidable(false);
-		Tiles.add(Air);
-		
-		Tile AirBlock = new Tile("AirBlock", new Color(0 / 255, 0 / 255, 0 / 255)).
-				setAnimation("res/Tiles/Air/", 100).
-				setColidable(true).setFriction(1F);
+				setColidable(true);
 		Tiles.add(AirBlock);
-		
-		Tile Brick = new Tile("Brick", new Color(87 / 255F, 50 / 255F, 17 / 255F)).
-				setAnimation("res/Tiles/Brick/Images", 100).
-				setColidable(true).setFriction(1F);
-		Tiles.add(Brick); 
-		
-		Tile Wood = new Tile("Wood", new Color(168 / 255F, 127 / 255F, 90 / 255F)).
-				setAnimation("res/Tiles/Wood/Images", 100).
-				setColidable(true).setFriction(1F);
-		Tiles.add(Wood);
 
 		Tile Stone = new Tile("Stone", new Color(105 / 255F, 105 / 255F, 105 / 255F)).
 				setAnimation("res/Tiles/Stone/Images", 100).
-				setColidable(true).setFriction(1F);
+				setColidable(false).setFriction(2F);
 		Tiles.add(Stone);
-
-		Tile dirt= new Tile("dirt", new Color(0 / 255F, 200 / 255F, 0 / 255F)).
-				setAnimation("res/Tiles/Dirt/Images", 100).
-				setColidable(true).setFriction(1F);
-		Tiles.add(dirt);
 		
+		//Meadow----------------------------------------------------------------------------------
+		
+		
+		//Forest----------------------------------------------------------------------------------
+		Tile Leaf1 = new Tile("Leaf 1", new Color(32 / 255F, 87 / 255F, 47 / 255F)).
+				setAnimation("res/Tiles/Forest/Leaf 1/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Leaf1);
+
+		Tile Leaf2 = new Tile("Leaf 2", new Color(41 / 255F, 132 / 255F, 74 / 255F)).
+				setAnimation("res/Tiles/Forest/Leaf 2/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Leaf2);
+
+		Tile Leaf3 = new Tile("Leaf 3", new Color(41 / 255F, 156 / 255F, 99 / 255F)).
+				setAnimation("res/Tiles/Forest/Leaf 3/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Leaf3);
+
+		Tile Leaf4 = new Tile("Leaf 4", new Color(66 / 255F, 181 / 255F, 107 / 255F)).
+				setAnimation("res/Tiles/Forest/Leaf 4/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Leaf4);
+		
+		//Desert----------------------------------------------------------------------------------
+		Tile Sand1 = new Tile("Sand 1", new Color(250 / 255F, 211 / 255F, 128 / 255F)).
+				setAnimation("res/Tiles/Desert/Sand 1/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Sand1);
+		
+		Tile Sand2 = new Tile("Sand 2", new Color(242 / 255F, 198 / 255F, 126 / 255F)).
+				setAnimation("res/Tiles/Desert/Sand 2/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Sand2);
+		
+		Tile Sand3 = new Tile("Sand 3", new Color(194 / 255F, 151 / 255F, 105 / 255F)).
+				setAnimation("res/Tiles/Desert/Sand 3/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Sand3);
+		
+		Tile Sand4 = new Tile("Sand 4", new Color(216 / 255F, 209 / 255F, 195 / 255F)).
+				setAnimation("res/Tiles/Desert/Sand 4/", 100).
+				setColidable(false).setFriction(2F); 
+		Tiles.add(Sand4);
+		
+		//Ice----------------------------------------------------------------------------------
+		Tile SlipIce = new Tile("Slippery Ice", new Color(198 / 255F, 218 / 255F, 255 / 255F)).
+				setAnimation("res/Tiles/Ice/Slippery Ice/", 100).
+				setColidable(false).setFriction(0.01F);
+		Tiles.add(SlipIce); 
+		
+		Tile FrostPath = new Tile("Frost Path", new Color(155 / 255F, 163 / 255F, 209 / 255F)).
+				setAnimation("res/Tiles/Ice/Snow Path/", 100).
+				setColidable(false).setFriction(2F);
+		Tiles.add(FrostPath); 
+		
+		Tile Ice = new Tile("Ice", new Color(143 / 255F, 173 / 255F, 243 / 255F)).
+				setAnimation("res/Tiles/Ice/Ice/", 100).
+				setColidable(false).setFriction(1F);
+		Tiles.add(Ice);
 	}
 	
 	public static void initPortals(World world)
@@ -65,66 +113,39 @@ public class TileList
 		
 		PortalTile Right = (PortalTile) new PortalTile("Right", world,  new Color(0, 1, 1, 0.25F)).
 				setDirection(1, 0).
-				setAnimation("res/Tiles/Air", 100);
+				setAnimation("res/Tiles/Air", 200);
 		Tiles.add(Right);
 		
 		PortalTile Down = (PortalTile) new PortalTile("Down", world, new Color(0, 0, 0, 0.25F)).
 				setDirection(0, 1).
-				setAnimation("res/Tiles/Air", 100);
+				setAnimation("res/Tiles/Air", 100).
+				addThing(new Thing("res/Things/Portal", 200).setDimension(13 * 5, 11 * 5, 0));
 		Tiles.add(Down);
+		
+		PortalTile UpLeft = (PortalTile) new PortalTile("Up Left", world, new Color(0, 1, 0, 0.25F)).
+				setDirection(1, -1).
+				setAnimation("res/Tiles/Air", 100);
+		Tiles.add(UpLeft);
+		
+		PortalTile  DownRight = (PortalTile) new PortalTile("Down Right", world, new Color(1, 0, 1, 0.25F)).
+				setDirection(-1, 1).
+				setAnimation("res/Tiles/Air", 100);
+		Tiles.add(DownRight);
+		
+		PortalTile  UpRight = (PortalTile) new PortalTile("Up Right", world, new Color(0, 0, 1, 0.25F)).
+				setDirection(1, 1).
+				setAnimation("res/Tiles/Air", 100);
+		Tiles.add(UpRight);
+		
+		PortalTile DownLeft = (PortalTile) new PortalTile("Down Left", world, new Color(1, 1, 0, 0.25F)).
+				setDirection(-1, -1).
+				setAnimation("res/Tiles/Air", 100);
+		Tiles.add(DownLeft);
 	}
 	
 	public static void initInteractTiles(Player player)
 	{
-		Ladder ladder = (Ladder) new Ladder("Ladder", player, new Color(153 / 255F, 116 / 255F, 82 / 255F)).
-				setAnimation("res/Tiles/Ladders/Wood/Images", 100).
-				setFriction(0);
-		Tiles.add(ladder);
 		
-		///////////////////////////////////////////////////////////////////	
-		
-		/*Stairs WoodenStairs = (Stairs) new Stairs("Wooden Stairs", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
-				setAnimation("res/Tiles/Ladders/Wood/Images", 100).
-				setFriction(0);
-		Tiles.add(WoodenStairs);//Incorporate stairs*/
-		
-		///////////////////////////////////////////////////////////////////	
-		
-		ItemTile BowTile = (ItemTile) new ItemTile("Bow Tile", player, new Color(255 / 255F, 0 / 255F, 0 / 255F)).
-				setItem(((RangedWeapon) new RangedWeapon("Bow", player).
-						setAtkStats(5, 500, 50).setChance(50, 2, 0, 0).
-						setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/BasicBow/Bow", 100).setDimensions(64, 64)).
-						setProjectile("res/Gear/Weapons/BasicBow/Arrow", 100, 10 * 5, 10 * 5, -45)).
-						setAnimation("res/Tiles/Air", 100).
-						setColidable(false).setFriction(1F);
-		Tiles.add(BowTile);
-		
-		ItemTile LBowTile = (ItemTile) new ItemTile("Legendary Bow Tile", player, new Color(0 / 255F, 0 / 255F, 255 / 255F)).
-				setItem(((RangedWeapon) new RangedWeapon("Legendary Bow", player).
-						setAtkStats(1, 100, 50).setChance(50, 2, 0, 0).
-						setDimensions(16 * 2.5F, 16 * 2.5F).setSprite("res/Gear/Weapons/LegendBow/Bow", 100).setDimensions(64, 64)).
-						setProjectile("res/Gear/Weapons/LegendBow/Arrow", 100, 10 * 5, 10 * 5, -45)).
-						setAnimation("res/Tiles/Air", 100).
-						setColidable(false).setFriction(1F);
-		Tiles.add(LBowTile);
-		
-		///////////////////////////////////////////////////////////////////	
-
-		SpawnTile GearBox = (SpawnTile) new SpawnTile("GearBox",
-				new Entity(player, 10, 5, 0).setAnimationSet("res/Entities/Scarecrow/Images", 300).setDimensions(19 * 5, 23 * 5),
-				4000, new Color(204 / 255F, 204 / 255F, 204 / 255F)).
-				setAnimation("res/Tiles/SpawnPraxDummy/Images", 100).
-				setColidable(true).
-				setFriction(1F);
-		Tiles.add(GearBox);
-		
-		SpawnTile dirtSpawn = (SpawnTile) new SpawnTile("dirtSpawn",
-				new Entity(player, 15, 5, 0).setAnimationSet("res/Entities/goblin/Images/Stale", 800).setDimensions(19 * 5, 23 * 5),
-				4000, new Color(0 / 255F, 255 / 255F, 0 / 255F)).
-				setAnimation("res/Tiles/Dirt/Images", 100).
-				setColidable(true).
-				setFriction(1F);
-		Tiles.add(dirtSpawn);
 	}
 	
 	public static ArrayList<Tile> getTiles()

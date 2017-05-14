@@ -37,7 +37,9 @@ public class World implements Serializable
 	{
 
 		try {
-			world = Converter.convertMap(MapReader.readTileMap(new Image("res/World " + id + ".png")), MapList.getMaps());
+			world = Converter.convertMap(
+					MapReader.readTileMap(new Image("res/World " + id + ".png")),
+					MapList.getMaps());
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -47,9 +49,10 @@ public class World implements Serializable
 		
 		for(Map map: world)
 		{
-			map.reset();
+			//map.reset();
 		}
-
+		
+		
 		player.setMap(world.get(mapX + mapY * 20));
 	}
 	
@@ -58,8 +61,10 @@ public class World implements Serializable
 		if(!paused)
 		{
 			player.setMap(world.get(mapX + mapY * 20));
-			world.get(mapX + mapY * 20).update();
+			world.get(mapX + mapY * 2).update();
 			
+			//System.out.println(world.get(mapX + mapY * 2).tilemap.getResourceReference());
+			//System.out.println(mapX + " " + mapY);
 		}
 	}
 	

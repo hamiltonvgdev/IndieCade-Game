@@ -14,6 +14,8 @@ import Tiles.Tile;
 
 public class BasicNPC implements Serializable
 {
+	//An NPC that interacts with the player. This is the basic framework for further extensions
+	
 	/**
 	 * 
 	 */
@@ -121,8 +123,11 @@ public class BasicNPC implements Serializable
 		{
 			near = false;
 		}
-		
-		if(hitbox.checkPoint(Mouse.getX(), Config.HEIGHT - Mouse.getY()) && 
+	}
+	
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
+	{
+		if(hitbox.checkPoint(Mouse.getX() - xOffset, Config.HEIGHT - Mouse.getY() - yOffset) && 
 				Mouse.isButtonDown(player.getInput().MOUSE_LEFT_BUTTON) && !active && near)
 		{
 			active = true;
@@ -131,27 +136,24 @@ public class BasicNPC implements Serializable
 		{
 			active = false;
 		}
-	}
-	
-	public void render(Graphics g) throws SlickException
-	{
+		
 		if(active && Active != null)
 		{
-			Active.render(x, y, width, height, rot, g);
+			Active.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else if(near && Near != null)
 		{
-			Near.render(x, y, width, height, rot, g);
+			Near.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else if(idle && Idle != null)
 		{
-			Idle.render(x, y, width, height, rot, g);
+			Idle.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}
 		
 		if(near)
 		{
-			speak(g);
+			speak(g, xOffset, yOffset);
 		}
 		
-		g.drawString(name, x - name.length() * 4, y + height / 3 * 2);
+		g.drawString(name, x - name.length() * 4 + xOffset, y + height / 3 * 2 + yOffset);
 	}
 	public void Physics()
 	{	
@@ -189,17 +191,17 @@ public class BasicNPC implements Serializable
 		
 	}
 	
-	public void speak(Graphics g) throws SlickException
+	public void speak(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		if(phrase != null)
 		{
-			speak(phrase, g);
+			speak(phrase, xOffset, yOffset, g);
 		}
 	}
 	
-	public void speak(String phrase, Graphics g) throws SlickException
+	public void speak(String phrase, float xOffset, float yOffset, Graphics g) throws SlickException
 	{
-		g.drawString(phrase, x - phrase.length() * 4, y - height);
+		g.drawString(phrase, x - phrase.length() * 4 + xOffset, y - height + yOffset);
 	}
 	
 	public boolean distanceSense(Player protag)
@@ -220,7 +222,7 @@ public class BasicNPC implements Serializable
 
 	public void action()
 	{
-		
+		//What the npc does when the player selects it. Left blank so it can be programmed in further extensions
 	}
 
 	public void shift(float xa, float ya) 

@@ -8,6 +8,7 @@ import Main.Config;
 
 public class Bone implements Serializable
 {
+	//Basic structure that comprises of the Bone Structure. It's sle purpose is to track some x, y, an rot values
 	/**
 	 * 
 	 */
@@ -56,6 +57,7 @@ public class Bone implements Serializable
 	
 	public void render(Graphics g)
 	{
+		//Basic Trignometry
 		g.drawLine((float)(x + length / 2 * Math.cos(rot)), 
 				(float) (y + length / 2 * Math.sin(rot)),
 				(float) (x - length / 2 * Math.cos(rot)), 
@@ -69,11 +71,13 @@ public class Bone implements Serializable
 	
 	public float getDegRot()
 	{
+		//Rot is in Radians, for some degree, so this is to convert it to Degree for better usage
 		return (float) Math.toDegrees(rot);
 	}
 	
 	public float getPureRot()
 	{
+		//Gives the Smaller rot that is sensitive to the flip of the bone
 		if(!flip)
 		{
 			return 180 - ((float) Math.toDegrees(rot));
@@ -85,6 +89,7 @@ public class Bone implements Serializable
 	
 	public float getRenderRot()
 	{
+		//Uh...... I dont know why I coded this, but hey, it works, soo.....
 		if(flip)
 		{
 			return getPureRot();
@@ -112,5 +117,11 @@ public class Bone implements Serializable
 	public float getLength()
 	{
 		return length;
+	}
+
+	public void move(float xa, float ya) 
+	{
+		x += xa;
+		y += ya;
 	}
 }

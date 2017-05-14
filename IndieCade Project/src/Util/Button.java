@@ -70,6 +70,7 @@ public class Button
 	{
 		rot ++;
 		hitbox.changeDimensions(x, y, width, height);
+		
 		if(hitbox.checkPoint(Mouse.getX(), Config.HEIGHT - Mouse.getY()))
 		{
 			if(Mouse.isButtonDown(Input.MOUSE_LEFT_BUTTON))
@@ -105,15 +106,20 @@ public class Button
 	
 	public void render(Graphics g) throws SlickException
 	{
+		Normal.render(x, 0, y, 0, width, height, 0, g);
+		
 		if(hitbox.checkPoint(Mouse.getX(),Config.HEIGHT -  Mouse.getY()) && Selected != null)
 		{
-			Selected.render(x, y, width, height, 0, g);
-		}else
-		{
-			Normal.render(x, y, width, height, 0, g);
+			Selected.render(x, 0, y, 0, width, height, 0, g);
 		}
 
 		g.drawString(Phrase, x - Phrase.length() / 2 * 10, y - 10);
+	}
+	
+	public void setPosition(float xa, float ya)
+	{
+		x = xa;
+		y = ya;
 	}
 	
 	public int getID()

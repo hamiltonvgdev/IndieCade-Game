@@ -30,7 +30,7 @@ public class Game extends BasicGameState implements Serializable
 	
 	transient GameContainer gc;
 	transient StateBasedGame sbg;
-	public static boolean button;
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
 	{
@@ -56,7 +56,7 @@ public class Game extends BasicGameState implements Serializable
 		player.update();
 		
 		world.update();
-		button=gc.getInput().isKeyPressed(gc.getInput().KEY_BACKSLASH);
+		
 		gui.update(sbg, world, player);
 	}
 
@@ -74,8 +74,12 @@ public class Game extends BasicGameState implements Serializable
 		world = (World) Load.Load.load(ref + "/World.wrl");
 		
 		TileList.initPortals(world);
+		
 		TileList.initInteractTiles(player);
+		
 		MapList.init(player);
+		
+		gui.init(player, world);
 	}
 	
 	public void newGame()
@@ -91,6 +95,8 @@ public class Game extends BasicGameState implements Serializable
 		MapList.init(player);
 		
 		world.initMaps(1);
+		
+		gui.init(player, world);
 	}
 	
 	public GameContainer getGc()

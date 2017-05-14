@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class FourWayJoint extends ThreeWayJoint implements Serializable
 {
+	//Extension of the Joint class, see that for more analysis. Basically same thing with 4 bones instead of 2
 	/**
 	 * 
 	 */

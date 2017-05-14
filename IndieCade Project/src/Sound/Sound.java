@@ -26,19 +26,19 @@ public class Sound
 	
 	public static void infiniteLoopSound(String ref)
 	{
-		if(klip == null || !klip.isActive())
+		if(klip == null )
 		{
 			try {
 		        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream
 		        		(new File(ref).getAbsoluteFile());
 		        klip = AudioSystem.getClip();
 		        klip.open(audioInputStream);
-		        klip.start();
 		    } catch(Exception ex) {
 		        System.out.println("Error with playing sound.");
 		        ex.printStackTrace();
 		    }
 		}
+        klip.loop(klip.LOOP_CONTINUOUSLY);
 	}
 	
 	public static void loopSound(String ref, int loops)

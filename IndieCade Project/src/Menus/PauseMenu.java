@@ -15,103 +15,49 @@ import Util.Button;
 public class PauseMenu extends BasicMenu
 {
 	public boolean pausing;
-	boolean saving;
 	
 	Button resume;
-	Button save;
 	Button exit;
 	
-	Button save1;
-	Button save2;
-	Button save3;
-	Button back;
-	
-	InventoryMenu Invent;
-	Button InvBack;
+	ConfirmMenu confirm;
 	
 	public PauseMenu()
 	{
 		pausing = false;
-		saving = false;
 		
 		resume = new Button("Resume", Config.WIDTH / 2, Config.HEIGHT / 2 - 150, 0).setDimensions(138, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		
-		save = new Button("Save", Config.WIDTH / 2, Config.HEIGHT / 2, 0).setDimensions(138, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT / 2 + 150, 0).setDimensions(138, 50).
 				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
-		save1 = new Button("Save to Save 1", Config.WIDTH / 2, Config.HEIGHT / 4, 1).setDimensions(150, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		save2 = new Button("Save to Save 2", Config.WIDTH / 4 , Config.HEIGHT / 2, 1).setDimensions(150, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		save3 = new Button("Save to Save 3", Config.WIDTH / 4 * 3, Config.HEIGHT / 2, 1).setDimensions(150, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		back = new Button("Back", Config.WIDTH / 2, Config.HEIGHT / 4 * 3, 1).setDimensions(150, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
-		
-		Invent = new InventoryMenu();
-		InvBack = new Button("Back", Config.WIDTH - 75, 167, 1).setDimensions(150, 50).
-				setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
+		confirm = new ConfirmMenu();
 	}
 
 	public void update(StateBasedGame sbg, World world, Player player)
 	{
-		if(pausing)
+		if(pausing && !confirm.active)
 		{
-			if(saving)
+			resume.update();
+			exit.update();
+			
+			if(resume.clicked)
 			{
-				save1.update();
-				save2.update();
-				save3.update();
-				back.update();
-				
-				if(save1.clicked)
-				{
-					Save.Save.save("saves/Save 1/Player.ply", player);
-					Save.Save.save("saves/Save 1/World.wrld", world);
-				}
-				
-				if(save2.clicked)
-				{
-					Save.Save.save("saves/Save 2/Player.ply", player);
-					Save.Save.save("saves/Save 2/World.wrld", world);
-				}
-				
-				if(save3.clicked)
-				{
-					Save.Save.save("saves/Save 3/Player.ply", player);
-					Save.Save.save("saves/Save 3/World.wrld", world);
-				}
-				
-				if(back.clicked)
-				{
-					saving = false;
-				}
-			}else
-			{
-				resume.update();
-				save.update();
-				exit.update();
-				
-				if(resume.clicked)
-				{
-					unpause(world, player);
-				}
-				
-				if(save.clicked)
-				{
-					saving = true;
-				}
-				
-				if(exit.clicked)
-				{
-					pausing = false;
-					sbg.enterState(1);
-				}
+				unpause(world, player);
 			}
+				
+			if(exit.clicked)
+			{
+				confirm.active = true;
+			}
+		}
+		
+		confirm.update();
+		
+		if(confirm.getConfirm())
+		{
+			pausing = false;
+			sbg.enterState(1);
 		}
 	}
 
@@ -120,24 +66,20 @@ public class PauseMenu extends BasicMenu
 		if(pausing)
 		{
 			Rectangle rec = new Rectangle(0, 0, Config.WIDTH, Config.HEIGHT);
-			g.setColor(new Color(1f, 1f, 1f, 0.5f));
+			g.setColor(new Color(1f, 1f, 1f, 0.75f));
 			g.fillRect(0, 0, Config.WIDTH, Config.HEIGHT);
 			
 			g.draw(rec);
 			
-			if(saving)
-			{
-				save1.render(g);
-				save2.render(g);
-				save3.render(g);
-				back.render(g);
-			}else	
+			confirm.render(g);
+			if(!confirm.active)
 			{
 				resume.render(g);
-				save.render(g);
 				exit.render(g);
-				g.setBackground(Color.black);
 			}
+		}else
+		{
+			g.setBackground(Color.black);
 		}
 	}
 	
@@ -157,6 +99,13 @@ public class PauseMenu extends BasicMenu
 		player.unpause();
 	}
 
+	public void reset(World world, Player player)
+	{
+		unpause(world, player);
+		
+		confirm.confirmed = false;
+		confirm.active = false;
+	}
 	
 	//Useless
 	@Override

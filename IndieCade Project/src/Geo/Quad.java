@@ -7,77 +7,114 @@ import org.newdawn.slick.SlickException;
 
 public class Quad implements Serializable
 {
+	//A Rectangular space that has methods that allows it to interact with other rectangular spaces.
+	//Cannot respond to rotations tho
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6083904781356000620L;
 	public float width, height, x, y;
+	
+	public boolean phased;
 
 	public Quad(float x, float y, float width, float height) {
 		this.x = x - width / 2;
 		this.y = y - height / 2;
 		this.width = width;
 		this.height = height;
+		
+		
+		phased = false;
+	}
+	
+	public Quad setPhased(boolean phased)
+	{
+		this.phased = phased;
+		return this;
 	}
 
 	public boolean checkPoint(float x, float y)
 	{
-		boolean derp = false;
-		
-		if (x >= this.x)
-			if (y >= this.y)
-				if (x <= this.x + this.width)
-					if (y <= this.y + this.height)
-						derp = true;
-		return derp;
+		if(phased)
+		{
+			return false;
+		}else
+		{
+			boolean derp = false;
+			
+			if (x >= this.x)
+				if (y >= this.y)
+					if (x <= this.x + this.width)
+						if (y <= this.y + this.height)
+							derp = true;
+			return derp;
+		}
 	}
 	
 	public boolean checkQuad(Quad quad)
 	{
-		boolean intersect = false;
-		
-		for(float x = quad.x ; x < quad.x + quad.width; x ++)
+		if(phased)
 		{
-			for(float y = quad.y ; y < quad.y + quad.height; y ++)
+			return false;
+		}else
+		{
+			boolean intersect = false;
+			
+			for(float x = quad.x ; x < quad.x + quad.width; x ++)
 			{
-				if(checkPoint(x,y))
+				for(float y = quad.y ; y < quad.y + quad.height; y ++)
 				{
-					intersect = true;
+					if(checkPoint(x,y))
+					{
+						intersect = true;
+						break;
+					}
+				}
+				
+				if(intersect)
+				{
 					break;
 				}
 			}
 			
-			if(intersect)
-			{
-				break;
-			}
+			return intersect;
 		}
-		
-		return intersect;
+	}
+	
+	public boolean checkQuadR(QuadR quadr)
+	{
+		return quadr.check(this);
 	}
 	
 	public boolean checkWithin(Quad quad)
 	{
-		boolean contained = true;
-		
-		for(float x = quad.x ; x < quad.x + quad.width; x ++)
+		if(phased)
 		{
-			for(float y = quad.y - quad.height; y < quad.y + quad.height; y ++)
+			return false;
+		}else
+		{
+			boolean contained = true;
+			
+			for(float x = quad.x ; x < quad.x + quad.width; x ++)
 			{
-				if(!checkPoint(x,y))
+				for(float y = quad.y - quad.height; y < quad.y + quad.height; y ++)
 				{
-					contained = false;
+					if(!checkPoint(x,y))
+					{
+						contained = false;
+						break;
+					}
+				}
+				
+				if(!contained)
+				{
 					break;
 				}
 			}
 			
-			if(!contained)
-			{
-				break;
-			}
+			return contained;
 		}
-		
-		return contained;
 	}
 	
 	public void changeDimensions(float x, float y, float width, float height)

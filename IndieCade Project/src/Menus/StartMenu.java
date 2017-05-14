@@ -3,8 +3,10 @@ package Menus;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
 import Main.Config;
+import Main.Game;
 import Main.MainMenu;
 import Render.AnimationSet;
 import Util.Button;
@@ -13,38 +15,36 @@ public class StartMenu extends BasicMenu
 {
 	MainMenu menu;
 	GameContainer gc;
+	Game game;
+	StateBasedGame sbg;
 	
 	Button Play;
-	Button Codex;
 	Button Exit;
 	
-	public StartMenu(GameContainer gc, MainMenu menu)
+	public StartMenu(GameContainer gc, Game game, StateBasedGame sbg, MainMenu menu)
 	{
 		this.menu = menu;
 		this.gc = gc;
 		
-		Play = new Button("Play", Config.WIDTH / 2, Config.HEIGHT / 2, 0);
-		Play = Play.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
+		this.game = game;
+		this.sbg = sbg;
 		
-		Codex = new Button("Codex",Config.WIDTH / 2, Config.HEIGHT / 2 + 75, 0);
-		Codex = Codex.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
+		Play = new Button("Play", Config.WIDTH / 2, Config.HEIGHT / 2, 0);
+		Play = Play.setDimensions(150, 100).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 		
 		Exit = new Button("Exit", Config.WIDTH / 2, Config.HEIGHT / 2 + 150, 0);
-		Exit = Exit.setDimensions(138, 50).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
+		Exit = Exit.setDimensions(150, 100).setImage(new AnimationSet("res/Buttons/Base/Idle", 100), new AnimationSet("res/Buttons/Base/Select", 100));
 	}
 	
 	public void update()
 	{
 		Play.update();
-		Codex.update();
 		Exit.update();
 		
 		if(Play.clicked)
 		{
-			menu.setIndex(1);
-		}else if(Codex.clicked)
-		{
-			menu.setIndex(2);
+			game.newGame();
+			sbg.enterState(2);
 		}else if(Exit.clicked)
 		{
 			gc.exit();
@@ -54,7 +54,6 @@ public class StartMenu extends BasicMenu
 	public void render(Graphics g) throws SlickException
 	{
 		Play.render(g);
-		Codex.render(g);
 		Exit.render(g);
 	}
 }

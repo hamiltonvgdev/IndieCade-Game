@@ -6,6 +6,9 @@ import org.newdawn.slick.Graphics;
 
 public class Joint implements Serializable
 {
+	//The link between 2 bones. It's sole purpose it to keep two bones touching each other at one end, 
+	//thus, holding them together, and serving as a center of rotation
+	
 	/**
 	 * 
 	 */
@@ -41,6 +44,7 @@ public class Joint implements Serializable
 	
 	public void update()
 	{
+		//Some Trigonometry and math
 		x = (float) (bone1.getX() + bone1.getLength() / 2 * Math.cos(bone1.getRot()));
 		y = (float) (bone1.getY() + constant * bone1.getLength() / 2 * Math.sin(bone1.getRot()));
 		
@@ -50,6 +54,7 @@ public class Joint implements Serializable
 	
 	public void render(Graphics g)
 	{
+		//Super ghetto, but it shows approximately where the joint it
 		g.drawString("o", x - 4, y - 10);
 	}
 	

@@ -6,49 +6,98 @@ import org.newdawn.slick.SlickException;
 import GameBasics.Entity;
 import Map.Map;
 import Player.Player;
+import Render.AnimationSet;
 
 public class Enemy extends Entity
 {
-
-	Player player;
+	//An entity with AI programming, so it will react to out side stimulus instead of standing around
 	
-	public Enemy(Player player, float health, float damage, float speed)
+	protected Player player;
+	protected AnimationSet triggered;
+	
+	protected float range;
+	
+	protected boolean near;
+	
+	public Enemy(String name, Player player, float health, float damage)
 	{
-		super(player, health, damage, speed);
+		super(name, player, health, damage);
 		
 		this.player = player;
+		
+		range = 100;
+		
+		near = false;
+	}
+	
+	public Enemy setRange(float range)
+	{
+		this.range = range;
+		return this;
+	}
+	
+	public Enemy setTriggeredAnimation(String res, long delay)
+	{
+		triggered = new AnimationSet(res, delay);
+		return this;
 	}
 	
 	public void update()
 	{
 		super.update();
 		
-		if(distanceSense(400, player))
+		if(distanceSense(range, player))
 		{
 			action();
 			
-			if(!sprite.getFolder().equals("res/Entities/goblin/Images/SideL"))
-			{
-				setAnimationSet("res/Entities/goblin/Images/SideL", 200);
-			}
+			near = true;
 		}else
 		{
+			deaction();
 			
-			if(!sprite.getFolder().equals("res/Entities/goblin/Images/Stale"))
-			{
-				setAnimationSet("res/Entities/goblin/Images/Stale", 800);
-				System.out.println("derp");
-			}
+			near = false;
 		}
 	}
 	
-	private void action() 
+	//The next two methods are left blank so they can be programmed in later extensions of Enemy
+	protected void action() 
 	{
-		follow(player);
+		//The thing that the AI will do if player is near it
 	}
 
-	public void render(Graphics g) throws SlickException
+	protected void deaction()
 	{
-		super.render(g);
+		//The reversion of action that returns the Enemy to its idle state
+	}
+	
+	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
+	{
+		if(near && triggered != null)
+		{
+			triggered.render(x, xOffset, y, yOffset, width, height, 0, g);
+		}else
+		{
+			super.render(g, xOffset, yOffset);
+		}
+
+		//Hitbox.render(g);
+	}
+	
+	public float getRange()
+	{
+		return range;
+	}
+	
+	public AnimationSet getTriggeredSprite()
+	{
+		return triggered;
+	}
+	
+	public Enemy clone()
+	{
+		return (Enemy) new Enemy(name, player, health, damage).
+				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
+				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
+				setAtkSpeed(atkSpeed).setMove(speed, acceleration);
 	}
 }

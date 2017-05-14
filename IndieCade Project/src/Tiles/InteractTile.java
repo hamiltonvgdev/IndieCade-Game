@@ -25,17 +25,13 @@ public abstract class InteractTile extends Tile
 	{	
 		super.update();
 
-		for(int i = 0; i < player.getHitboxes().size(); i ++)
+		if(player.getHitbox().check(hitbox) && 
+			player.getInput().isKeyPressed(player.getInput().KEY_BACKSLASH))
 		{
-			if(player.getHitboxes().get(i).checkQuad(hitbox) && 
-					player.getInput().isKeyPressed(player.getInput().KEY_BACKSLASH))
-			{
-				interact = true;
-				break;
-			}
-			
+			interact = true;
 		}
-		
+			
+			
 		if(interact)
 		{
 			action();
