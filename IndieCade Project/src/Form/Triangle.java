@@ -233,14 +233,15 @@ public class Triangle extends Form
 	@Override
 	public void attack()
 	{
-		subAtk();
-		
 		float factor = 1;
 		
 		if(shadowed)
 		{
 			factor = 0.75F;
 		}
+		
+		subAtk();
+		
 		
 		if(atk.getCurrentIndex() == atk.getSet().size() - 1)
 		{

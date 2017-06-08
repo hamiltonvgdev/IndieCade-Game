@@ -1,5 +1,6 @@
 package Enemy;
 
+import Geo.M;
 import Player.Player;
 
 public class RushEnemy extends Enemy
@@ -11,6 +12,12 @@ public class RushEnemy extends Enemy
 		super(name, player, health, damage);
 		
 		id = 1;
+	}
+	
+	@Override
+	public void update()
+	{
+		super.update();
 	}
 	
 	@Override
@@ -27,6 +34,10 @@ public class RushEnemy extends Enemy
 	
 	public RushEnemy clone()
 	{
+		if(triggered == null)
+		{
+			triggered = sprite;
+		}
 		
 		return (RushEnemy) new RushEnemy(name, player, health, damage).
 				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).

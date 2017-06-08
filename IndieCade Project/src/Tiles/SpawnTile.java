@@ -26,16 +26,15 @@ public class SpawnTile extends Tile
 		
 		shrine = new Entity(mob.toString() + " Shrine", mob.getPlayer(),
 				mob.getMaxHealth() * 5, 0).setAtkSpeed(10000).
-				setDimensions(width, height).
+				setDimensions(41 * 2, 93 * 2).
 				setAnimationSet("res/Entities/Shrines/" + name, 100);
 		shrine.setPosition(x, y - height / 2);
-		shrine.passive = true;
 		shrine.permanent = true;
-		
+		shrine.fake = true;
 		
 		this.CD = CD;
 		
-		tick = 0;
+		tick = (long) (System.currentTimeMillis() - CD * 0.75);
 		
 		Type = 2;
 	}
@@ -89,6 +88,7 @@ public class SpawnTile extends Tile
 			if(System.currentTimeMillis() - tick > CD)
 			{
 				spawn();
+				tick = System.currentTimeMillis();
 			}
 		}else
 		{
@@ -101,12 +101,29 @@ public class SpawnTile extends Tile
 		super.reset();
 		
 		tick = 0;
+		
+		if(!shrine.dead)
+		{
+			map.getLevel().removeEntity(shrine);
+			
+			shrine = new Entity(mob.toString() + " Shrine", mob.getPlayer(),
+					mob.getMaxHealth() * 5, 0).setAtkSpeed(10000).
+					setDimensions(41 * 2, 93 * 2).
+					setAnimationSet("res/Entities/Shrines/" + name, 100);
+			shrine.setPosition(x, y - height / 2);
+			shrine.permanent = true;
+			shrine.fake = true;
+			
+			map.getLevel().addEntity(shrine);
+		}
 	}
 	
 	public void spawn()
 	{
 		if(!shrine.dead)
 		{
+			Entity mob = this.mob.clone();
+			mob.setMap(getMap());
 			mob.setPosition(shrine.getX(), shrine.getY());
 			mob.reset();
 			map.getLevel().addEntity(mob);

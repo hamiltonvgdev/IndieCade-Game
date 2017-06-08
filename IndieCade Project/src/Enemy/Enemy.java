@@ -4,6 +4,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import GameBasics.Entity;
+import Geo.M;
 import Map.Map;
 import Player.Player;
 import Render.AnimationSet;
@@ -46,6 +47,8 @@ public class Enemy extends Entity
 	{
 		super.update();
 		
+		rot = M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY());
+		
 		if(distanceSense(range, player))
 		{
 			action();
@@ -74,12 +77,25 @@ public class Enemy extends Entity
 	{
 		if(near && triggered != null)
 		{
-			triggered.render(x, xOffset, y, yOffset, width, height, 0, g);
+			triggered.render(x, xOffset, y, yOffset, width, height, rot, g);
 		}else
 		{
 			super.render(g, xOffset, yOffset);
 		}
-
+		
+		if(health / maxHealth >= 0.75)
+		{
+			Green.render(x - width / 2 + (health / maxHealth) * width / 2, xOffset, y - width / 2 - 10, 
+					yOffset, (health / maxHealth) * width, 10, 0, g);
+		}else if(health / maxHealth >= 0.25)
+		{
+			Yellow.render(x - width / 2 + (health / maxHealth) * width / 2, xOffset, y - width / 2 - 10, 
+					yOffset, (health / maxHealth) * width, 10, 0, g);
+		}else if(health / maxHealth < 0.25)
+		{
+			Red.render(x - width / 2 + (health / maxHealth) * width / 2, xOffset, y - width / 2 - 10, 
+					yOffset, (health / maxHealth) * width, 10, 0, g);
+		}
 		//Hitbox.render(g);
 	}
 	

@@ -7,7 +7,9 @@ import org.newdawn.slick.Color;
 import Tiles.InteractTile;
 import Tiles.PortalTile;
 import Tiles.Respawn;
+import Tiles.SingleSpawnTile;
 import Tiles.SpawnTile;
+import Tiles.ThingTile;
 import Tiles.Tile;
 
 public class Converter 
@@ -32,7 +34,7 @@ public class Converter
 						if(Math.abs(PossibleTiles.get(j).getID().g - ID.g) <= 0.04)
 						{
 							if(Math.abs(PossibleTiles.get(j).getID().b - ID.b) <= 0.04)
-							{
+							{	
 								if(PossibleTiles.get(j).getType() == 0)
 								{
 									Tiles.add(new Tile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID()).
@@ -54,6 +56,24 @@ public class Converter
 								{
 									Tiles.add(new SpawnTile(PossibleTiles.get(j).getName(), ((SpawnTile) PossibleTiles.get(j)).getEnt(), 
 											((SpawnTile) PossibleTiles.get(j)).getCD(), PossibleTiles.get(j).getID()).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()).
+											addThings(PossibleTiles.get(j).getThings()));
+								}else if(PossibleTiles.get(j).getType() == 3)
+								{
+									Tiles.add(new ThingTile(PossibleTiles.get(j).getName(), PossibleTiles.get(j).getID(), 
+											((ThingTile) PossibleTiles.get(j)).getThing().clone(PossibleTiles.get(j))).
+											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
+											setColidable(PossibleTiles.get(j).getCollidable()).
+											setFriction(PossibleTiles.get(j).getFriction()).
+											setSound(PossibleTiles.get(j).getSoundRef()).
+											addThings(PossibleTiles.get(j).getThings()));
+								}else if(PossibleTiles.get(j).getType() == 4)
+								{
+									Tiles.add(new SingleSpawnTile(PossibleTiles.get(j).getName(), ((SingleSpawnTile) PossibleTiles.get(j)).getEnt(), 
+											((SingleSpawnTile) PossibleTiles.get(j)).getCD(), PossibleTiles.get(j).getID()).
 											setAnimation(PossibleTiles.get(j).getRef(), PossibleTiles.get(j).getDelay()).
 											setColidable(PossibleTiles.get(j).getCollidable()).
 											setFriction(PossibleTiles.get(j).getFriction()).
@@ -88,6 +108,7 @@ public class Converter
 						Math.abs(ID.b - PossibleMaps.get(j).getID().b) < 0.001)
 				{
 					Maps.add(PossibleMaps.get(j));
+					
 					break;
 				}
 			}

@@ -1,7 +1,10 @@
-/BoneStructure
-/Enemy
-/Form
-/GUI
-/GameBasics
-/Geo
+/Map
+/Player
+/Bosses
+/Tiles
 /Thing
+/GameBasics
+/SquareShield.class
+/Enemy
+/Projectiles
+/Form

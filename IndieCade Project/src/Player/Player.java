@@ -94,7 +94,7 @@ public class Player implements Serializable
 	float Speed;
 	public boolean damaged;
 	
-	Hitbox hitbox;
+	Quad hitbox;
 	
 	
 	public Player(Game game, float x, float y)
@@ -103,11 +103,6 @@ public class Player implements Serializable
 		
 		Inventory = new ArrayList<Form>();
 		Killed = new ArrayList<Entity>();
-		
-		giveForm(new Triangle(this));
-		giveForm(new Square(this));
-		giveForm(new Pentagon(this));
-		giveForm(new Hexagon(this));
 		
 		//Equiped = new Triangle(this);
 		//Equiped = new Square(this);
@@ -148,7 +143,7 @@ public class Player implements Serializable
 		Stun = 0;
 		
 		
-		hitbox = new Hitbox(Equiped.getCurrentSprite().getCurrentFrame());
+		hitbox = new Quad(x, y, Equiped.width, Equiped.height);
 		
 		
 		xOffset = 0;
@@ -205,24 +200,24 @@ public class Player implements Serializable
 		{
 			for(int j = -1; j <= 1; j ++)
 			{
-				if(map.getTile(x + Vx + Ax, y).getCollidable() 
-						&& hitbox.check(map.getTile(x, y).getHitbox()))
+				if(map.getMap().getTile(x + Vx + Ax, y).getCollidable() 
+						&& hitbox.checkQuad(map.getMap().getTile(x, y).getHitbox()))
 				{
 					CollisionX = true;
-					map.getTile(x + Vx + Ax, y).nextTo = true;
+					map.getMap().getTile(x + Vx + Ax, y).nextTo = true;
 				}else
 				{
-					map.getTile(x + Vx + Ax, y).nextTo = false;
+					map.getMap().getTile(x + Vx + Ax, y).nextTo = false;
 				}
 				
-				if(map.getTile(x , y + Vy + Ay).getCollidable() 
-						&& hitbox.check(map.getTile(x, y).getHitbox()))
+				if(map.getMap().getTile(x , y + Vy + Ay).getCollidable() 
+						&& hitbox.checkQuad(map.getMap().getTile(x, y).getHitbox()))
 				{
 					CollisionY = true;
-					map.getTile(x, y + Vy + Ay).on = true;
+					map.getMap().getTile(x, y + Vy + Ay).on = true;
 				}else
 				{
-					map.getTile(x, y).on = false;
+					map.getMap().getTile(x, y).on = false;
 				}
 			}
 		}
@@ -242,12 +237,12 @@ public class Player implements Serializable
 	{	
 		if(!paused)
 		{
-			hitbox.update(Equiped.getCurrentSprite().getCurrentFrame());
+			hitbox.changeDimensions(x, y, Equiped.width, Equiped.height);;
 			
 			if(health <= 0)
 			{
 				die();
-				map.reset();
+				map.getMap().reset();
 			}
 			
 			Physics();
@@ -335,7 +330,7 @@ public class Player implements Serializable
 			{
 				if(Vx < 0)
 				{
-					Ax = map.getTile(x, y).getFriction();
+					Ax = map.getMap().getTile(x, y).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
@@ -343,7 +338,7 @@ public class Player implements Serializable
 				
 				if(Vx > 0)
 				{
-					Ax = -map.getTile(x, y).getFriction();
+					Ax = -map.getMap().getTile(x, y).getFriction();
 				}else if(Vx == 0)
 				{
 					Ax = 0;
@@ -385,7 +380,7 @@ public class Player implements Serializable
 			{
 				if(Vy < 0)
 				{
-					Ay = map.getTile(x, y).getFriction();
+					Ay = map.getMap().getTile(x, y).getFriction();
 				}else if(Vy == 0)
 				{
 					Ay = 0;
@@ -393,19 +388,19 @@ public class Player implements Serializable
 				
 				if(Vy > 0)
 				{
-					Ay = -map.getTile(x, y).getFriction();
+					Ay = -map.getMap().getTile(x, y).getFriction();
 				}else if(Vy == 0)
 				{
 					Ay = 0;
 				}
 			}
 
-			if(Math.abs(Vx) < map.getTile(x, y).getFriction())
+			if(Math.abs(Vx) < map.getMap().getTile(x, y).getFriction())
 			{
 				setVx(0);
 			}
 			
-			if(Math.abs(Vy) < map.getTile(x, y).getFriction())
+			if(Math.abs(Vy) < map.getMap().getTile(x, y).getFriction())
 			{
 				setVy(0);
 			}
@@ -449,12 +444,12 @@ public class Player implements Serializable
 	
 	public void move(float xa, float ya) 
 	{
-		if(!map.getTile(x - xa, y - ya).getCollidable())
+		if(!map.getMap().getTile(x - xa, y - ya).getCollidable())
 		{
 			x -= xa;
 			y -= ya;
-			map.shift(xa, 0);
-			map.shift(0, ya);
+			map.getMap().shift(xa, 0);
+			map.getMap().shift(0, ya);
 			
 			xOffset += xa;
 			yOffset += ya;
@@ -509,12 +504,12 @@ public class Player implements Serializable
 			
 		}
 		
-		//hitbox.render(g);
+		hitbox.render(g);
 	}
 	
 	public void die()
 	{
-		map.reset();
+		map.getMap().reset();
 		health = maxHealth;
 		x += xOffset;
 		y += yOffset;
@@ -524,6 +519,8 @@ public class Player implements Serializable
 		Vy = 0;
 		Ax = 0;
 		Ay = 0;
+		
+		setMap(map);
 	}
 	
 	public void Jump()
@@ -678,7 +675,7 @@ public class Player implements Serializable
 		return Killed;
 	}
 	
-	public Hitbox getHitbox()
+	public Quad getHitbox()
 	{
 		return hitbox;
 	}
@@ -690,10 +687,10 @@ public class Player implements Serializable
 	
 	public void godpowerz101()
 	{
-		RushEnemy derp = (RushEnemy) new RushEnemy("derp", this, 100, 10).
+		/*RushEnemy derp = (RushEnemy) new RushEnemy("derp", this, 100, 10).
 				setRange(500).setAtkSpeed(100).setDimensions(64, 64).setMove(10, 2).
 				setAnimationSet("res/Forms/Point/Idle", 100);
-		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);
+		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);*/
 		
 	/*	ShootEnemy derp = (ShootEnemy) new ShootEnemy("derp", this, 100, 10).
 				setProjectile(new BasicProjectile(this, 0).setDimensions(32, 32, 0).
@@ -714,6 +711,8 @@ public class Player implements Serializable
 				setAnimationSet("res/Forms/Point/Idle", 100);
 		derp.setPosition(Mouse.getX() - xOffset, M.toRightHandY(Mouse.getY()) + yOffset);*/
 		
-		map.getLevel().addEntity(derp);
+		//map.getMap().getLevel().addEntity(derp);
+		
+		giveForm(new Triangle(this));
 	}
 }

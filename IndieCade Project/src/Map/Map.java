@@ -102,16 +102,11 @@ public class Map implements Serializable
 		
 		for(int i = 0; i < TileMap.size(); i ++ )
 		{
-			if(Math.abs(TileMap.get(i).getX() + TileMap.get(i).getXOffset()) <= Config.WIDTH + 64 &&
-					Math.abs(TileMap.get(i).getY() + TileMap.get(i).getYOffset()) <= Config.HEIGHT + 64)
+			if(Math.abs(TileMap.get(i).getX() - player.getX()) < Config.WIDTH / 2 && 
+					Math.abs(TileMap.get(i).getY() - player.getY()) < Config.HEIGHT / 2)
 			{
 				TileMap.get(i).update();
 			}
-		}
-		
-		for(int i = 0; i < level.getThings().size(); i ++)
-		{
-			level.getThings().get(i).update();
 		}
 		
 		Hitbox.changeDimensions(x, y,  width * 64, height * 64);
@@ -132,8 +127,8 @@ public class Map implements Serializable
 		
 		for(Tile T: TileMap)
 		{
-			if(Math.abs(T.getX() + T.getXOffset()) <= Config.WIDTH + 64 &&
-					Math.abs(T.getY() + T.getYOffset()) <= Config.HEIGHT + 64)
+			if(Math.abs(T.getX() - player.getX()) < Config.WIDTH / 2 + 64 && 
+					Math.abs(T.getY() - player.getY()) < Config.HEIGHT / 2 + 64)
 			{
 				T.render(g);
 			}
@@ -157,27 +152,36 @@ public class Map implements Serializable
 	
 	public void reset()
 	{
+		
 		if(player.getMap() != null)
 		{
 			shift((player.getX() + player.getXOffset()) - resx, (player.getY() + player.getYOffset()) - resy);
 		}
+
+		level.reset(); 
 		
 		for(int i = 0; i < TileMap.size(); i ++)
 		{
 			TileMap.get(i).changeCoordinates(i % tilemap.getWidth() * 64 + 64 / 2,
 					i / tilemap.getWidth() * 64 + 64 / 2);
-			TileMap.get(i).reset();
 			
 			TileMap.get(i).move((player.getX() + player.getXOffset()) - resx, 
 					(player.getY() + player.getYOffset()) - resy);
+			
+			TileMap.get(i).reset();
 		}
-		
-		level.reset();
 		
 		for(Form f: player.getInventory())
 		{
 			f.reset();
 		}
+	}
+	
+	public void setTile(Tile tile, float xa, float ya)
+	{
+		int index = TileMap.indexOf(getTile(xa, ya));
+		TileMap.remove(getTile(xa, ya));
+		TileMap.add(index, tile);
 	}
 	
 	public Color getID()
@@ -240,8 +244,16 @@ public class Map implements Serializable
 	
 	public Map directSpawn(Entity e)
 	{
+		Entity derp = e.clone();
+		
+		derp.setPosition(x, y);
 		level.addEntity(e);
 
+		return this;
+	}
+	
+	public Map getMap()
+	{
 		return this;
 	}
 }

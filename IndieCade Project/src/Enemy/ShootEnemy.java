@@ -89,6 +89,11 @@ public class ShootEnemy extends Enemy
 	
 	public ShootEnemy clone()
 	{
+		if(triggered == null)
+		{
+			triggered = sprite;
+		}
+		
 		return (ShootEnemy) new ShootEnemy(name, player, health, damage).setProjectile(proj, xa).
 				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).
 				setDimensions(width, height).setAnimationSet(sprite.getFolder(), sprite.getDelay()).
