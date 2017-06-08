@@ -65,22 +65,6 @@ public class Game extends BasicGameState implements Serializable
 	{
 		return 2;
 	}
-
-	public void loadFiles(String ref)
-	{
-		player = (Player) Load.Load.load(ref + "/Player.ply");
-
-		
-		world = (World) Load.Load.load(ref + "/World.wrl");
-		
-		TileList.initPortals(world);
-		
-		TileList.initInteractTiles(player);
-		
-		MapList.init(player);
-		
-		gui.init(player, world);
-	}
 	
 	public void newGame()
 	{	

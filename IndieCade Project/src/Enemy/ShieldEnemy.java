@@ -18,7 +18,6 @@ public class ShieldEnemy extends Enemy
 	
 	float Shealth;
 	float Sradius;
-	float Ssize;
 	float Sspeed;
 	float Srot;
 	float Sdrot;
@@ -127,6 +126,10 @@ public class ShieldEnemy extends Enemy
 	
 	public ShieldEnemy clone()
 	{
+		if(triggered == null)
+		{
+			triggered = sprite;
+		}
 		
 		return (ShieldEnemy) new ShieldEnemy(name, player, health, damage).
 				setShieldDimensions(Swidth, Sheight).setShieldStats(Shealth, Sradius, Sspeed).

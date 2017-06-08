@@ -108,7 +108,7 @@ public class BasicProjectile
 	
 	public void update()
 	{
-		if(ended)
+	 	if(ended)
 		{
 			end();
 		}
@@ -123,7 +123,7 @@ public class BasicProjectile
 		
 		if(type == 0)
 		{
-			if(player.getHitbox().check(hitbox))
+			if(player.getHitbox().checkQuadR(hitbox))
 			{
 				player.damage((int) entity.getDamage() * damage);
 				ended = true;
@@ -145,7 +145,8 @@ public class BasicProjectile
 			ended = true;
 		}
 		
-		if(Math.abs(x - player.getX()) >= Config.WIDTH / 2)
+		if(Math.abs(x - player.getX()) >= Config.WIDTH / 2 &&
+				Math.abs(y - player.getY()) >= Config.HEIGHT / 2)
 		{
 			end();
 		}
@@ -252,6 +253,11 @@ public class BasicProjectile
 	public float getTotalRot()
 	{
 		return rot + oRot;
+	}
+	
+	public boolean getEnded()
+	{
+		return ended;
 	}
 	
 	public AnimationSet getSprite()

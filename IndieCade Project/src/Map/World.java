@@ -21,6 +21,7 @@ public class World implements Serializable
 	
 	int mapX;
 	int mapY;
+	int factor;
 	
 	ArrayList<Map> world;
 	
@@ -44,24 +45,25 @@ public class World implements Serializable
 			e.printStackTrace();
 		}
 		
-		mapX = (world.size() % 20) / 2;
-		mapY = (world.size() / 20) / 2;
+		factor = 20;
+		
+		mapX = 6;
+		mapY = 10;
 		
 		for(Map map: world)
 		{
-			//map.reset();
+			map.reset();
 		}
 		
-		
-		player.setMap(world.get(mapX + mapY * 20));
+		player.setMap(world.get(mapX + mapY * factor));
 	}
 	
 	public void update()
 	{
 		if(!paused)
 		{
-			player.setMap(world.get(mapX + mapY * 20));
-			world.get(mapX + mapY * 2).update();
+			player.setMap(world.get(mapX + mapY * factor));
+			world.get(mapX + mapY * factor).update();
 			
 			//System.out.println(world.get(mapX + mapY * 2).tilemap.getResourceReference());
 			//System.out.println(mapX + " " + mapY);
@@ -70,14 +72,14 @@ public class World implements Serializable
 	
 	public void render(Graphics g) throws SlickException
 	{
-		world.get(mapX + mapY * 20).render(g);
+		world.get(mapX + mapY * factor).render(g);
 	}
 	
 	public void move(int xa, int ya)
 	{
 		mapX += xa;
 		mapY += ya;
-		world.get(mapX + mapY * 20).reset();
+		world.get(mapX + mapY * factor).reset();
 	}
 	
 	public void pause()
@@ -97,7 +99,7 @@ public class World implements Serializable
 
 	public Map getCurrentMap()
 	{
-		return world.get(mapX + mapY * 20);
+		return world.get(mapX + mapY * factor);
 	}
 	
 	public int getXa() 

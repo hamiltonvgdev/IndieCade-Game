@@ -1,6 +1,8 @@
 package Tiles;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 import Form.Form;
 import Geo.M;
@@ -15,6 +17,7 @@ public class PortalTile extends InteractTile
 	int xa;
 	int ya;
 	boolean teleported;
+	Thing portal;
 	
 	public PortalTile(String name, World world, Color Id)
 	{
@@ -26,14 +29,14 @@ public class PortalTile extends InteractTile
 		
 		teleported = false;
 		
-		addThing(new Thing("res/Things/Portal", 200).setDimension(11 * 5, 13 * 5, 0));
+		portal = (new Thing("res/Things/Portal", 200).setDimension(11 * 5, 13 * 5, 0).setTile(this));
 	}
 	
 	@Override
 	public void postSetAction()
-	{
-		setAnimation(map.getTiles().get(map.getTiles().indexOf(this) + 1).getRef(),
-				map.getTiles().get(map.getTiles().indexOf(this) + 1).getDelay());
+	{	
+		setAnimation(map.getTiles().get(map.getTiles().indexOf(this) - 1).getRef(),
+				map.getTiles().get(map.getTiles().indexOf(this) - 1).getDelay());
 		setSound(map.getTiles().get(map.getTiles().indexOf(this) - 1).getSoundRef());
 	}
 	
@@ -49,11 +52,18 @@ public class PortalTile extends InteractTile
 	{
 		super.update();
 		
-		for(Thing thing: Things)
-		{
-			thing.setDimension(thing.getWidth(), thing.getHeight(), 
-					M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY()));
-		}
+		portal.update();
+		
+		portal.setDimension(11 * 5, 13 * 5, 
+				M.GetAngleOfLineBetweenTwoPoints(x, y, player.getX(), player.getY()));
+		
+	}
+	
+	public void render(Graphics g) throws SlickException
+	{
+		super.render(g);
+		
+		portal.render(g, xOffset, yOffset);
 	}
 	
 	public void action()

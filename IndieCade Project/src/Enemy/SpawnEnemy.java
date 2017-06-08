@@ -50,6 +50,11 @@ public class SpawnEnemy extends Enemy
 	
 	public SpawnEnemy clone()
 	{
+		if(triggered == null)
+		{
+			triggered = sprite;
+		}
+		
 		return (SpawnEnemy) new SpawnEnemy(name, player, health, damage).
 				setEntity(minion, cd).setSpawnSound(spawnRef).
 				setRange(range).setTriggeredAnimation(triggered.getFolder(), triggered.getDelay()).

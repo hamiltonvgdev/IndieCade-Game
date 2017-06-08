@@ -164,6 +164,7 @@ public class Tile implements Serializable
 		nextTo = false;
 		xOffset = 0;
 		yOffset = 0;
+		hitbox.changeDimensions(x, y, width, height);
 	}
 	
 	public void update()
@@ -171,7 +172,6 @@ public class Tile implements Serializable
 		hitbox.changeDimensions(x, y, width, height);
 		
 		Sprite.resetAnimate();
-		
 		
 		if(on && !sounded && ref != null)
 		{
@@ -198,10 +198,10 @@ public class Tile implements Serializable
 			th.render(g, xOffset, yOffset);
 		}
 		
-		/*if(collidableO)
+		if(collidableO)
 		{
 			hitbox.render(g);
-		}*/
+		}
 	}
 	
 	public String getName()

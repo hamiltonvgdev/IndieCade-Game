@@ -193,7 +193,7 @@ public class Square extends Form
 			if(atk.getCurrentIndex() == atk.getSet().size() - 1)
 			{
 				BasicProjectile shot = new SpreadShot(player, 2, 1).setSpread(90).
-						setSplit(new BasicProjectile(player, 0.5F, 1).
+						setSplit(new BasicProjectile(player, 1F, 1).
 								setSprite("res/Forms/Square/Projectile", 100).
 								setDimensions(40 * 1.5F * 0.75F, 40 * 1.5F * 0.75F, -rot).setLimit(1000 / 2), 4, 10).
 						setSprite("res/Forms/Square/Projectile", 100).

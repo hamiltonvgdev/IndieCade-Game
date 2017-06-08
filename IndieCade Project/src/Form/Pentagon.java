@@ -49,12 +49,12 @@ public class Pentagon extends Form
 		walls = new ArrayList<Wall>();
 		wallTick = System.currentTimeMillis();
 		
-		atkSpeed = 700;
+		atkSpeed = 500;
 		
 		cd1 = 500;
 		cd2 = 20000;
 		cd3 = 3000;
-		//range = 500;
+		range = 500;
 		
 		desecrate = false;
 		speed = 20;
@@ -286,7 +286,7 @@ public class Pentagon extends Form
 			
 			ThingShot shot = (ThingShot) new ThingShot(player, 0, 1).
 					setThing(new Sentry("res/Forms/Pentagon/Projectile/Sentry", 100, player, 1).
-							setProjectile(new BasicProjectile(player, 0.2F, 1).
+							setProjectile(new BasicProjectile(player, 0.75F, 1).
 									setSprite("res/Forms/Pentagon/Projectile/Sentry Atk", 100).
 									setDimensions(3 * 4, 3 * 4, 0).setLimit(1000), 60, 1000).
 							setDimension(11 * 4, 13 * 4, 90).setAge(5000).setCollidable(false, true)

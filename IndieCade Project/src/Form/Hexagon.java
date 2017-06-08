@@ -24,6 +24,7 @@ public class Hexagon extends Form
 		cd1 = 5000;
 		cd2 = 5000;
 		cd3 = 5000;
+		atkSpeed = 1000;
 		
 		idle = new AnimationSet("res/Forms/Hexagon/Idle", 100);
 		atk = new AnimationSet("res/Forms/Hexagon/Attacking", (long) (atkSpeed / 7));

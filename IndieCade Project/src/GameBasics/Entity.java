@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import BoneStructure.BoneStructure;
+import Geo.M;
 import Geo.Quad;
 import Geo.QuadR;
 import Main.Config;
@@ -31,6 +33,9 @@ public class Entity implements Serializable
 	public boolean dead;
 	public boolean passive;
 	public boolean permanent;
+	public boolean near;
+	public boolean fake;
+	public boolean omnipresent;
 	
 	protected String name;
 	
@@ -43,6 +48,10 @@ public class Entity implements Serializable
 	protected float Ay;
 	protected float acceleration;
 	protected boolean moving;
+	
+	//Wandering
+	protected long wanderTick;
+	protected int direction;
 	
 	//Combat statistics
 	protected float maxHealth;
@@ -68,6 +77,9 @@ public class Entity implements Serializable
 	
 	//animation
 	protected AnimationSet sprite;
+	protected BasicImage Green;
+	protected BasicImage Yellow;
+	protected BasicImage Red;
 	
 	protected Random gen = new Random();
 	protected int id;
@@ -84,6 +96,7 @@ public class Entity implements Serializable
 		paused = false;
 		stun = false;
 		moving = false;
+		fake = false;
 		
 		
 		Vx = 0;
@@ -92,6 +105,8 @@ public class Entity implements Serializable
 		Ax = 0F;
 		Ay = 0F;
 		acceleration = 0.5F;
+		
+		wanderTick = System.currentTimeMillis();
 
 		rot = 0;
 		Hitbox = new Quad(x, y, width, height);
@@ -103,6 +118,12 @@ public class Entity implements Serializable
 		id = 0;
 
 		permanent = false;
+		
+		Green = new BasicImage("res/GUI/Health/green.png");
+		Yellow = new BasicImage("res/GUI/Health/yellow.png");
+		Red = new BasicImage("res/GUI/Health/red.png");
+		
+		omnipresent = false;
 	}
 	public void setMap(Map map)
 	{
@@ -160,6 +181,8 @@ public class Entity implements Serializable
 	{	
 		//The physics engine that handles gravity and collisions
 		
+		setMap(player.getMap());
+		
 		if(health <= 0)
 		{
 			die();
@@ -177,6 +200,7 @@ public class Entity implements Serializable
 					if(Vx * i >= 0)
 					{
 						Vx = 0;
+						Ax = 0;
 					}
 				}
 			}
@@ -188,11 +212,23 @@ public class Entity implements Serializable
 					if(Vy * i >= 0)
 					{
 						Vy = 0;
+						Ay = 0;
 					}
 				}
 			}
 		}
 		
+		if(Math.abs(Vx) < map.getTile(x, y).getFriction())
+		{
+			Vx = 0;
+			Ax = 0;
+		}
+		
+		if(Math.abs(Vy) < map.getTile(x, y).getFriction() )
+		{
+			Vy = 0;
+			Ay = 0;
+		}
 		
 		Move(Vx, Vy);
 	}
@@ -202,8 +238,18 @@ public class Entity implements Serializable
 	{		
 		if(!paused)
 		{
-			setMap(player.getMap());
-			sprite.resetAnimate();
+			if(sprite != null)
+			{
+				sprite.resetAnimate();
+				
+				if(player.getX() > x)
+				{
+					sprite.setFlip(true);
+				}else
+				{
+					sprite.setFlip(false);
+				}
+			}
 			
 			
 			if(Math.abs(Vx) < acceleration)
@@ -216,17 +262,9 @@ public class Entity implements Serializable
 				Vy = 0;
 			}
 			
-			if(player.getX() > x)
-			{
-				sprite.setFlip(true);
-			}else
-			{
-				sprite.setFlip(false);
-			}
-			
 			if(System.currentTimeMillis() - atkTick >= atkSpeed)
 			{
-				if(player.getHitbox().check(Hitbox))
+				if(player.getHitbox().checkQuad(Hitbox))
 				{
 					atk();
 					atkTick = System.currentTimeMillis();
@@ -252,24 +290,34 @@ public class Entity implements Serializable
 			}
 		}
 		
-		if(Math.abs(Vx) < map.getTile(x, y).getFriction())
+		if(health <= 0)
 		{
-			Vx = 0;
-			Ax = 0;
+			die();
 		}
 		
-		if(Math.abs(Vy) < map.getTile(x, y).getFriction() )
-		{
-			Vy = 0;
-			Ay = 0;
-		}
 		
 		Hitbox.changeDimensions(x, y, width, height);
+		
 	}
 	
 	public void render(Graphics g, float xOffset, float yOffset) throws SlickException
 	{
 		sprite.render(x, xOffset, y, yOffset, width, height, rot, g);
+		
+		
+		if(health / maxHealth >= 0.75)
+		{
+			Green.render(x - width / 2 + (health / maxHealth) * width / 2, xOffset, y - width / 2 - 10, 
+					yOffset, (health / maxHealth) * width, 10, 0, g);
+		}else if(health / maxHealth >= 0.25)
+		{
+			Yellow.render(x - width / 2 + (health / maxHealth) * width / 2, xOffset, y - width / 2 - 10, 
+					yOffset, (health / maxHealth) * width, 10, 0, g);
+		}else if(health / maxHealth < 0.25)
+		{
+			Red.render(x - width / 2 + (health / maxHealth) * width / 2, xOffset, y - width / 2 - 10, 
+					yOffset, (health / maxHealth) * width, 10, 0, g);
+		}
 	}
 	
 	protected void atk()
@@ -383,11 +431,30 @@ public class Entity implements Serializable
 	
 	public void die()
 	{
-		level.getEntities().remove(this);
+		level.far(this);
+		level.removeEntity(this);
 		
 		player.getKilled().add(this);
 		
 		dead = true;
+	}
+	
+	public void near()
+	{
+		if(!near && map != null && level != null)
+		{
+			level.near(this);
+			near = true;
+		}
+	}
+	
+	public void far()
+	{
+		if(near && map != null && level != null)
+		{
+			level.far(this);
+			near = false;
+		}
 	}
 	public Quad getHitbox() 
 	{
@@ -562,11 +629,78 @@ public class Entity implements Serializable
 		}
 	}
 	
-	public void wander()
+	public void spasm()
 	{
 		int movement = gen.nextInt(8) + 1;
 		
 		switch(movement)
+		{
+			default:
+			{
+				move(0, 0);
+				break;
+			}
+			
+			case 1:
+			{
+				move(1, 0);
+				break;
+			}
+			
+			case 2:
+			{
+				move(0, 1);
+				break;
+			}
+			
+			case 3:
+			{
+				move(-1, 0);
+				break;
+			}
+			
+			
+			case 4:
+			{
+				move(1, 1);
+				break;
+			}
+			
+			case 5:
+			{
+				move(-1, 1);
+				break;
+			}
+			
+			case 6:
+			{
+				move(-1, -1);
+				break;
+			}
+			
+			case 7:
+			{
+				move(0, -1);
+				break;
+			}
+			
+			case 8:
+			{
+				move(1, -1);
+				break;
+			}
+		}
+	}
+	
+	public void wander(long cd)
+	{
+		if(System.currentTimeMillis() - wanderTick >= cd)
+		{
+			direction = gen.nextInt(8);
+			wanderTick = System.currentTimeMillis();
+		}
+		
+		switch(direction)
 		{
 			default:
 			{
